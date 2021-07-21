@@ -1,0 +1,51 @@
+<!-- START SIDEBAR-->
+<nav class="page-sidebar" id="sidebar">
+    <div id="sidebar-collapse">
+        <div class="admin-block d-flex">
+            <div>
+                <img src="<?= session('profil_image'); ?>" width="45px" class="imgProfil" />
+            </div>
+            <div class="admin-info">
+                <div class="font-strong"><?= session('fullname') ?></div>
+            </div>
+        </div>
+        <ul class="side-menu metismenu">
+            <li>
+                <a href="<?= base_url() . '/home'; ?>"><i class="sidebar-item-icon fa fa-th-large"></i>
+                    <span class="nav-label">Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="javascript:;"><i class="sidebar-item-icon fa fa-gear"></i>
+                    <span class="nav-label">Menu</span><i class="fa fa-angle-left arrow"></i></a>
+                <ul class="nav-2-level collapse">
+                    <?php if (enforce(1, 1)) : ?>
+                        <li>
+                            <a href="<?= base_url() . '/menu_satu'; ?>">Menu 1</a>
+                        </li>
+                    <?php endif ?>
+                    <?php if (enforce(2, 1)) : ?>
+                        <li>
+                            <a href="<?= base_url() . '/menu_dua'; ?>">Menu 2</a>
+                        </li>
+                    <?php endif ?>
+                </ul>
+            </li>
+            <?php if (session('level') == 1) : ?>
+                <li>
+                    <a href="javascript:;"><i class="sidebar-item-icon fa fa-gear"></i>
+                        <span class="nav-label">Admin Menu</span><i class="fa fa-angle-left arrow"></i></a>
+                    <ul class="nav-2-level collapse">
+                        <li>
+                            <a href="<?= base_url() . '/admin/user'; ?>">User</a>
+                        </li>
+                        <li>
+                            <a href="<?= base_url() . '/admin/policy'; ?>">Policy</a>
+                        </li>
+                    </ul>
+                </li>
+            <?php endif ?>
+        </ul>
+    </div>
+</nav>
+<!-- END SIDEBAR-->
