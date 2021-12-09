@@ -1,6 +1,6 @@
 <header class="header">
     <div class="page-brand">
-        <a class="link" href="<?=base_url();?>">
+        <a class="link" href="index.html">
             <span class="brand">Admin
                 <span class="brand-tip">CAST</span>
             </span>

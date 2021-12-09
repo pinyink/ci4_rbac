@@ -27,25 +27,26 @@ class Auth implements FilterInterface
     {
         //
         $log = [];
+        helper(['Permission_helper']);
         $response = service('response');
-        if (!isset($arguments[2]) && !isset($arguments[2])) {
-            if (empty(session('user'))) {
-                if (isset($arguments[0]) && $arguments[0] == 'N') {
-                    return redirect()->to('/login')->with('messageLogin', '<div class="alert alert-danger">Anda Tidak Mempunyai Akses</div>');
-                } else {
-                    $log['errorCode'] = 2;
-                    $log['errorMessage'] = 'Anda Belum Login';
-                    return $response->setJSON($log);
-                }
+        if (empty(session('user'))) {
+            if (isset($arguments[0]) && $arguments[0] == 'Y') {
+                return redirect()->to('/login')->with('messageLogin', '<div class="alert alert-danger">Anda Tidak Mempunyai Akses</div>');
+            } else {
+                $log['errorCode'] = 2;
+                $log['errorMessage'] = 'Anda Belum Login';
+                return $response->setJSON($log);
             }
         } else {
-            if (empty(session('user'))) {
-                if (isset($arguments[0]) && $arguments[0] == 'Y') {
-                    return redirect()->to('/login')->with('messageLogin', '<div class="alert alert-danger">Anda Tidak Mempunyai Akses</div>');
-                } else {
-                    $log['errorCode'] = 2;
-                    $log['errorMessage'] = 'Anda Belum Login';
-                    return $response->setJSON($log);
+            if (isset($arguments[1]) && isset($arguments[2])) {
+                if (enforce($arguments[1], $arguments[2]) == false) {
+                    if (isset($arguments[0]) && $arguments[0] == 'Y') {
+                        return redirect()->to('/login')->with('messageLogin', '<div class="alert alert-danger">Anda Tidak Mempunyai Akses</div>');
+                    } else {
+                        $log['errorCode'] = 2;
+                        $log['errorMessage'] = 'Anda Belum Login';
+                        return $response->setJSON($log);
+                    }
                 }
             }
         }
