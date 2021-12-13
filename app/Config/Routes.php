@@ -38,6 +38,7 @@ $routes->get('/setting/profil', 'Profil::index', ['filter' => 'auth:N', 'namespa
 $routes->get('/setting/profil/getData', 'Profil::getData', ['filter' => 'auth:N' , 'namespace' => 'App\Controllers\Setting']);
 $routes->post('/setting/profil/update', 'Profil::update', ['filter' => 'auth:N', 'namespace' => 'App\Controllers\Setting']);
 $routes->post('/setting/profil/updateFoto', 'Profil::updateFoto', ['filter' => 'auth:N', 'namespace' => 'App\Controllers\Setting']);
+$routes->post('/setting/profil/updatePassword', 'Profil::updatePassword', ['filter' => 'auth:N', 'namespace' => 'App\Controllers\Setting']);
 
 /**
  * --------------------------------------------------------------------
@@ -72,7 +73,8 @@ $routes->post('admin/policy/updateData', 'Policy::updateData', ['filter' => 'adm
 $routes->post('admin/policy/userList', 'Policy::userList', ['filter' => 'adminjson', 'namespace' => 'App\Controllers\Admin']);
 $routes->post('admin/policy/addRole', 'Policy::addRole', ['filter' => 'adminjson', 'namespace' => 'App\Controllers\Admin']);
 $routes->post('admin/policy/removeRole', 'Policy::removeRole', ['filter' => 'adminjson', 'namespace' => 'App\Controllers\Admin']);
-$routes->post('admin/policy/menuList', 'Policy::menuList', ['filter' => 'adminjson', 'namespace' => 'App\Controllers\Admin']);
+$routes->get('admin/policy/menuList/(:num)', 'Policy::menuList/$1', ['filter' => 'adminjson', 'namespace' => 'App\Controllers\Admin']);
+$routes->post('admin/policy/saveSubMenu', 'Policy::saveSubMenu', ['filter' => 'adminjson', 'namespace' => 'App\Controllers\Admin']);
 $routes->post('admin/policy/addPolicy', 'Policy::addPolicy', ['filter' => 'adminjson', 'namespace' => 'App\Controllers\Admin']);
 $routes->post('admin/policy/removePolicy', 'Policy::removePolicy', ['filter' => 'adminjson', 'namespace' => 'App\Controllers\Admin']);
 

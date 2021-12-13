@@ -46,6 +46,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="#tab-3" data-toggle="tab"><i class="ti-image"></i> Foto</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#tab-4" data-toggle="tab"><i class="ti-key"></i> Password</a>
+                        </li>
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane fade show active" id="tab-1">
@@ -106,6 +109,27 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="tab-pane fade" id="tab-4">
+                            <form action="javascript:void(0)" id="form-password">
+                                <div class="form-group">
+                                    <label>Password Lama</label>
+                                    <input class="form-control" type="password" placeholder="Old Password" name="oldPassword" required>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6 form-group">
+                                        <label>Password Baru</label>
+                                        <input class="form-control" type="password" placeholder="New Password" name="newPassword" required>
+                                    </div>
+                                    <div class="col-sm-6 form-group">
+                                        <label>Ulangi Password</label>
+                                        <input class="form-control" type="password" placeholder="Retype Password" name="retypePassword" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <button class="btn btn-info" type="submit">Save</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -141,6 +165,52 @@
                 var dataString = $('#form-setting').serialize() + '&token=' + $('meta[name=TOKEN]').attr("content");
                 $.ajax({
                         'url': '<?= base_url(); ?>/setting/profil/update',
+                        'type': 'post',
+                        'headers': {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        'dataType': 'JSON',
+                        'data': dataString,
+                    })
+                    .done(function(data) {
+                        get_data();
+                        alertify.set('notifier', 'position', 'top-right');
+                        alertify.notify('<span><i class="fa fa-bell"></i> ' + data.errorMessage + '</span>', data.errorType, 5, function() {
+                            console.log('dismissed');
+                        });
+                    })
+                    .fail(function(jqXHR) {
+                        console.log(jqXHR.responseText);
+                    })
+                    .always(function() {
+                        console.log('reconnect success');
+                    });
+            }
+        });
+
+        $('#form-password').validate({
+            errorClass: "help-block",
+            rules: {
+                oldPassword: {
+                    required: true
+                },
+                newPassword: {
+                    required: true
+                },
+                retypePassword: {
+                    required: true
+                }
+            },
+            highlight: function(e) {
+                $(e).closest(".form-group").addClass("has-error")
+            },
+            unhighlight: function(e) {
+                $(e).closest(".form-group").removeClass("has-error")
+            },
+            submitHandler: function() {
+                var dataString = $('#form-password').serialize() + '&token=' + $('meta[name=TOKEN]').attr("content");
+                $.ajax({
+                        'url': '<?= base_url(); ?>/setting/profil/updatePassword',
                         'type': 'post',
                         'headers': {
                             'X-Requested-With': 'XMLHttpRequest'

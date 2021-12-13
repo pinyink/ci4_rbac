@@ -4,7 +4,10 @@ namespace App\Controllers\Setting;
 
 use App\Controllers\BaseController;
 use App\Libraries\Tema;
+use App\Models\Admin\UserModel;
+use App\Models\LoginModel;
 use App\Models\Setting\ProfilModel;
+use App\Models\LoginModels;
 
 class Profil extends BaseController
 {
@@ -83,6 +86,38 @@ class Profil extends BaseController
         $log['errorMessage'] = 'Update Data Berhasil';
         $log['errorType'] = 'success';
 
+        return $this->response->setJSON($log);
+    }
+
+    public function updatePassword()
+    {
+        $log = [];
+        $oldPassword = $this->req->getPost('oldPassword');
+        $newPassword = $this->req->getPost('newPassword');
+        $retypePassword = $this->req->getPost('retypePassword');
+        $loginModel = new LoginModel($this->request);
+        $id = session('user_id');
+        $query = $loginModel->getData(['a.user_id' => $id, 'user_deleted_at' => null])->getRow();
+        if (password_verify($oldPassword, $query->user_password)) {
+            if ($newPassword == $retypePassword) {
+                $dataUpdate = [
+                    'user_password' => password_hash($newPassword, PASSWORD_BCRYPT)
+                ];
+                $userModel = new UserModel($this->req);
+                $queryUpdatePassword = $userModel->update($id, $dataUpdate);
+                $log['errorCode'] = 1;
+                $log['errorMessage'] = 'Password Baru Berhasil Disimpan';
+                $log['errorType'] = 'success';
+            } else {
+                $log['errorCode'] = 2;
+                $log['errorMessage'] = 'Password Baru Salah';
+                $log['errorType'] = 'error';
+            }
+        } else {
+            $log['errorCode'] = 2;
+            $log['errorMessage'] = 'Password Lama Salah';
+            $log['errorType'] = 'error';
+        }
         return $this->response->setJSON($log);
     }
 

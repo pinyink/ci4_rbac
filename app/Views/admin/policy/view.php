@@ -6,46 +6,52 @@
 <link href="<?= base_url(); ?>/assets/admincast/dist/assets/vendors/DataTables/datatables.min.css" rel="stylesheet" />
 <?= $this->endSection(); ?>
 <?= $this->section('content'); ?>
-<div class="page-heading">
-    <h1 class="page-title">Admin</h1>
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item">
-            <a href="index.html"><i class="fa fa-home font-20"></i></a>
-        </li>
-        <li class="breadcrumb-item">Admin</li>
-        <li class="breadcrumb-item">Policy</li>
-    </ol>
-</div>
-<div class="page-content fade-in-up">
-    <div class="row">
-        <div class="col-lg-12 col-md-12">
-            <div class="ibox small">
-                <div class="ibox-head">
-                    <div class="ibox-title">Data Table</div>
-                    <div class="ibox-tools">
-                        <a href="javascript:;" onclick="modalAddOpen()" data-toggle="tooltip" data-placement="top" title="Add Data"><i class="fa fa-plus-square"></i></a>
-                        <a class="ibox-collapse"><i class="fa fa-minus"></i></a>
-                        <a class="fullscreen-link"><i class="fa fa-expand"></i></a>
+<div id="page-content-menu">
+    <div class="page-heading">
+        <h1 class="page-title">Admin</h1>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="index.html"><i class="fa fa-home font-20"></i></a>
+            </li>
+            <li class="breadcrumb-item">Admin</li>
+            <li class="breadcrumb-item">Policy</li>
+        </ol>
+    </div>
+    <div class="page-content fade-in-up">
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <div class="ibox small">
+                    <div class="ibox-head">
+                        <div class="ibox-title">Data Table</div>
+                        <div class="ibox-tools">
+                            <a href="javascript:;" onclick="modalAddOpen()" data-toggle="tooltip" data-placement="top" title="Add Data"><i class="fa fa-plus-square"></i></a>
+                            <a class="ibox-collapse"><i class="fa fa-minus"></i></a>
+                            <a class="fullscreen-link"><i class="fa fa-expand"></i></a>
+                        </div>
                     </div>
-                </div>
-                <div class="ibox-body">
-                    <table id="datatable" class="table table-striped table-bordered table-hover" cellspacing="0" width="100%">
-                        <thead>
-                            <tr>
-                                <th>Aksi</th>
-                                <th>No</th>
-                                <th>Desc</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                    <div class="ibox-body">
+                        <table id="datatable" class="table table-striped table-bordered table-hover" cellspacing="0" width="100%">
+                            <thead>
+                                <tr>
+                                    <th>Aksi</th>
+                                    <th>No</th>
+                                    <th>Desc</th>
+                                </tr>
+                            </thead>
+                            <tbody>
 
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<!-- hide the content -->
+<div id="page-content-more" class="hide"></div>
+
+<!-- modal -->
 <div class="modal fade" id="modalAdd">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -167,8 +173,8 @@
             },
             //optional
             "lengthMenu": [
-                [5, 10, 25],
-                [5, 10, 25]
+                [10, 25],
+                [10, 25]
             ],
             "columnDefs": [{
                 "targets": [0, 1],
@@ -281,8 +287,8 @@
             },
             //optional
             "lengthMenu": [
-                [5, 10, 25],
-                [5, 10, 25]
+                [10, 25],
+                [10, 25]
             ],
             "columnDefs": [{
                 "targets": [0, 1],
@@ -336,94 +342,6 @@
                     console.log('dismissed');
                 });
                 tableUser.ajax.reload(null, false);
-            })
-            .fail(function(jqXHR) {
-                console.log(jqXHR.responseText);
-            });
-    }
-
-    function menu(id) {
-        policy_Id = id;
-        $('#modalMenu').modal('show');
-        $('#modalMenu .modal-title').text('add / remove role');
-        tableMenu = $('#datatableMenu').DataTable({
-            "processing": true,
-            "responsive": true,
-            "serverSide": true,
-            "order": [],
-            "ajax": {
-                "url": "<?php echo base_url('admin/policy/menuList') ?>",
-                "headers": {
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                "type": "POST",
-                "data": function(data) {
-                    data.token = $('meta[name=TOKEN]').attr("content");
-                    data.policy = id;
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    console.log(jqXHR.responseText);
-                }
-            },
-            //optional
-            "lengthMenu": [
-                [5, 10, 25],
-                [5, 10, 25]
-            ],
-            "columnDefs": [{
-                "targets": [0, 1],
-                "orderable": false,
-            }, ],
-            "bDestroy": true
-        });
-    }
-
-    function remove_policy(menu_id, menu_akses_id) {
-        $.ajax({
-                'url': '<?= base_url(); ?>/admin/policy/removePolicy',
-                'type': 'POST',
-                'dataType': 'JSON',
-                'headers': {
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                'data': {
-                    menu_id: menu_id,
-                    menu_akses_id: menu_akses_id,
-                    policy_id: policy_Id
-                }
-            })
-            .done(function(data) {
-                alertify.set('notifier', 'position', 'top-right');
-                alertify.notify('<span><i class="fa fa-bell"></i> ' + data.errorMessage + '</span>', data.errorType, 5, function() {
-                    console.log('dismissed');
-                });
-                tableMenu.ajax.reload(null, false);
-            })
-            .fail(function(jqXHR) {
-                console.log(jqXHR.responseText);
-            });
-    }
-
-    function add_policy(menu_id, menu_akses_id) {
-        $.ajax({
-                'url': '<?= base_url(); ?>/admin/policy/addPolicy',
-                'type': 'POST',
-                'dataType': 'JSON',
-                'headers': {
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                'data': {
-                    menu_id: menu_id,
-                    menu_akses_id: menu_akses_id,
-                    policy_id: policy_Id
-                }
-            })
-            .done(function(data) {
-                alertify.set('notifier', 'position', 'top-right');
-                alertify.notify('<span><i class="fa fa-bell"></i> ' + data.errorMessage + '</span>', data.errorType, 5, function() {
-                    console.log('dismissed');
-                });
-                tableMenu.ajax.reload(null, false);
             })
             .fail(function(jqXHR) {
                 console.log(jqXHR.responseText);

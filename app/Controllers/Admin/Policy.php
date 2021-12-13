@@ -4,6 +4,7 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
 use App\Libraries\Tema;
+use App\Models\Admin\MenuAksesModel;
 use App\Models\Admin\MenuModel;
 use App\Models\Admin\PolicyModel;
 use App\Models\Admin\UserModel;
@@ -33,7 +34,8 @@ class Policy extends BaseController
                 $no++;
                 $row = [];
                 $id = $list->policy_id;
-                $action = '<a href="javascript:;" onclick="editData(' . $id . ')" title="Edit Data"><i class="fa fa-edit"></i></a>&nbsp;<a href="javascript:;" onclick="user(' . $id . ')" title="setting user"><i class="fa fa-user"></i></a>&nbsp;<a href="javascript:;" onclick="menu(' . $id . ')" title="Setting Menu"><i class="fa fa-list"></i></a>';
+                $url = base_url('admin/policy/menuList/'.$id);
+                $action = '<a href="javascript:;" onclick="editData(' . $id . ')" title="Edit Data"><i class="fa fa-edit"></i></a>&nbsp;<a href="javascript:;" onclick="user(' . $id . ')" title="setting user"><i class="fa fa-user"></i></a>&nbsp;<a href="'.$url.'" title="Setting Menu"><i class="fa fa-list"></i></a>';
                 $row[] = $action;
                 $row[] = $no;
                 $row[] = $list->policy_desc;
@@ -160,40 +162,59 @@ class Policy extends BaseController
         return $this->response->setJSON($log);
     }
 
-    public function menuList()
+    public function menuList($policyId)
     {
-        $this->menuModel = new MenuModel($this->request);
-        $lists = $this->menuModel->get_datatables();
-        $data = [];
-        $no = $this->req->getPost("start");
-        $policy_id = $this->req->getPost('policy');
+        $menuModel = new MenuModel();
+        $menuAksesModel = new MenuAksesModel();
 
-        $menuAkses = $this->menuModel->getMenuAkses()->getResult();
-        foreach ($lists as $list) {
-            $no++;
-            $row = [];
-            $id = $list->menu_id;
-            $action = '<ul style="list-style-type:none;">';
-            foreach ($menuAkses as $key => $value) {
-                if (hasPolicy($policy_id, $id, $value->menu_akses_id)) {
-                    $_action = '<input type="checkbox" value="1" onclick="remove_policy(' . $id . ', ' . $value->menu_akses_id . ')" checked>';
-                } else {
-                    $_action = '<input type="checkbox" value="1" onclick="add_policy(' . $id . ', ' . $value->menu_akses_id . ')">';
+        $data = array();
+        $allMenu = $menuModel->findAll();
+        $menu = $menuAksesModel->orderBy('menu_akses_id', 'asc')->findAll();
+        foreach ($allMenu as $key => $vAllMenu) {
+            foreach ($menu as $key => $vMenu) {
+                if ($vAllMenu->menu_id == $vMenu->menu_id) {
+                    $array = [
+                        'akses_id' => $vMenu->akses_id,
+                        'menu_akses_id' => $vMenu->menu_akses_id,
+                        'menu_akses_desc' => $vMenu->menu_akses_desc,
+                        'menu_id' => $vMenu->menu_id
+                    ];
+                    if (hasPolicy($policyId, $vMenu->menu_id, $vMenu->menu_akses_id)) {
+                        $array['check'] = 'Y';
+                    } else {
+                        $array['check'] = 'N';
+                    }
+                    array_push($data, $array);
                 }
-                $action .= '<li>' . $_action . '&nbsp;' . $value->menu_akses_desc . '</li>';
             }
-            $action .= '</ul>';
-            $row[] = $no;
-            $row[] = $list->menu_desc . '</br>' . $action;
-            $data[] = $row;
         }
-        $output = [
-            "draw" => $this->req->getPost('draw'),
-            "recordsTotal" => $this->menuModel->count_all(),
-            "recordsFiltered" => $this->menuModel->count_filtered(),
-            "data" => $data
+        $tema = new Tema();
+        $tema->loadTema('admin/policy/menu_list', ['data' => $data, 'menu' => $allMenu]);
+    }
+
+    public function saveSubMenu()
+    {
+        $db = \Config\Database::connect();
+        $request = \Config\Services::request();
+        $menuDesc = $request->getPost('nama_menu');
+        $menuId = $request->getPost('menu_id');
+        $menuAksesModel = new MenuAksesModel();
+        $lastMenuAkses = $menuAksesModel->orderBy('menu_akses_id', 'desc')->where(['menu_id' => $menuId])->limit(1)->first();
+        $menuAksesId = $lastMenuAkses->menu_akses_id + 1;
+        $dataInsert = [
+            'menu_akses_id' => $menuAksesId,
+            'menu_id' => $menuId,
+            'menu_akses_desc' => $menuDesc
         ];
-        echo json_encode($output);
+        $queryInsert = $menuAksesModel->insert($dataInsert);
+        $aksesId = $db->insertID();
+        $dataInsert['akses_id'] = $aksesId;
+        $log['errorCode'] = 1;
+        $log['errorMessage'] = 'Tambah Menu Akses Berhasil';
+        $log['errorType'] = 'success';
+        $log['data'] = $dataInsert;
+        $response = \Config\Services::response();
+        return $response->setJSON($log);
     }
 
     public function addPolicy()
