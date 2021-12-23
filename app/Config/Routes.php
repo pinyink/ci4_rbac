@@ -77,7 +77,13 @@ $routes->get('admin/policy/menuList/(:num)', 'Policy::menuList/$1', ['filter' =>
 $routes->post('admin/policy/saveSubMenu', 'Policy::saveSubMenu', ['filter' => 'adminjson', 'namespace' => 'App\Controllers\Admin']);
 $routes->post('admin/policy/addPolicy', 'Policy::addPolicy', ['filter' => 'adminjson', 'namespace' => 'App\Controllers\Admin']);
 $routes->post('admin/policy/removePolicy', 'Policy::removePolicy', ['filter' => 'adminjson', 'namespace' => 'App\Controllers\Admin']);
-
+$routes->get('admin/menu', 'Menu::index', ['filter' => 'adminjson', 'namespace' => 'App\Controllers\Admin']);
+$routes->post('admin/menu/saveMenu', 'Menu::saveMenu', ['filter' => 'adminjson', 'namespace' => 'App\Controllers\Admin']);
+$routes->get('admin/menu/getMenu/(:num)', 'Menu::getMenu/$1', ['filter' => 'adminjson', 'namespace' => 'App\Controllers\Admin']);
+$routes->post('admin/menu/updateMenu', 'Menu::updateMenu', ['filter' => 'adminjson', 'namespace' => 'App\Controllers\Admin']);
+$routes->get('admin/menu/getMenuAkses/(:num)', 'Menu::getMenuAkses/$1', ['filter' => 'adminjson', 'namespace' => 'App\Controllers\Admin']);
+$routes->post('admin/menu/updateMenuAkses', 'Menu::updateMenuAkses', ['filter' => 'adminjson', 'namespace' => 'App\Controllers\Admin']);
+$routes->post('admin/menu/tambahMenuAkses', 'Menu::tambahMenuAkses', ['filter' => 'adminjson', 'namespace' => 'App\Controllers\Admin']);
 /**
  * Menu Content
  */

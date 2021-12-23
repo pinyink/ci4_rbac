@@ -1,13 +1,13 @@
--- MySQL dump 10.13  Distrib 8.0.25, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.33, for Linux (x86_64)
 --
--- Host: 127.0.0.1    Database: ci_php_casbin
+-- Host: 127.0.0.1    Database: ci_rbac
 -- ------------------------------------------------------
--- Server version	5.7.33
+-- Server version	5.7.27
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -21,12 +21,15 @@
 
 DROP TABLE IF EXISTS `menu`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `menu` (
   `menu_id` int(11) NOT NULL AUTO_INCREMENT,
   `menu_desc` varchar(45) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`menu_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -35,7 +38,7 @@ CREATE TABLE `menu` (
 
 LOCK TABLES `menu` WRITE;
 /*!40000 ALTER TABLE `menu` DISABLE KEYS */;
-INSERT INTO `menu` VALUES (1,'menu 1'),(2,'menu 2'),(3,'menu 3'),(4,'menu 4'),(5,'menu 5'),(6,'menu 6'),(7,'menu 7'),(8,'menu 8');
+INSERT INTO `menu` VALUES (1,'Menu Pertama',NULL,NULL,NULL),(2,'Menu Kedua',NULL,NULL,NULL),(3,'Menu Ketiga',NULL,NULL,NULL),(4,'Menu Keempat',NULL,NULL,NULL);
 /*!40000 ALTER TABLE `menu` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -45,12 +48,17 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `menu_akses`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `menu_akses` (
-  `menu_akses_id` int(11) NOT NULL AUTO_INCREMENT,
+  `akses_id` int(11) NOT NULL AUTO_INCREMENT,
+  `menu_akses_id` int(11) DEFAULT NULL,
   `menu_akses_desc` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`menu_akses_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+  `menu_id` int(11) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `deleted_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`akses_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -59,7 +67,7 @@ CREATE TABLE `menu_akses` (
 
 LOCK TABLES `menu_akses` WRITE;
 /*!40000 ALTER TABLE `menu_akses` DISABLE KEYS */;
-INSERT INTO `menu_akses` VALUES (1,'read'),(2,'create'),(3,'update'),(4,'delete');
+INSERT INTO `menu_akses` VALUES (5,1,'read',1,NULL,NULL,NULL),(6,1,'read',2,NULL,NULL,NULL),(7,2,'create',1,NULL,NULL,NULL),(8,2,'create',2,NULL,NULL,NULL),(9,3,'update',1,NULL,NULL,NULL),(10,4,'delete',1,NULL,NULL,NULL),(11,5,'Upload',1,NULL,NULL,NULL),(12,3,'Update',2,NULL,NULL,NULL),(13,4,'Delete',2,NULL,NULL,NULL),(14,5,'Upload',2,NULL,NULL,NULL),(15,6,'Delete Upload',2,NULL,NULL,NULL),(16,6,'delete upload menu pertama',1,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `menu_akses` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -69,7 +77,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `migrations`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `migrations` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `version` varchar(255) NOT NULL,
@@ -98,7 +106,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `policy`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `policy` (
   `policy_id` int(11) NOT NULL AUTO_INCREMENT,
   `policy_desc` varchar(45) DEFAULT NULL,
@@ -126,7 +134,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `profil`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `profil` (
   `user_id` int(11) NOT NULL,
   `profil_firstname` varchar(45) DEFAULT NULL,
@@ -144,7 +152,7 @@ CREATE TABLE `profil` (
 
 LOCK TABLES `profil` WRITE;
 /*!40000 ALTER TABLE `profil` DISABLE KEYS */;
-INSERT INTO `profil` VALUES (1,'Pindi','Ya','nurkhafindi@gmail.com','menggenggam tanganmu merupakan salah satu tujuan hidupku, aku akan berusaha untuk itu','upload/img/profil/2021/06/1624278481_0e14e1283f9aa3b4c4d0.jpeg'),(2,'operator','satu','akun779@gmail.com','','upload/img/profil/2021/01/1609685435_d93211bdf4a7480e8f38.png');
+INSERT INTO `profil` VALUES (1,'Pindi','Ya','nurkhafindi@gmail.com','menggenggam tanganmu merupakan salah satu tujuan hidupku, aku akan berusaha untuk itu','upload/img/profil/2021/12/1639058290_7ea776ef301febe9a559.jpeg'),(2,'operator','satu','akun779@gmail.com','','upload/img/profil/2021/01/1609685435_d93211bdf4a7480e8f38.png');
 /*!40000 ALTER TABLE `profil` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -154,7 +162,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `rules`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `rules` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `ptype` varchar(255) DEFAULT NULL,
@@ -165,7 +173,7 @@ CREATE TABLE `rules` (
   `v4` varchar(255) DEFAULT NULL,
   `v5` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -184,7 +192,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user` (
   `user_username` varchar(32) DEFAULT NULL,
   `user_password` varchar(256) DEFAULT NULL,
@@ -205,9 +213,13 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES ('pindi','$2y$10$Evrg4MfVzfTFhvElZLXPsuh9rEHl6as/mvRNPJRVh9gW9l14gidri',1,'2020-12-27 15:14:39',NULL,1,NULL,1),('opr','$2y$10$MOt7KAU89vHkD0c56rZs8OiTCgQyjzgqmB53pZe638Ss6/qgas64a',2,'2020-12-27 15:14:39',NULL,1,NULL,2),('opr1','$2y$10$OKnMtodTvan0U70eshm3wuGjbYnzqWt0n3w0hsl8jxq6l6PXAbVm6',2,'2021-02-07 13:45:21',NULL,1,NULL,3),('opr2','$2y$10$i9/STRrX6vqQ1mI6j1ljguZwiSiQm/pIykcPoXDvvX7mta7EM41Ia',2,'2021-02-07 13:47:21',NULL,1,'2021-02-15 23:06:01',4),('opr3','$2y$10$OWOYrD8zIp6tZtLkxxH4pulwUeD4K38kTCTF0utBs7Y7q2K7l9/6K',2,'2021-02-07 13:47:28',NULL,1,NULL,5),('opr4','$2y$10$X/4mwVPcCkKbOEk5C3tJHuWWkVyP3YZeY2uQCdbJQ/yio4PUuIJg6',2,'2021-02-07 13:58:33',NULL,1,NULL,6),('user1','$2y$10$zYhrdxs/cKS6L/RiGh11auFtgHG44pDt.v6ALX0EYnpdavXgVXDV2',2,'2021-06-21 10:14:22',NULL,1,'2021-07-06 19:36:31',7);
+INSERT INTO `user` VALUES ('pindi','$2y$10$.f15mnpUdh6UB/UuQdrIweIx3zL1wPgnC8WhHYECOtTjIslBMGCGS',1,'2020-12-27 15:14:39',NULL,1,NULL,1),('opr','$2y$10$mDP3zyyqXNWHTvvq3P6oQeWV98Du9yt5NCh0uJExkQ.P9by3CjINi',2,'2020-12-27 15:14:39',NULL,1,NULL,2),('opr1','$2y$10$OKnMtodTvan0U70eshm3wuGjbYnzqWt0n3w0hsl8jxq6l6PXAbVm6',2,'2021-02-07 13:45:21',NULL,1,NULL,3),('opr2','$2y$10$i9/STRrX6vqQ1mI6j1ljguZwiSiQm/pIykcPoXDvvX7mta7EM41Ia',2,'2021-02-07 13:47:21',NULL,1,'2021-02-15 23:06:01',4),('opr3','$2y$10$OWOYrD8zIp6tZtLkxxH4pulwUeD4K38kTCTF0utBs7Y7q2K7l9/6K',2,'2021-02-07 13:47:28',NULL,1,NULL,5),('opr4','$2y$10$X/4mwVPcCkKbOEk5C3tJHuWWkVyP3YZeY2uQCdbJQ/yio4PUuIJg6',2,'2021-02-07 13:58:33',NULL,1,'2021-11-16 21:57:10',6),('user1','$2y$10$zYhrdxs/cKS6L/RiGh11auFtgHG44pDt.v6ALX0EYnpdavXgVXDV2',2,'2021-06-21 10:14:22',NULL,1,'2021-07-06 19:36:31',7);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Dumping events for database 'ci_rbac'
+--
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -218,4 +230,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-07-21 20:02:34
+-- Dump completed on 2021-12-23 21:49:38

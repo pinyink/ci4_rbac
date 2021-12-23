@@ -189,7 +189,7 @@ class Policy extends BaseController
             }
         }
         $tema = new Tema();
-        $tema->loadTema('admin/policy/menu_list', ['data' => $data, 'menu' => $allMenu]);
+        $tema->loadTema('admin/policy/menu_list', ['data' => $data, 'menu' => $allMenu, 'policyId' => $policyId]);
     }
 
     public function saveSubMenu()
@@ -220,10 +220,11 @@ class Policy extends BaseController
     public function addPolicy()
     {
         $log = [];
-        $menu_id = $this->req->getPost('menu_id');
-        $menu_akses_id = $this->req->getPost('menu_akses_id');
+        $aksesId = $this->req->getPost('akses_id');
         $policy_id = $this->req->getPost('policy_id');
-        addPolicy($policy_id, $menu_id, $menu_akses_id);
+        $menuAksesModel = new MenuAksesModel();
+        $query = $menuAksesModel->find($aksesId);
+        addPolicy($policy_id, $query->menu_id, $query->menu_akses_id);
         $log['errorCode'] = 1;
         $log['errorMessage'] = 'Tambah Akses Menu Berhasil';
         $log['errorType'] = 'success';
@@ -234,10 +235,11 @@ class Policy extends BaseController
     public function removePolicy()
     {
         $log = [];
-        $menu_id = $this->req->getPost('menu_id');
-        $menu_akses_id = $this->req->getPost('menu_akses_id');
+        $aksesId = $this->req->getPost('akses_id');
         $policy_id = $this->req->getPost('policy_id');
-        removePolicy($policy_id, $menu_id, $menu_akses_id);
+        $menuAksesModel = new MenuAksesModel();
+        $query = $menuAksesModel->find($aksesId);
+        removePolicy($policy_id, $query->menu_id, $query->menu_akses_id);
         $log['errorCode'] = 1;
         $log['errorMessage'] = 'Hapus Akses Menu Berhasil';
         $log['errorType'] = 'success';

@@ -8,18 +8,24 @@ function hasRoleForUser($user, $role)
 
 function addRoleForUser($user, $role)
 {
+    $cache = \Config\Services::cache();
+    $cache->delete('rules');
     $enforcer = \Config\Services::enforcer();
     return $enforcer->addRoleForUser($user, $role);
 }
 
 function deleteRoleForUser($user, $role)
 {
+    $cache = \Config\Services::cache();
+    $cache->delete('rules');
     $enforcer = \Config\Services::enforcer();
     return $enforcer->deleteRoleForUser($user, $role);
 }
 
 function addPolicy($role, $menu, $menu_akses)
 {
+    $cache = \Config\Services::cache();
+    $cache->delete('rules');
     $enforcer = \Config\Services::enforcer();
     return $enforcer->addPolicy($role, $menu, $menu_akses);
 }
@@ -32,6 +38,8 @@ function hasPolicy($role, $menu, $menu_akses)
 
 function removePolicy($role, $menu, $menu_akses)
 {
+    $cache = \Config\Services::cache();
+    $cache->delete('rules');
     $enforcer = \Config\Services::enforcer();
     return $enforcer->removePolicy($role, $menu, $menu_akses);
 }
