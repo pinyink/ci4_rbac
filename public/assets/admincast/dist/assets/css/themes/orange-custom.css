@@ -17,7 +17,6 @@
 
 .side-menu li .sidebar-item-icon {
     width: 20px !important;
-    font-size: 10px !important;
 }
 
 .side-menu>li a {
@@ -106,19 +105,6 @@
 
 .header .navbar-toolbar .navbar-search .search-icon {
     color: #fff;
-}
-
-.page-heading {
-    background-color: #f2f2f2;
-    box-shadow: 5px 5px rgba(216, 17, 17, 0.1) !important;
-}
-
-.content-wrapper {
-    background-color: rgb(233, 227, 227);
-}
-
-.ibox {
-    box-shadow: 5px 5px rgba(216, 17, 17, 0.1) !important;
 }
 
 .ibox .ibox-head {

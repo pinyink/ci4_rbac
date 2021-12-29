@@ -42,6 +42,9 @@
                         <li>
                             <a href="<?= base_url() . '/admin/policy'; ?>">Policy</a>
                         </li>
+                        <li>
+                            <a href="<?= base_url() . '/admin/menu'; ?>">Menu</a>
+                        </li>
                     </ul>
                 </li>
             <?php endif ?>
