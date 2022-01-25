@@ -4498,7 +4498,7 @@ a.text-danger:hover {
 .page-sidebar ul li a {
     position: relative;
     display: block;
-    padding: 11px 15px
+    padding: 11px 15px;
 }
 
 .page-sidebar .admin-block {
@@ -4506,7 +4506,8 @@ a.text-danger:hover {
 }
 
 .page-sidebar .admin-block .admin-avatar {
-    width: 45px
+    width: 45px;
+    height: 45px;
 }
 
 .page-sidebar .admin-block .admin-info {

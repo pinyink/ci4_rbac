@@ -1,9 +1,9 @@
 <!-- START SIDEBAR-->
 <nav class="page-sidebar" id="sidebar">
     <div id="sidebar-collapse">
-        <div class="admin-block d-flex">
+        <div class="admin-block">
             <div>
-                <img src="<?= session('profil_image'); ?>" width="45px" class="imgProfil" />
+                <img src="<?= session('profil_image'); ?>" class="imgProfil img-circle admin-avatar" />
             </div>
             <div class="admin-info">
                 <div class="font-strong"><?= session('fullname') ?></div>
