@@ -61,7 +61,20 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6 col-md-6">
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalMenu">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
                 <div class="ibox small">
                     <div class="ibox-head">
                         <div class="ibox-title" id="titleMenu">Form Menu</div>
@@ -91,7 +104,9 @@
                 </div>
             </div>
         </div>
+        <!-- /.modal-content -->
     </div>
+    <!-- /.modal-dialog -->
 </div>
 
 <?= $this->endSection(); ?>
@@ -111,15 +126,13 @@
         $('#titleMenu').text('Form Tambah Menu');
         $('#labelNamaMenu').text('Nama Menu');
         $('#btnMenu').text('Simpan');
+        $('#modalMenu').modal('show');
         saveMethod = 'tambah_menu';
         $('#formMenu :input').prop('disabled', false);
     }
 
     function editMenu(id){
         resetForm();
-        $('#titleMenu').text('Form Edit Menu');
-        $('#labelNamaMenu').text('Nama Menu');
-        $('#btnMenu').text('Update');
         saveMethod = 'edit_menu';
         $('#formMenu :input').prop('disabled', false);
         $.ajax({
@@ -130,6 +143,10 @@
         .done(function(response){
             $('[name="namaMenu"]').val(response.data.menu_desc);
             $('[name="idMenu"]').val(response.data.menu_id);
+            $('#modalMenu').modal('show');
+            $('#titleMenu').text('Form Edit Menu');
+            $('#labelNamaMenu').text('Nama Menu');
+            $('#btnMenu').text('Update');
         })
         .fail(function(jqXHR){
             console.log(jqXHR.responseText);
@@ -145,12 +162,10 @@
         $('#formMenu :input').prop('disabled', false);
         $('[name="idMenu"]').val(id);
         $('#divMenuAkses').show();
+        $('#modalMenu').modal('show');
     }
 
     function editMenuAkses(id){
-        $('#titleMenu').text('Form Edit Menu Akses');
-        $('#labelNamaMenu').text('Nama Menu Akses');
-        $('#btnMenu').text('Update');
         saveMethod = 'edit_menu_akses';
         $('#formMenu :input').prop('disabled', false);
         $.ajax({
@@ -163,6 +178,10 @@
             $('[name="idMenu"]').val(response.data.akses_id);
             $('[name="kodeMenuAkses"]').val(response.data.menu_akses_id);
             $('#divMenuAkses').show();
+            $('#modalMenu').modal('show');
+            $('#titleMenu').text('Form Edit Menu Akses');
+            $('#labelNamaMenu').text('Nama Menu Akses');
+            $('#btnMenu').text('Update');
         })
         .fail(function(jqXHR){
             console.log(jqXHR.responseText);
@@ -227,6 +246,7 @@
                         } else if (saveMethod == 'tambah_menu_akses') {
                             $('#list_group_'+data.menu_id).append('<li class="list-group-item mt-1" id="menu_akses_'+data.akses_id+'"><span id="span_menu_akses_'+data.akses_id+'">'+data.menu_akses_id+'. '+data.menu_akses_desc+'</span><a class="btn btn-sm float-right" data-toggle="tooltip" data-placement="top" title="Edit" onclick="editMenuAkses('+data.akses_id+')"><i class="fa fa-edit"></i></a></li>');
                         }
+                        $('#modalMenu').modal('hide');
                     }
                 })
                 .fail(function(jqXHR) {
