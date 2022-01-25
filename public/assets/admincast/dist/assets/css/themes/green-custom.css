@@ -1,0 +1,87 @@
+.page-sidebar {
+    background-color: #ffffff;
+    border-right: 5px solid #ebf7eb;
+}
+
+.page-sidebar .admin-block .admin-info {
+    color: inherit;
+}
+
+.page-sidebar .admin-block .admin-info small {
+    color: inherit;
+}
+
+.side-menu .heading {
+    color: inherit;
+    font-size: 12px !important;
+}
+
+.side-menu li .sidebar-item-icon {
+    width: 20px !important;
+}
+
+.side-menu>li a {
+    color: inherit;
+}
+
+.side-menu>li a:hover,
+.side-menu>li a:focus {
+    color: #f26602;
+    background-color: #facc78;
+}
+
+.side-menu>li.active {
+    background-color: #ededed;
+}
+
+.side-menu>li.active>a,
+.side-menu>li.active>a:hover,
+.side-menu>li.active>a:focus {
+    color: #fff;
+    background-color: #f28a02;
+}
+
+.side-menu li a.active {
+    color: #f28a02;
+}
+
+.side-menu li a.active:hover {
+    color: #fff;
+}
+
+.sidebar-mini .side-menu>li:hover>a {
+    background-color: #f28a02;
+    color: #fff;
+}
+
+.sidebar-mini .side-menu>li:hover .nav-2-level {
+    background-color: white;
+}
+
+.header {
+    height: 48px !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none;
+}
+
+.header .page-brand {
+    color: black;
+    background-color: #fdfffc;
+    width: 215px !important;
+}
+
+.header .navbar-toolbar>li>a {
+    color: black !important;
+}
+
+.ibox .ibox-head {
+    height: 40px !important;
+}
+
+.ibox .ibox-body {
+    font-size: 12px;
+}
+
+.modal .modal-dialog .modal-content .modal-header {
+    height: 42px;
+}
