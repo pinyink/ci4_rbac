@@ -79,6 +79,15 @@
     top: 32px !important;
 }
 
+.sidebar-mini .side-menu>li:hover>a {
+    background-color: #ffffff;
+    color: #37e310;
+}
+
+.sidebar-mini .side-menu>li:hover .nav-2-level {
+    background-color: #ffffff;
+}
+
 .ibox .ibox-head {
     height: 40px !important;
 }
