@@ -14,12 +14,12 @@
     <!-- PLUGINS STYLES-->
     <!-- THEME STYLES-->
     <link href="<?= base_url(); ?>/assets/admincast/dist/assets/css/main.min.css" rel="stylesheet" />
-    <link href="<?= base_url(); ?>/assets/admincast/dist/assets/css/themes/orange-custom.css" rel="stylesheet" />
+    <link href="<?= base_url(); ?>/assets/admincast/dist/assets/css/themes/green-custom.css" rel="stylesheet" />
     <?= $this->renderSection('css'); ?>
     <!-- PAGE LEVEL STYLES-->
 </head>
 
-<body class="fixed-navbar has-animation">
+<body class="has-animation">
     <div class="page-wrapper">
         <?= $this->include('/tema/header'); ?>
         <?= $this->include('/tema/sidebar'); ?>
