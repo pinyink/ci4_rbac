@@ -4904,7 +4904,6 @@ body.boxed-layout.fixed-navbar .header {
     left: 0;
     right: 0;
     z-index: 1004;
-    background-color: #fff
 }
 
 .preloader-backdrop .page-preloader {
@@ -4915,7 +4914,9 @@ body.boxed-layout.fixed-navbar .header {
     margin-left: -60px;
     z-index: 1005;
     font-family: Poppins;
-    font-size: 16px
+    font-size: 16px;
+    background-color: #fff;
+    border-radius: 5%;
 }
 
 .preloader-backdrop .page-preloader::before {
@@ -4927,12 +4928,12 @@ body.boxed-layout.fixed-navbar .header {
     height: 20px;
     margin-top: -10px;
     margin-left: -10px;
-    border-top: 2px solid #34495f;
+    border-top: 2px solid #08bbff;
     border-right: 2px solid transparent;
     -webkit-border-radius: 50%;
     border-radius: 50%;
     -webkit-animation: loader-rotate .6s linear infinite;
-    animation: loader-rotate .6s linear infinite
+    animation: loader-rotate .6s linear infinite;
 }
 
 .backdrop {
