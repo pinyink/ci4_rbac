@@ -13,21 +13,21 @@ class Permission extends Controller
         print_r($role);
         $policy = $enforcer->getPolicy();
         print_r($policy);
-        // $permission = $enforcer->getRolesForUser('pindi');
-        // print_r($permission);
     }
 
     public function addPermissionUserForRole()
     {
+        $request = \Config\Services::request();
         $enforcer = \Config\Services::enforcer();
-        $role = $this->request->getGet('role');
-        $user = $this->request->getGet('user');
+        $role = $request->getGet('role');
+        $user = $request->getGet('user');
         $enforcer->addRoleForUser($user, $role);
     }
 
     public function viewPermissionUserForRole()
     {
-        $role = $this->request->getGet('role');
+        $request = \Config\Services::request();
+        $role = $request->getGet('role');
         $enforcer = \Config\Services::enforcer();
         $user = $enforcer->getUsersForRole($role);
         print_r($user);
@@ -35,9 +35,10 @@ class Permission extends Controller
 
     public function addPermissionAddPolicy()
     {
-        $role = $this->request->getGet('role');
-        $menu = $this->request->getGet('menu');
-        $permission = $this->request->getGet('permission');
+        $request = \Config\Services::request();
+        $role = $request->getGet('role');
+        $menu = $request->getGet('menu');
+        $permission = $request->getGet('permission');
         $enforcer = \Config\Services::enforcer();
         $query = $enforcer->addPolicy($role, $menu, $permission);
         print_r($query);

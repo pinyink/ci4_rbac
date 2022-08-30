@@ -110,12 +110,12 @@ class Policy extends BaseController
         foreach ($lists as $list) {
             $no++;
             $row = [];
-            $id = $list->user_id;
+            $id = $list->user_username;
             $action = '';
             if (hasRoleForUser($id, $policy_id)) {
-                $action = '<input type="checkbox" value="1" onclick="remove_role(' . $id . ')" checked>';
+                $action = '<input type="checkbox" value="1" onclick="remove_role(\'' . $id . '\')" checked>';
             } else {
-                $action = '<input type="checkbox" value="1" onclick="add_role(' . $id . ')">';
+                $action = '<input type="checkbox" value="1" onclick="add_role(\'' . $id . '\')">';
             }
             $aktif = '';
             if ($list->user_aktif == 1) {
