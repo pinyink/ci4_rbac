@@ -1,3 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,300;0,400;0,600;0,800;1,100;1,300;1,400;1,600;1,800&display=swap');
+
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
 .header {
     height: 48px !important;
     -webkit-box-shadow: none !important;
@@ -59,6 +65,7 @@
 .side-menu>li.active>a:focus {
     color: #1507d6;
     background-color: #fbfdfa;
+    font-weight: 600;
 }
 
 .side-menu>li.active>a {
@@ -76,6 +83,10 @@
     top: 32px !important;
 }
 
+.sidebar-mini .nav-2-level>li>a {
+    padding: 6px 10px 6px 10px !important;
+}
+
 .sidebar-mini .side-menu>li:hover>a {
     background-color: #ffffff;
     color: #1507d6;
@@ -85,9 +96,14 @@
     background-color: #ffffff;
 }
 
+.ibox {
+    border-radius: 10px 10px 10px 10px;
+}
+
 .ibox .ibox-head {
     height: 40px !important;
     border-top: 2px solid #1507d6;
+    border-radius: 10px 10px 0 0;
 }
 
 .ibox .ibox-body {
