@@ -15,6 +15,10 @@ body {
     background-color: #fbfdfa;
 }
 
+.navbar-toolbar .dropdown .dropdown-menu {
+    z-index: 1100;
+}
+
 .page-sidebar {
     background-color: #fbfdfa;
     margin-top: 45px !important;
