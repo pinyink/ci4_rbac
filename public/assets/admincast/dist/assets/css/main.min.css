@@ -4287,13 +4287,12 @@ a.text-danger:hover {
     -webkit-align-items: center;
     -ms-flex-align: center;
     align-items: center;
-    padding: 0 15px;
     font-weight: 500;
     font-size: 20px;
     -webkit-transition: all .2s ease-in-out;
     -o-transition: all .2s ease-in-out;
     transition: all .2s ease-in-out;
-    overflow: hidden
+    overflow: hidden;
 }
 
 .header .page-brand .brand {
@@ -4511,7 +4510,8 @@ a.text-danger:hover {
 }
 
 .page-sidebar .admin-block .admin-info {
-    padding-left: 1rem
+    /* padding-left: 1rem */
+    margin-top: 15px;
 }
 
 .side-menu .heading {
@@ -4573,7 +4573,7 @@ body:not(.fixed-layout).sidebar-mini .page-sidebar {
 }
 
 body:not(.fixed-layout).sidebar-mini .page-brand {
-    width: 60px
+    width: 60px;
 }
 
 body:not(.fixed-layout).sidebar-mini .brand {
@@ -4640,7 +4640,12 @@ body:not(.fixed-layout).sidebar-mini .side-menu>li:hover .nav-2-level {
 }
 
 body:not(.fixed-layout).sidebar-mini .admin-block {
-    padding: 15px 12px
+    padding: 15px 12px;
+}
+
+body:not(.fixed-layout).sidebar-mini .admin-block div img {
+    height: 36px;
+    width: 36px;
 }
 
 body:not(.fixed-layout).sidebar-mini .admin-block .admin-info {

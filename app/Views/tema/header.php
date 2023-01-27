@@ -1,5 +1,5 @@
 <header class="header">
-    <div class="page-brand">
+    <div class="page-brand d-flex align-content-center justify-content-center">
         <a class="link" href="<?=base_url('home')?>">
             <span class="brand">Admin
                 <span class="brand-tip">CAST</span>

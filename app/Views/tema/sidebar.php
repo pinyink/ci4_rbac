@@ -1,7 +1,7 @@
 <!-- START SIDEBAR-->
 <nav class="page-sidebar" id="sidebar">
     <div id="sidebar-collapse">
-        <div class="admin-block">
+        <div class="admin-block d-flex align-items-center justify-content-center flex-column">
             <div>
                 <img src="<?= session('profil_image'); ?>" class="imgProfil img-circle admin-avatar" />
             </div>

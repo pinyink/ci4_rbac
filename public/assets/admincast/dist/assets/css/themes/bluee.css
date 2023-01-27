@@ -1,0 +1,10 @@
+.header {
+    background-color: rgb(2, 28, 224);
+    box-shadow: 0 2px 4px rgba(141, 5, 232, 0.08);
+    height: 40px;
+}
+
+.header .page-brand {
+    height: 60px;
+    background-color: rgb(2, 28, 224);
+}
