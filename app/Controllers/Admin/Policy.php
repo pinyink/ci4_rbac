@@ -11,6 +11,9 @@ use App\Models\Admin\UserModel;
 
 class Policy extends BaseController
 {
+    private $policyModel;
+    private $userModel;
+    
     public function __construct()
     {
         helper(['Permission_helper']);

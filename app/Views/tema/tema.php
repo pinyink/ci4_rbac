@@ -14,7 +14,7 @@
     <!-- PLUGINS STYLES-->
     <!-- THEME STYLES-->
     <link href="<?= base_url(); ?>/assets/admincast/dist/assets/css/main.min.css" rel="stylesheet" />
-    <link href="<?= base_url(); ?>/assets/admincast/dist/assets/css/themes/white-custom.css" rel="stylesheet" />
+    <link href="<?= base_url(); ?>/assets/admincast/dist/assets/css/themes/blue.css" rel="stylesheet" />
     <?= $this->renderSection('css'); ?>
     <!-- PAGE LEVEL STYLES-->
 </head>
