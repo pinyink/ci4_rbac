@@ -2034,8 +2034,8 @@ fieldset[disabled] .btn-yahoo:hover {
 }
 
 .ibox .ibox-head .ibox-title {
-    font-size: 16px;
-    font-weight: 600
+    font-size: 14px;
+    font-weight: 400
 }
 
 .ibox .ibox-head .ibox-title small {
@@ -2074,7 +2074,7 @@ fieldset[disabled] .btn-yahoo:hover {
 }
 
 .ibox .ibox-body {
-    padding: 15px 20px 20px 20px
+    padding: 15px 5px 10px 5px
 }
 
 .ibox .ibox-footer {
@@ -4680,7 +4680,7 @@ body.fixed-layout.sidebar-mini .content-wrapper {
     -ms-flex-align: center;
     align-items: center;
     padding: 10px 15px;
-    background-color: #fff
+    background-color: #fff;
 }
 
 .page-wrapper {

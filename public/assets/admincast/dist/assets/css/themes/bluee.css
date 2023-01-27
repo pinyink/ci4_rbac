@@ -94,9 +94,52 @@ body {
 }
 
 .ibox .ibox-head {
-    /* background-color: rgb(2, 28, 224);
-    color: #fff; */
+    background-color: rgb(2, 28, 224);
+    color: #fff;
     border-radius: 5px 5px 0 0;
     margin-right: -1px;
     margin-left: -1px;
+    height: 30px !important;
+}
+
+.ibox .ibox-head .ibox-tools>a {
+    color: #fff;
+}
+
+.ibox .ibox-body {
+    font-size: 12px;
+}
+
+.pagination .page-link {
+    color: inherit;
+}
+
+.pagination .page-link:focus,
+.pagination .page-link:hover {
+    color: rgb(2, 28, 224);
+}
+
+.pagination .active>a,
+.pagination .active>a:focus,
+.pagination .active>a:hover,
+.pagination .active>span,
+.pagination .active>span:focus,
+.pagination .active>span:hover,
+.pagination .page-item.active .page-link {
+    background-color: rgb(2, 28, 224);
+    border-color: rgb(2, 28, 224);
+    color: #fff
+}
+
+.page-footer {
+    border-top: 1px solid rgba(64, 86, 247, 0.28);
+}
+
+.to-top:hover {
+    background-color: rgb(2, 28, 224);
+}
+
+.to-top:hover i {
+    display: block;
+    color: #fff
 }
