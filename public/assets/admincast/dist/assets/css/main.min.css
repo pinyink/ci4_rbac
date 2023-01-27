@@ -2030,7 +2030,7 @@ fieldset[disabled] .btn-yahoo:hover {
     -webkit-align-items: center;
     -ms-flex-align: center;
     align-items: center;
-    height: 50px
+    min-height: 40px
 }
 
 .ibox .ibox-head .ibox-title {
@@ -4476,7 +4476,7 @@ a.text-danger:hover {
     min-height: 100%;
     position: absolute;
     top: 0;
-    margin-top: 50px;
+    margin-top: 61px;
     -webkit-transition: all .2s ease-in-out;
     -o-transition: all .2s ease-in-out;
     transition: all .2s ease-in-out;
@@ -4693,8 +4693,6 @@ body.fixed-layout.sidebar-mini .content-wrapper {
 .content-wrapper {
     position: relative;
     background-color: #f7f7f7;
-    background-color: #f2f2f2;
-    background-color: #f1f1f1;
     margin-left: 220px;
     padding: 0 15px 60px 15px;
     -webkit-transition: margin .2s ease-in-out;
@@ -4746,7 +4744,7 @@ body.fixed-layout.sidebar-mini .content-wrapper {
 }
 
 .page-heading .breadcrumb li+li:before {
-    content: '\002022';
+    content: '\0021d2';
     color: inherit
 }
 

@@ -1,3 +1,10 @@
+body {
+    overflow-x: hidden;
+    font-family: 'Open Sans', sans-serif;
+    background-color: #fff;
+    color: rgb(0, 1, 6, 0.90);
+}
+
 .header {
     background-color: rgb(2, 28, 224);
     box-shadow: 0 2px 4px rgba(141, 5, 232, 0.08);
@@ -7,4 +14,89 @@
 .header .page-brand {
     height: 60px;
     background-color: rgb(2, 28, 224);
+    border-radius: 0 0 10px 10px;
+}
+
+.header .flexbox .nav li a {
+    color: #fff;
+}
+
+.page-sidebar {
+    border-radius: 10px 10px 0 0;
+    background-color: rgb(2, 28, 224);
+    color: #fff;
+}
+
+.page-sidebar .admin-block {
+    border-radius: 0 0 10px 10px;
+    margin-bottom: 1px;
+}
+
+.side-menu>li a {
+    color: #fff
+}
+
+.side-menu>li a:focus,
+.side-menu>li a.active,
+.side-menu>li a:hover {
+    color: #fff;
+    background-color: rgba(64, 86, 247, 0.28);
+    border-radius: 0 15px 15px 0;
+}
+
+.side-menu>li.active {
+    background-color: rgba(64, 86, 247, 0.28);
+}
+
+.side-menu>li.active>a,
+.side-menu>li.active>a:hover {
+    color: #fff;
+    background-color: rgba(64, 86, 247, 0.28);
+}
+
+.side-menu>li.active>a:focus {
+    color: #fff;
+    background-color: rgb(2, 28, 224);
+}
+
+.side-menu li a.active {
+    color: #fff
+}
+
+.sidebar-mini .side-menu>li:hover>a {
+    background-color: rgb(2, 28, 224, 0.76);
+    color: #fff
+}
+
+.sidebar-mini .side-menu>li:hover .nav-2-level {
+    background-color: rgb(2, 28, 224);
+}
+
+.content-wrapper {
+    background-color: #fff;
+}
+
+.content-wrapper .page-heading .breadcrumb {
+    background-color: rgb(2, 28, 224, 0.76);
+    padding: 7px 0 7px 10px;
+}
+
+.content-wrapper .page-heading .breadcrumb li,
+.content-wrapper .page-heading .breadcrumb li a {
+    color: #fff;
+}
+
+.ibox {
+    background-color: #fff;
+    border: 1px solid rgba(64, 86, 247, 0.28);
+    border-radius: 5px;
+    box-shadow: none;
+}
+
+.ibox .ibox-head {
+    /* background-color: rgb(2, 28, 224);
+    color: #fff; */
+    border-radius: 5px 5px 0 0;
+    margin-right: -1px;
+    margin-left: -1px;
 }
