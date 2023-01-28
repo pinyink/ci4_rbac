@@ -38,6 +38,12 @@ $routes->post('/setting/profil/update', 'Profil::update', ['filter' => 'auth:N',
 $routes->post('/setting/profil/updateFoto', 'Profil::updateFoto', ['filter' => 'auth:N', 'namespace' => 'App\Controllers\Setting']);
 $routes->post('/setting/profil/updatePassword', 'Profil::updatePassword', ['filter' => 'auth:N', 'namespace' => 'App\Controllers\Setting']);
 
+$routes->group('crud', ['namespace' => 'App\Controllers', 'filter' => 'admin'], static function($routes) {
+    $routes->get('/', 'CrudController::index');
+    $routes->post('table', 'CrudController::table');
+    $routes->post('result', 'CrudController::result');
+});
+
 /**
  * Admin
  */

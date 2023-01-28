@@ -8,6 +8,8 @@ use App\Libraries\Tema;
 
 class User extends BaseController
 {
+    private $tema, $userModel;
+    
     public function __construct()
     {
         $this->tema = new Tema();
