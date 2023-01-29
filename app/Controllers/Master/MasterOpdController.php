@@ -38,7 +38,6 @@ class MasterOpdController extends BaseController
             $row[] = $action;
             $row[] = $no;
 			$row[] = $list->opd;
-			$row[] = number_format($list->deleted, 0, '.', ',');
             $data[] = $row;
         }
         $output = [
@@ -55,10 +54,53 @@ class MasterOpdController extends BaseController
         $masterOPDModel = new MasterOpdModel();
 
         $method = $this->request->getPost('method');
+        
+		$imgdeleted = $this->request->getFile('val_deleted');
+
+        $validation = [
+            'val_opd' => 'required',
+        ];
+
+        
+		if (!empty($_FILES['val_deleted']['name'])) {
+			$validation['val_deleted'] = 'uploaded[val_deleted]'
+			. '|is_image[val_deleted]'
+			. '|mime_in[val_deleted,image/jpg,image/jpeg,image/gif,image/png,image/webp]'
+			. '|max_size[val_deleted,2048]';
+		}
+        $validated = $this->validate($validation);
+        if ($validated === false) {
+            $errors = $this->validator->getErrors();
+            $message = '<ul>';
+            foreach ($errors as $key => $value) {
+                $message .= '<li>'.$value.'</li>';
+            }
+            
+			if (!empty($_FILES['val_deleted']['name'])) {
+				$type = $imgdeleted->getClientMimeType();
+				$message .= '<li>'.$imgdeleted->getErrorString() . '(' . $imgdeleted->getError() . ' Type File ' . $type . ' )</li>';
+			}
+            $message .= '</ul>';
+
+            $log['errorCode'] = 2;
+            $log['errorMessage'] = $message;
+            return $this->response->setJSON($log);
+        }
 
         $id = $this->request->getPost('id');
 		$data['opd'] = $this->request->getPost('val_opd');
-		$data['deleted'] = $this->request->getPost('val_deleted') == null ? null : str_replace('.', '', $this->request->getPost('val_deleted'));
+		if (!empty($_FILES['val_deleted']['name'])) {
+			$th = date('Y') . '/' . date('m');
+			$path = 'uploads//master/masteropd/';
+			$_dir = $path . $th;
+			$dir = ROOTPATH.'/public' . $path . $th;
+			if (!file_exists($dir)) {
+				mkdir($dir, 0777, true);
+			}
+			$newName = $imgdeleted->getRandomName();
+			$imgdeleted->move($dir, $newName);
+			$data['deleted'] = $_dir.'/'.$newName;
+		}
 
         if ($method == 'save') {
             $masterOPDModel->insert($data);

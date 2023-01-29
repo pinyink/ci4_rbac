@@ -40,7 +40,6 @@
                                     <th width="15%">Action</th>
                                     <th width="10%">No</th>
 									<th style="width: 37.5%">Nama OPD</th>
-									<th style="width: 37.5%">Deleted</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -70,11 +69,19 @@
                 <div class="modal-body">
 					<div class="form-group">
                         <?=form_label('Nama OPD');?>
-                        <?=form_input('val_opd', '', ['class' => 'form-control']);?>
+                        <?=form_input('val_opd', '', ['class' => 'form-control'], 'text');?>
                     </div>
 					<div class="form-group">
-                        <?=form_label('Deleted');?>
-                        <?=form_input('val_deleted', '', ['class' => 'form-control']);?>
+                        <?=form_label('Deleted ( jpg/png )', 'val_deleted');?>
+                        <?=form_upload('val_deleted', '', ['class' => 'form-control', 'id' => 'val_deleted', 'accept' => ".png,.jpg,.jpeg", 'onchange' => "readURL(this, 'img-preview-deleted');"]);?>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <img src="<?=base_url('theme/img/img-thumb.jpg') ?>" alt="" class="img img-thumbnail img-preview " id="img-preview-deleted" style="width: 100px; height: 100px;">
+                        </div>
+                        <div class="col-md-6">
+                            <img src="<?=base_url('theme/img/img-thumb.jpg') ?>" alt="" class="img img-thumbnail img-preview" id="img-old" style="width: 100px; height: 100px;">
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -130,14 +137,6 @@
     }
 
     $(document).ready(function () {
-		$('[name="val_opd"]').keyup(function(){
-			var str = $('[name="val_opd"]').val();
-			$('[name="val_opd"]').val(str.replace(/[^\d.-]/g, ""));
-		});
-			$('[name="val_deleted"]').keyup(function(){
-			var str = $('[name="val_deleted"]').val();
-			$('[name="val_deleted"]').val(formatRupiah(this.value, ''));
-		});
 	});
 
     function reset_form() {
@@ -169,7 +168,7 @@
                 $('#modalmasteropd .modal-title').text('Edit Data');
                 $('[name="id"]').val(response.id);
                 $('[name="val_opd"]').val(response.opd);
-				$('[name="val_deleted"]').val(formatRupiah(response.deleted));
+				$('[name="val_deleted"]').val(response.deleted);
 				
             }
         });
@@ -238,7 +237,7 @@
             },
 
 			val_deleted: {
-                required: true,
+                
 				maxlength: 11
             },
 
@@ -249,7 +248,7 @@
                 },
 
 				val_deleted: {
-                    required:'Deleted harus diisi',maxlength: 'Deleted Tidak Boleh Lebih dari 11 Huruf'
+                    maxlength: 'Deleted Tidak Boleh Lebih dari 11 Huruf'
                 },
 
 

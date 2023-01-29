@@ -58,6 +58,8 @@ class CrudController extends BaseController
         $maxLength = $request->getPost('maxLength');
         $fieldAttrLabel =  $this->request->getPost('fieldAttrLabel');
         $fieldType = $this->request->getPost('fieldType');
+        $viewTable = $this->request->getPost('viewTable');
+        $fieldRequired = $this->request->getPost('fieldRequired');
 
         $dataSave = [
             'namespace' => $namespace,
@@ -74,7 +76,9 @@ class CrudController extends BaseController
             'fieldTableRemote' => $fieldTableRemote,
             'maxLength' => $maxLength,
             'fieldAttrLabel' => $fieldAttrLabel,
-            'fieldType' => $fieldType
+            'fieldType' => $fieldType,
+            'viewTable' => $viewTable,
+            'fieldRequired' => $fieldRequired
         ];
         $crudModel = new CrudModel();
         $findCrudTable = $crudModel->find($table);
@@ -110,7 +114,7 @@ $columnSearch = '';
 $allowedFields = '';
 $selectFields = '';
 $no = 1;
-foreach ($fieldTable as $key => $value) {
+foreach ($viewTable as $key => $value) {
     if ($no == 1) {
         $columnSearch .= "'a.".$value."'";
         $allowedFields .= "'".$value."'";
@@ -278,13 +282,35 @@ $functionExists .= "public function ".strtolower(str_replace("_", "", $value))."
 
         $rowFields = '';
         $fieldInserts = '';
-        foreach ($fieldTable as $key => $value) {
+        $fieldImg = '';
+        $formValidation = '';
+        $validationImg = '';
+        foreach ($viewTable as $key => $value) {
             if (in_array($fieldType[$key], ['rupiah'])) {
                 $rowFields .= "\n\t\t\t"."\$row[] = number_format(\$list->".$value.", 0, '.', ',');";
-                $fieldInserts .= "\n\t\t\$data['".$value."'] = \$this->request->getPost('val_".$value."') == null ? null : str_replace('.', '', \$this->request->getPost('val_".$value."'));";
             } else {
                 $rowFields .= "\n\t\t\t"."\$row[] = \$list->".$value.";";
+            }
+            
+        }
+        $validationRequired = '';
+        foreach ($fieldTable as $key => $value) {
+            if (in_array($fieldType[$key], ['rupiah'])) {
+                $fieldInserts .= "\n\t\t\$data['".$value."'] = \$this->request->getPost('val_".$value."') == null ? null : str_replace('.', '', \$this->request->getPost('val_".$value."'));";
+            } else if(in_array($fieldType[$key], ['image'])) {
+                $fieldImg .= "\n\t\t\$img".$value." = \$this->request->getFile('val_".$value."');";
+                
+                $formValidation .= "\n\t\tif (!empty(\$_FILES['val_".$value."']['name'])) {\n\t\t\t\$validation['val_".$value."'] = 'uploaded[val_".$value."]'\n\t\t\t. '|is_image[val_".$value."]'\n\t\t\t. '|mime_in[val_".$value.",image/jpg,image/jpeg,image/gif,image/png,image/webp]'\n\t\t\t. '|max_size[val_".$value.",2048]';\n\t\t}";
+
+                $validationImg .= "\n\t\t\tif (!empty(\$_FILES['val_".$value."']['name'])) {\n\t\t\t\t\$type = \$img".$value."->getClientMimeType();\n\t\t\t\t\$message .= '<li>'.\$img".$value."->getErrorString() . '(' . \$img".$value."->getError() . ' Type File ' . \$type . ' )</li>';\n\t\t\t}";
+
+                $fieldInserts .= "\n\t\tif (!empty(\$_FILES['val_".$value."']['name'])) {\n\t\t\t\$th = date('Y') . '/' . date('m');\n\t\t\t\$path = 'uploads/".$routeName."/';\n\t\t\t\$_dir = \$path . \$th;\n\t\t\t\$dir = ROOTPATH.'/public' . \$path . \$th;\n\t\t\tif (!file_exists(\$dir)) {\n\t\t\t\tmkdir(\$dir, 0777, true);\n\t\t\t}\n\t\t\t\$newName = \$img".$value."->getRandomName();\n\t\t\t\$img".$value."->move(\$dir, \$newName);\n\t\t\t\$data['".$value."'] = \$_dir.'/'.\$newName;\n\t\t}";
+            } else {
                 $fieldInserts .= "\n\t\t\$data['".$value."'] = \$this->request->getPost('val_".$value."');";
+            }
+
+            if (isset($fieldRequired[$key])) {
+                $validationRequired .= "'val_".$value."' => 'required',";
             }
         }
 
@@ -343,6 +369,27 @@ class ".$namaController." extends BaseController
         \$".$modelVariable." = new ".$namaModel."();
 
         \$method = \$this->request->getPost('method');
+        ".$fieldImg."
+
+        \$validation = [
+            ".$validationRequired."
+        ];
+
+        ".$formValidation."
+        \$validated = \$this->validate(\$validation);
+        if (\$validated === false) {
+            \$errors = \$this->validator->getErrors();
+            \$message = '<ul>';
+            foreach (\$errors as \$key => \$value) {
+                \$message .= '<li>'.\$value.'</li>';
+            }
+            ".$validationImg."
+            \$message .= '</ul>';
+
+            \$log['errorCode'] = 2;
+            \$log['errorMessage'] = \$message;
+            return \$this->response->setJSON(\$log);
+        }
 
         \$id = \$this->request->getPost('".$primaryKey."');".$fieldInserts."
 
@@ -397,7 +444,7 @@ class ".$namaController." extends BaseController
         $countfieldTable = count($fieldTable);
         $width = 75/$countfieldTable;
         $tableTh = '';
-        foreach ($fieldTable as $key => $value) {
+        foreach ($viewTable as $key => $value) {
             $tableTh .= "\n\t\t\t\t\t\t\t\t\t".'<th style="width: '.$width.'%">'.$fieldAlias[$key].'</th>';
         }
 
@@ -435,7 +482,21 @@ class ".$namaController." extends BaseController
                         @?=form_label('".$fieldAlias[$key].$attrLabel."');?@
                         @?=form_input('val_".$value."', '', ['class' => 'form-control']);?@
                     </div>";
-                $jsCustom .= "\n\t\t\t\$('[name=\"val_".$value."\"]').keyup(function(){\n\t\t\tvar str = $('[name=\"val_".$value."\"]').val();\n\t\t\t$('[name=\"val_".$value."\"]').val(formatRupiah(this.value, ''));\n\t\t});";
+                $jsCustom .= "\n\t\t\$('[name=\"val_".$value."\"]').keyup(function(){\n\t\t\tvar str = $('[name=\"val_".$value."\"]').val();\n\t\t\t$('[name=\"val_".$value."\"]').val(formatRupiah(this.value, ''));\n\t\t});";
+            }
+            if (in_array($fieldType[$key], ['image'])) {
+                $formData .= "\n\t\t\t\t\t<div class=\"form-group\">
+                        @?=form_label('".$fieldAlias[$key].$attrLabel."', 'val_".$value."');?@
+                        @?=form_upload('val_".$value."', '', ['class' => 'form-control', 'id' => 'val_".$value."', 'accept' => \".png,.jpg,.jpeg\", 'onchange' => \"readURL(this, 'img-preview-".$value."');\"]);?@
+                    </div>
+                    <div class=\"row\">
+                        <div class=\"col-md-6\">
+                            <img src=\"@?=base_url('theme/img/img-thumb.jpg') ?@\" alt=\"\" class=\"img img-thumbnail img-preview \" id=\"img-preview-".$value."\" style=\"width: 100px; height: 100px;\">
+                        </div>
+                        <div class=\"col-md-6\">
+                            <img src=\"@?=base_url('theme/img/img-thumb.jpg') ?@\" alt=\"\" class=\"img img-thumbnail img-preview\" id=\"img-old\" style=\"width: 100px; height: 100px;\">
+                        </div>
+                    </div>";
             }
         }
         $jqReady .= $jsCustom;
@@ -456,7 +517,7 @@ class ".$namaController." extends BaseController
             $remote = '';
             $remoteMessage = '';
             if (isset($fieldTableRemote[$key])) {
-$remote .= "\n\t\t\t\tremote: {
+            $remote .= "\n\t\t\t\tremote: {
                     url: \"@?=base_url('".$routeName."/".$value."_exist'); ?@\",
                     type: \"post\",
                     data: {
@@ -481,13 +542,20 @@ if (isset($maxLength[$key]) && $maxLength[$key] != null) {
     $formMaxLength .= "\n\t\t\t\tmaxlength: ".$maxLength[$key];
     $formMaxLengthMessages .= "maxlength: '".$fieldAlias[$key]." Tidak Boleh Lebih dari ".$maxLength[$key]." Huruf'";
 }
+
+$required = '';
+$messageRequired = '';
+if (isset($fieldRequired[$key])) {
+    $required = 'required: true,';
+    $messageRequired = "required:'".$fieldAlias[$key]." harus diisi',";
+}
 $formDataRules .= "\n\t\t\tval_".$value.": {
-                required: true,".$remote.$formMaxLength."
+                ".$required.$remote.$formMaxLength."
             },
 ";
 
 $formDataMessages .= "\n\t\t\t\tval_".$value.": {
-                    required:'".$fieldAlias[$key]." harus diisi',".$remoteMessage.$formMaxLengthMessages."
+                    ".$messageRequired.$remoteMessage.$formMaxLengthMessages."
                 },
 ";
         }

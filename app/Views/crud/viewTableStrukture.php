@@ -15,6 +15,8 @@
     $fieldTableRemote = isset($crudConfig->fieldTableRemote) ? (array) $crudConfig->fieldTableRemote : [];
     $fieldAttrLabel = isset($crudConfig->fieldAttrLabel) ? (array) $crudConfig->fieldAttrLabel : [];
     $fieldType = isset($crudConfig->fieldType) ? (array) $crudConfig->fieldType : [];
+    $viewTable = isset($crudConfig->viewTable) ? (array) $crudConfig->viewTable : [];
+    $fieldRequired = isset($crudConfig->fieldRequired) ? (array) $crudConfig->fieldRequired : [];
 ?>
 <div id="page-content-menu">
     <div class="page-heading">
@@ -151,6 +153,7 @@
                                 <th>Type</th>
                                 <th>Max Length</th>
                                 <th>Form Field</th>
+                                <th>Datatable</th>
                                 <th>Exist Keyword</th>
                             </tr>
                             <?php $no = 1; ?>
@@ -175,7 +178,8 @@
                                         'number' => 'number',
                                         'textarea' => 'textarea',
                                         'koordinate' => 'koordinate',
-                                        'rupiah' => 'rupiah'
+                                        'rupiah' => 'rupiah',
+                                        'image' => 'image'
                                     ], $type, ['class' => 'form-control'])?>
                                 </td>
                                 <td>
@@ -186,6 +190,18 @@
                                     <label for="fieldTable_<?=$no;?>">
                                         <input type="checkbox" id="fieldTable_<?=$no?>" name="fieldTable[<?=$no;?>]"
                                             value="<?=$value->name;?>" <?=isset($fieldTable[$no]) ? 'checked' : '';?>> <?=$value->name;?>
+                                    </label>
+                                </td>
+                                <td>
+                                    <label for="viewTable_<?=$no;?>">
+                                        <input type="checkbox" id="viewTable_<?=$no?>" name="viewTable[<?=$no;?>]"
+                                            value="<?=$value->name;?>" <?=isset($viewTable[$no]) ? 'checked' : '';?>> <?=$value->name;?>
+                                    </label>
+                                </td>
+                                <td>
+                                    <label for="fieldRequired_<?=$no;?>">
+                                        <input type="checkbox" id="fieldRequired_<?=$no?>" name="fieldRequired[<?=$no;?>]"
+                                            value="<?=$value->name;?>" <?=isset($fieldRequired[$no]) ? 'checked' : '';?>> <?=$value->name;?>
                                     </label>
                                 </td>
                                 <td>
