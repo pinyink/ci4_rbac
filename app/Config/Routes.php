@@ -76,3 +76,12 @@ $routes->post('admin/menu/tambahMenuAkses', 'Menu::tambahMenuAkses', ['filter' =
  */
 $routes->get('/menu_dua', 'Menu_dua::index', ['filter' => 'auth:N, 2, 1', 'namespace' => 'App\Controllers']);
 $routes->get('/menu_satu', 'Menu_satu::index', ['filter' => 'auth:N, 1, 1', 'namespace' => 'App\Controllers']);
+
+$routes->group('/master/masteropd', ['namespace' => 'App\Controllers\Master'], static function($routes) {
+    $routes->get('/', 'MasterOpdController::index', ['filter' => 'auth:Y,1,1']);
+    $routes->post('ajax_list', 'MasterOpdController::ajaxList', ['filter' => 'auth:N,1,1']);
+    $routes->post('save_data', 'MasterOpdController::saveData', ['filter' => 'auth:N,1,2']);
+    $routes->get('get_data/(:num)', 'MasterOpdController::getData/$1', ['filter' => 'auth:N,1,2']);
+    $routes->delete('delete_data/(:num)', 'MasterOpdController::deleteData/$1', ['filter' => 'auth:N,1,3']);
+	$routes->post('opd_exist', 'MasterOpdController::opdExist', ['filter' => 'auth:N,1,2']);
+});

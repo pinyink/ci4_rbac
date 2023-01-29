@@ -15,6 +15,7 @@
     <!-- THEME STYLES-->
     <link href="<?= base_url(); ?>/assets/admincast/dist/assets/css/main.min.css" rel="stylesheet" />
     <link href="<?= base_url(); ?>/assets/admincast/dist/assets/css/themes/bluee.css" rel="stylesheet" />
+    <link href="<?=base_url();?>/assets/admincast/dist/assets/vendors/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css">
     <?= $this->renderSection('css'); ?>
     <!-- PAGE LEVEL STYLES-->
 </head>
@@ -48,6 +49,7 @@
     <script src="<?= base_url(); ?>/assets/admincast/dist/assets/vendors/metisMenu/dist/metisMenu.min.js" type="text/javascript"></script>
     <script src="<?= base_url(); ?>/assets/admincast/dist/assets/vendors/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
     <!-- PAGE LEVEL PLUGINS-->
+    <script src="<?=base_url();?>/assets/admincast/dist/assets/vendors/sweetalert2/sweetalert2.min.js"></script>
     <!-- CORE SCRIPTS-->
     <script src="<?= base_url(); ?>/assets/admincast/dist/assets/js/app.min.js" type="text/javascript"></script>
     <script>

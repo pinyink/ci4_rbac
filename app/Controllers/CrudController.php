@@ -60,17 +60,19 @@ class CrudController extends BaseController
         $routeExistField = "";
         foreach ($fieldTable as $key => $value) {
             if (isset($fieldTableRemote[$key])) {
-                $routeExistField .= "\n\t#routes->post('".$value."_exist', '".$namaController."::".strtolower(str_replace('_', '', $value))."Exist', ['filter' => 'auth:N,".$rbac.",2']);";
+                $routeExistField .= "\n\t\$routes->post('".$value."_exist', '".$namaController."::".strtolower(str_replace('_', '', $value))."Exist', ['filter' => 'auth:N,".$rbac.",2']);";
             }
         }
 $route = "
-#routes->group('".$routeName."', ['namespace' => 'App\Controllers".$namespace."'], static function(#routes) {
-    #routes->get('/', '".$namaController."::index', ['filter' => 'auth:Y,".$rbac.",1']);
-    #routes->post('ajax_list', '".$namaController."::ajaxList', ['filter' => 'auth:N,".$rbac.",1']);
-    #routes->post('save_data', '".$namaController."::saveData', ['filter' => 'auth:N,".$rbac.",2']);
-    #routes->get('get_data/(:num)', '".$namaController."::getData/$1', ['filter' => 'auth:N,".$rbac.",2']);
-    #routes->delete('delete_data/(:num)', '".$namaController."::deleteData/$1', ['filter' => 'auth:N,".$rbac.",3']);".$routeExistField."
+\$routes->group('".$routeName."', ['namespace' => 'App\Controllers".$namespace."'], static function(\$routes) {
+    \$routes->get('/', '".$namaController."::index', ['filter' => 'auth:Y,".$rbac.",1']);
+    \$routes->post('ajax_list', '".$namaController."::ajaxList', ['filter' => 'auth:N,".$rbac.",1']);
+    \$routes->post('save_data', '".$namaController."::saveData', ['filter' => 'auth:N,".$rbac.",2']);
+    \$routes->get('get_data/(:num)', '".$namaController."::getData/$1', ['filter' => 'auth:N,".$rbac.",2']);
+    \$routes->delete('delete_data/(:num)', '".$namaController."::deleteData/$1', ['filter' => 'auth:N,".$rbac.",3']);".$routeExistField."
 });";
+
+    echo "<pre>".$route."</pre>";
 
 $namaModel = str_replace(' ', '', ucwords(strtolower($nama))).'Model';
 $columnSearch = '';
@@ -141,6 +143,7 @@ class ".$namaModel." extends Model
     public function setWhere(\$where = [])
     {
         \$this->where = \$where;
+    }
 
     public function setRequest(\$request)
     {
@@ -207,57 +210,262 @@ class ".$namaModel." extends Model
 ";
     echo "<pre>".$model."</pre>";
 
-    $view = "
-@?= \$this->extend('default'); ?@ 
-@?=\$this->section('judul');?@
-".$nama."
-@?=\$this->endSection();?@
+    // controller
+    $modelVariable = '';
+        $_model = explode(" ", $nama);
+        $no = 0;
+        if (count($_model) == 0) {
+            $modelVariable = strtolower($_model[0]).'Model';
+        } else {
+            foreach ($_model as $key => $value) {
+                if ($no == 0) {
+                    $modelVariable .= strtolower($_model[0]);
+                } else {
+                    $modelVariable .= ucwords($_model[$no]);
+                }
+                $no++;
+            }
+            $modelVariable .= 'Model';
+        }
+
+        $functionExists = "";
+        foreach ($fieldTable as $key => $value) {
+            if (isset($fieldTableRemote[$key])) {
+$functionExists .= "public function ".strtolower(str_replace("_", "", $value))."Exist()
+    {
+        \$".$modelVariable." = new ".$namaModel."();
+        \$".$primaryKey." = \$this->request->getPost('".$primaryKey."');
+        \$".$value." = \$this->request->getPost('".$value."');
+        \$query = \$".$modelVariable."->where(['".$primaryKey." !=' => \$".$primaryKey.", '".$value."' => \$".$value."])->first();
+        if (!empty(\$query)) {
+            return \$this->response->setJSON(false);
+        }
+        return \$this->response->setJSON(true);
+    }";
+            }
+        }
+
+        $rowFields = '';
+        $fieldInserts = '';
+        foreach ($fieldTable as $key => $value) {
+            $rowFields .= "\n\t\t\t"."\$row[] = \$list->".$value.";";
+            $fieldInserts .= "\n\t\t\$data['".$value."'] = \$this->request->getPost('val_".$value."');";
+        }
+
+    $controller = "@?php
+
+namespace App\Controllers".$namespace.";
+
+use App\Controllers\BaseController;
+use App\Libraries\Tema;
+use App\Models".$namespace.'\\'.$namaModel.";
+
+class ".$namaController." extends BaseController
+{
+    private \$tema;
+
+    function __construct()
+    {
+        helper(['form']);
+        \$this->tema = new Tema();
+    }
+
+    public function index()
+    {
+        \$this->tema->loadTema('".$routeName."');
+    }
+
+    public function ajaxList()
+    {
+        \$".$modelVariable." = new ".$namaModel."();
+        \$".$modelVariable."->setRequest(\$this->request);
+        \$lists = \$".$modelVariable."->getDatatables();
+        \$data = [];
+        \$no = \$this->request->getPost(\"start\");
+        foreach (\$lists as \$list) {
+            \$no++;
+            \$row = [];
+            \$id = \$list->".$primaryKey.";
+            \$action = '<a href=\"javascript:;\" class=\"\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Edit Data\" onclick=\"edit_data('.\$id.')\"><i class=\"fa fa-edit\"></i></a><a href=\"javascript:;\" class=\"text-red ml-2\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Delete Data\" onclick=\"delete_data('.\$id.')\"><i class=\"fa fa-trash\"></i></a>';
+            
+            \$row[] = \$action;
+            \$row[] = \$no;".$rowFields."
+            \$data[] = \$row;
+        }
+        \$output = [
+                \"draw\" => \$this->request->getPost('draw'),
+                \"recordsTotal\" => \$".$modelVariable."->countAll(),
+                \"recordsFiltered\" => \$".$modelVariable."->countFiltered(),
+                \"data\" => \$data
+            ];
+        echo json_encode(\$output);
+    }
+
+    public function saveData()
+    {
+        \$".$modelVariable." = new ".$namaModel."();
+
+        \$method = \$this->request->getPost('method');
+
+        \$id = \$this->request->getPost('".$primaryKey."');".$fieldInserts."
+
+        if (\$method == 'save') {
+            \$".$modelVariable."->insert(\$data);
+            \$log['errorCode'] = 1;
+            \$log['errorMessage'] = 'Simpan Data Berhasil';
+            \$log['errorType'] = 'success';
+            return \$this->response->setJSON(\$log);
+        } else {
+            \$".$modelVariable."->update(\$id, \$data);
+            \$log['errorCode'] = 1;
+            \$log['errorMessage'] = 'Update Data Berhasil';
+            \$log['errorType'] = 'success';
+            return \$this->response->setJSON(\$log);
+        }
+    }
+
+    public function getData(\$id)
+    {
+        \$".$modelVariable." = new ".$namaModel."();
+        \$query = \$".$modelVariable."->find(\$id);
+        return \$this->response->setJSON(\$query);
+    }
+
+    public function deleteData(\$id)
+    {
+        \$".$modelVariable." = new ".$namaModel."();
+        \$query = \$".$modelVariable."->delete(\$id);
+        if (\$query) {
+            \$log['errorCode'] = 1;
+            \$log['errorMessage'] = 'Delete Data Berhasil';
+            \$log['errorType'] = 'success';
+            return \$this->response->setJSON(\$log);
+        } else {
+            \$log['errorCode'] = 2;
+            \$log['errorMessage'] = 'Delete Data Gagal';
+            \$log['errorType'] = 'warning';
+            return \$this->response->setJSON(\$log);
+        }
+    }
+
+    ".$functionExists."
+}
+";
+    echo "<pre>".$controller."</pre>";
+
+    // view
+
+    $breadCumb = ucwords(str_replace('\\', '', $namespace));
+    $viewBreadCumb = '';
+        $countfieldTable = count($fieldTable);
+        $width = 75/$countfieldTable;
+        $tableTh = '';
+        foreach ($fieldTable as $key => $value) {
+            $tableTh .= "\n\t\t\t\t\t\t\t\t\t".'<th style="width: '.$width.'%">'.$fieldAlias[$key].'</th>';
+        }
+
+        $formData = '';
+        foreach ($fieldTable as $key => $value) {
+$formData .= "\n\t\t\t\t\t<div class=\"form-group\">
+                        @?=form_label('".$fieldAlias[$key]."');?@
+                        @?=form_input('val_".$value."', '', ['class' => 'form-control']);?@
+                    </div>";
+        }
+
+        $editData = '';
+        foreach ($fieldTable as $key => $value) {
+            $editData .= "\$('[name=\"val_".$value."\"]').val(response.".$value.");\n\t\t\t\t";
+        }
+
+        $formDataRules = '';
+        $formDataMessages = "";
+        foreach ($fieldTable as $key => $value) {            
+            $remote = '';
+            $remoteMessage = '';
+            if (isset($fieldTableRemote[$key])) {
+$remote .= "\n\t\t\t\tremote: {
+                    url: \"@?=base_url('".$routeName."/".$value."_exist'); ?@\",
+                    type: \"post\",
+                    data: {
+                        ".$value.": function() {
+                            return \$('[name=\"val_".$value."\"]').val();
+                        },
+                        ".$primaryKey.": function() {
+                            return \$('[name=\"".$primaryKey."\"]').val();
+                        },
+                        csrf_test_name: function() {
+                            return \$('meta[name=X-CSRF-TOKEN]').attr(\"content\");
+                        },
+                    },
+                },
+";
+
+$remoteMessage = "remote: '".$fieldAlias[$key]." sudah Ada, Tidak bisa di Input',";
+            }
+$formMaxLength = '';
+$formMaxLengthMessages = '';
+if (isset($maxLength[$key]) && $maxLength[$key] != null) {
+    $formMaxLength .= "\n\t\t\t\tmaxlength: ".$maxLength[$key];
+    $formMaxLengthMessages .= "maxlength: '".$fieldAlias[$key]." Tidak Boleh Lebih dari ".$maxLength[$key]." Huruf'";
+}
+$formDataRules .= "\n\t\t\tval_".$value.": {
+                required: true,".$remote.$formMaxLength."
+            },
+";
+
+$formDataMessages .= "\n\t\t\t\tval_".$value.": {
+                    required:'".$fieldAlias[$key]." harus diisi',".$remoteMessage.$formMaxLengthMessages."
+                },
+";
+        }
+
+$view = "
+@?= \$this->extend('tema/tema'); ?@ 
 @?=\$this->section('css');?@
 <!-- Data Table CSS -->
-<link href=\"@?=base_url();?@/vendors/datatables.net-dt/css/jquery.dataTables.min.css\" rel=\"stylesheet\" type=\"text/css\" />
+<link href=\"@?=base_url();?@/assets/alertifyjs/css/alertify.min.css\" rel=\"stylesheet\" type=\"text/css\" />
+<link href=\"@?=base_url();?@/assets/alertifyjs/css/themes/bootstrap.min.css\" rel=\"stylesheet\" type=\"text/css\" />
+<link href=\"@?=base_url();?@/assets/admincast/dist/assets/vendors/DataTables/datatables.min.css\" rel=\"stylesheet\" type=\"text/css\" />
 @?=\$this->endSection();?@
-@?=\$this->section('breadcrumb');?@
-<li class=\"breadcrumb-item\"><a href=\"javascript:;\">".$breadCumb."</a></li>
-<li class=\"breadcrumb-item active\"><a href=\"javascript:;\">".ucwords($nama)."</a></li>
-@?=\$this->endSection();?@
+
 @?=\$this->section('content'); ?@
+<div class=\"page-heading\">
+    <h1 class=\"page-title\">Admin</h1>
+    <ol class=\"breadcrumb\">
+        <li class=\"breadcrumb-item\">
+            <a href=\"@?=base_url('home');?@\"><i class=\"fa fa-home font-20\"></i></a>
+        </li>
+        <li class=\"breadcrumb-item\">".$breadCumb."</li>
+        <li class=\"breadcrumb-item\">".ucwords($nama)."</li>
+    </ol>
+</div>
+
 <!-- Container -->
-<div class=\"container-fluid\">
+<div class=\"page-content fade-in-up\">
     <!-- Row -->
     <div class=\"row\">
         <div class=\"col-xl-12 col-lg-12 col-md-12\">
-            <div class=\"hk-row\">
-                <div class=\"col-lg-12 col-md-12 col-sm-12 col-xs-12\">
-                    <div class=\"card card-refresh\" id=\"card".$url."\">
-                        <div class=\"refresh-container\">
-                            <div class=\"loader-pendulums\"></div>
-                        </div>
-                        <div class=\"card-header card-header-action\">
-                            <div>
-                                <h5 class=\"hk-sec-title\">Data ".$nama."</h5>
-                            </div>
-                            <div class=\"card-action-wrap\">
-                                <a onclick=\"reload_table()\" class=\"refresh\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"reload data\"><i class=\"ion ion-md-refresh\"></i></a>
-                                <a class=\"\" onclick=\"tambah_data()\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"tambah data\"><i class=\"ion ion-md-add\"></i></a>
-                            </div>
-                        </div>
-                        <div class=\"card-body\">
-                            <div class=\"\">
-                                <div class=\"table-wrap table-responsive\">
-                                    <table id=\"datable_1\" class=\"table table-striped w-100 display pb-30\">
-                                        <thead>
-                                            <tr>
-                                                <th width=\"15%\">Action</th>
-                                                <th width=\"10%\">No</th>".$tableTh."
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
+            <div class=\"ibox\">
+                <div class=\"ibox-head\">
+                    <div class=\"ibox-title\">Data ".$nama."</div>
+                    <div class=\"ibox-tools\">
+                        <a onclick=\"reload_table()\" class=\"refresh\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"reload data\"><i class=\"fa fa-refresh\"></i></a>
+                        <a class=\"\" onclick=\"tambah_data()\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"tambah data\"><i class=\"fa fa-plus-square\"></i></a>
+                    </div>
+                </div>
+                <div class=\"ibox-body\">
+                    <div class=\"table-responsive\">
+                        <table id=\"datatable\" class=\"table table-striped table-bordered table-hover\">
+                            <thead>
+                                <tr>
+                                    <th width=\"15%\">Action</th>
+                                    <th width=\"10%\">No</th>".$tableTh."
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -290,16 +498,15 @@ class ".$namaModel." extends Model
 </div>
 @?=\$this->endSection();?@
 @?=\$this->section('js');?@
-<script src=\"@?=base_url(); ?@/vendors/jquery-validation/dist/jquery.validate.min.js\" type=\"text/javascript\"> </script>
-<script src=\"@?=base_url();?@/vendors/datatables.net/js/jquery.dataTables.min.js\"> </script>
-<script src=\"@?=base_url();?@/vendors/datatables.net-bs4/js/dataTables.bootstrap4.min.js\"> </script>
-<script src=\"@?=base_url();?@/vendors/datatables.net-dt/js/dataTables.dataTables.min.js\"> </script>
+<script src=\"@?=base_url(); ?@/assets/alertifyjs/alertify.min.js\" type=\"text/javascript\"> </script>
+<script src=\"@?=base_url(); ?@/assets/admincast/dist/assets/vendors/jquery-validation/dist/jquery.validate.min.js\" type=\"text/javascript\"> </script>
+<script src=\"@?=base_url(); ?@/assets/admincast/dist/assets/vendors/DataTables/datatables.min.js\" type=\"text/javascript\"> </script>
+
 <script>
-    var data_table = data_csrf;
     var table;
     var save_method;
     \$(document).ready(function () {
-        table = \$('#datable_1').DataTable({
+        table = \$('#datatable').DataTable({
                     scrollCollapse: true,
                     responsive: true,
                     autoWidth: false,
@@ -314,7 +521,9 @@ class ".$namaModel." extends Model
                             'X-Requested-With': 'XMLHttpRequest'
                         },
                         \"type\": \"POST\",
-                        \"data\": data_table,
+                        \"data\": function(data) {
+                            data.token = $('meta[name=TOKEN]').attr(\"content\");
+                        },
                         error: function(jqXHR, textStatus, errorThrown) {
                             console.log(jqXHR.responseText);
                         }
@@ -416,7 +625,6 @@ class ".$namaModel." extends Model
                 \$(e).closest(\".form-control\").removeClass(\"is-invalid\").addClass(\"is-valid\");
             },
             submitHandler: function() {
-                startLoading('card".$url."');
                 var url = \"@?=base_url('".$routeName."/save_data');?@\";
                 \$.ajax({
                     type: \"POST\",
@@ -425,13 +633,15 @@ class ".$namaModel." extends Model
                     dataType: \"JSON\",
                     success: function (response) {
                         if(response.errorCode == 1) {
-                            toast_success(response.errorMessage);
+                            alertify.set('notifier', 'position', 'top-right');
+                            alertify.notify('<span><i class=\"fa fa-bell\"></i> ' + response.errorMessage + '</span>', response.errorType, 5, function() {
+                                console.log('dismissed');
+                            });
                             reload_table();
                             \$('#modal".$url."').modal('hide');
                         } else {
                             toast_error(response.errorMessage);
                         }
-                        stopLoading('card".$url."');
                     },
                     error: function(jqXHR){
                         console.log(jqXHR.responseText);
@@ -443,5 +653,54 @@ class ".$namaModel." extends Model
 </script>
 @?=\$this->endSection();?@
 ";
+    echo "<pre>".$view."</pre>";
+
+    // created Controller
+    if (!file_exists(ROOTPATH.'App\Controllers'.$namespace)) {
+        mkdir(ROOTPATH.'App\Controllers'.$namespace, 7775);
+    }
+    $pathController = ROOTPATH.'App\Controllers'.$namespace.'\\'.$namaController.'.php';
+    $controller = str_replace('@?', '<?', $controller);
+    // if (!file_exists($pathController)) {
+    //     self::createFile($controller, $pathController);
+    // } else {
+    //     echo "File Sudah Ada";
+    // }
+    self::createFile($controller, $pathController);
+    
+
+    if (!file_exists(ROOTPATH.'App\Models'.$namespace)) {
+        mkdir(ROOTPATH.'App\Models'.$namespace, 775);
+    }
+    $pathModel = ROOTPATH.'App\Models'.$namespace.'\\'.$namaModel.'.php';
+    $model = str_replace('@?', '<?', $model);
+    // if (!file_exists($pathModel)) {
+    //     self::createFile($model, $pathModel);
+    // } else {
+    //     echo "File Sudah Ada";
+    // }
+    self::createFile($model, $pathModel);
+
+    if (!file_exists(ROOTPATH.'App\Views'.strtolower($namespace))) {
+        mkdir(ROOTPATH.'App\Views'.strtolower($namespace), 775);
+    }
+    $pathView = ROOTPATH.'App\Views'.strtolower($namespace)."\\".str_replace(' ', '', strtolower($nama)).".php";
+    $view = str_replace('@?', '<?', $view);
+    $view = str_replace('?@', '?>', $view);
+    // if (!file_exists($pathView)) {
+    //     self::createFile($view, $pathView);
+    // } else {
+    //     echo "File Sudah Ada";
+    // }
+    self::createFile($view, $pathView);
+    }
+
+    function createFile($string, $path)
+    {
+        $create = fopen($path, "w") or die("Change your permision folder for application and harviacode folder to 777");
+        fwrite($create, $string);
+        fclose($create);
+        
+        return $path;
     }
 }

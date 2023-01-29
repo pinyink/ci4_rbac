@@ -110,6 +110,10 @@ body {
     font-size: 12px;
 }
 
+.ibox .ibox-body .table {
+    font-size: 11px;
+}
+
 .pagination .page-link {
     color: inherit;
 }
@@ -144,7 +148,27 @@ body {
     color: #fff
 }
 
+.modal .modal-dialog .modal-content .modal-header {
+    height: 42px;
+    background-color: rgb(2, 28, 224);
+}
+
+.modal .modal-dialog .modal-content .modal-header .modal-title {
+    font-size: 12pt;
+    color: #fff;
+}
+
+.modal .modal-dialog .modal-content .modal-header button {
+    font-size: 12pt;
+    color: #fff;
+}
+
 .btn-primary {
     background-color: rgb(2, 28, 224);
     color: #fff;   
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: rgba(64, 86, 247, 0.90);
 }
