@@ -13,13 +13,15 @@
     $maxLength = isset($crudConfig->maxLength) ? (array) $crudConfig->maxLength : [];
     $fieldTable = isset($crudConfig->fieldTable) ? (array) $crudConfig->fieldTable : [];
     $fieldTableRemote = isset($crudConfig->fieldTableRemote) ? (array) $crudConfig->fieldTableRemote : [];
+    $fieldAttrLabel = isset($crudConfig->fieldAttrLabel) ? (array) $crudConfig->fieldAttrLabel : [];
+    $fieldType = isset($crudConfig->fieldType) ? (array) $crudConfig->fieldType : [];
 ?>
 <div id="page-content-menu">
     <div class="page-heading">
         <h1 class="page-title">Crud Generator</h1>
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
-                <a href="index.html"><i class="fa fa-home font-20"></i></a>
+                <a href="<?=base_url('home');?>"><i class="fa fa-home font-20"></i></a>
             </li>
             <li class="breadcrumb-item">Admin</li>
             <li class="breadcrumb-item">Crud</li>
@@ -145,6 +147,8 @@
                             <tr>
                                 <th>Nama Filed</th>
                                 <th>Alias Field</th>
+                                <th>ATtr</th>
+                                <th>Type</th>
                                 <th>Max Length</th>
                                 <th>Form Field</th>
                                 <th>Exist Keyword</th>
@@ -159,6 +163,20 @@
                                 <td>
                                     <input type="text" class="form-control" name="fieldAlias[<?=$no;?>]"
                                         value="<?=isset($fieldAlias[$no]) ? $fieldAlias[$no] : ucwords(str_replace('_', ' ', str_replace($table.'_', '', $value->name)))?>">
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" name="fieldAttrLabel[<?=$no;?>]"
+                                        value="<?=isset($fieldAttrLabel[$no]) ? $fieldAttrLabel[$no] : '';?>">
+                                </td>
+                                <td>
+                                    <?php $type = isset($fieldType[$no]) ? $fieldType[$no] : '';?>
+                                    <?=form_dropdown('fieldType['.$no.']', [
+                                        'text' => 'text',
+                                        'number' => 'number',
+                                        'textarea' => 'textarea',
+                                        'koordinate' => 'koordinate',
+                                        'rupiah' => 'rupiah'
+                                    ], $type, ['class' => 'form-control'])?>
                                 </td>
                                 <td>
                                     <input type="text" class="form-control" name="maxLength[<?=$no;?>]"

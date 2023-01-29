@@ -14,7 +14,7 @@ class MasterOpdModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = true;
     protected $protectFields    = true;
-    protected $allowedFields    = ['opd'];
+    protected $allowedFields    = ['opd', 'deleted'];
 
     // Dates
     protected $useTimestamps = true;
@@ -39,8 +39,8 @@ class MasterOpdModel extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
-    public $column_order  = array(null, null, 'a.opd');
-    public $column_search = array('a.opd');
+    public $column_order  = array(null, null, 'a.opd', 'a.deleted');
+    public $column_search = array('a.opd', 'a.deleted');
     public $order         = array('a.opd' => 'asc');
 
     private $request = '';
@@ -64,7 +64,7 @@ class MasterOpdModel extends Model
 
     private function _getDatatablesQuery()
     {
-        $this->dt->select('a.id, a.opd');
+        $this->dt->select('a.id, a.opd, a.deleted');
         $this->dt->where($this->deletedField, null);
         $this->dt->where($this->where);
         $i = 0;

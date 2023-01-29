@@ -56,6 +56,8 @@ class CrudController extends BaseController
         $fieldAlias = $request->getPost('fieldAlias');
         $fieldTableRemote = $request->getPost('fieldTableRemote');
         $maxLength = $request->getPost('maxLength');
+        $fieldAttrLabel =  $this->request->getPost('fieldAttrLabel');
+        $fieldType = $this->request->getPost('fieldType');
 
         $dataSave = [
             'namespace' => $namespace,
@@ -70,7 +72,9 @@ class CrudController extends BaseController
             'fieldTable' => $fieldTable,
             'fieldAlias' => $fieldAlias,
             'fieldTableRemote' => $fieldTableRemote,
-            'maxLength' => $maxLength
+            'maxLength' => $maxLength,
+            'fieldAttrLabel' => $fieldAttrLabel,
+            'fieldType' => $fieldType
         ];
         $crudModel = new CrudModel();
         $findCrudTable = $crudModel->find($table);
@@ -275,8 +279,13 @@ $functionExists .= "public function ".strtolower(str_replace("_", "", $value))."
         $rowFields = '';
         $fieldInserts = '';
         foreach ($fieldTable as $key => $value) {
-            $rowFields .= "\n\t\t\t"."\$row[] = \$list->".$value.";";
-            $fieldInserts .= "\n\t\t\$data['".$value."'] = \$this->request->getPost('val_".$value."');";
+            if (in_array($fieldType[$key], ['rupiah'])) {
+                $rowFields .= "\n\t\t\t"."\$row[] = number_format(\$list->".$value.", 0, '.', ',');";
+                $fieldInserts .= "\n\t\t\$data['".$value."'] = \$this->request->getPost('val_".$value."') == null ? null : str_replace('.', '', \$this->request->getPost('val_".$value."'));";
+            } else {
+                $rowFields .= "\n\t\t\t"."\$row[] = \$list->".$value.";";
+                $fieldInserts .= "\n\t\t\$data['".$value."'] = \$this->request->getPost('val_".$value."');";
+            }
         }
 
     $controller = "@?php
@@ -299,6 +308,7 @@ class ".$namaController." extends BaseController
 
     public function index()
     {
+        \$this->tema->setJudul('".$nama."');
         \$this->tema->loadTema('".$routeName."');
     }
 
@@ -392,16 +402,52 @@ class ".$namaController." extends BaseController
         }
 
         $formData = '';
+        $attrLabel = '';
+        $jsCustom = '';
+        $jqReady = "\$(document).ready(function () {";
         foreach ($fieldTable as $key => $value) {
-$formData .= "\n\t\t\t\t\t<div class=\"form-group\">
-                        @?=form_label('".$fieldAlias[$key]."');?@
+            if (isset($fieldAttrLabel[$key]) && $fieldAttrLabel[$key] != null) {
+                $attrLabel = ' ( '.$fieldAttrLabel[$key].' )';
+            }
+
+            if (in_array($fieldType[$key], ['text', 'number'])) {
+                $formData .= "\n\t\t\t\t\t<div class=\"form-group\">
+                        @?=form_label('".$fieldAlias[$key].$attrLabel."');?@
+                        @?=form_input('val_".$value."', '', ['class' => 'form-control'], '".$fieldType[$key]."');?@
+                    </div>";
+            }
+            if (in_array($fieldType[$key], ['textarea'])) {
+                $formData .= "\n\t\t\t\t\t<div class=\"form-group\">
+                        @?=form_label('".$fieldAlias[$key].$attrLabel."');?@
+                        @?=form_textarea('val_".$value."', '', ['class' => 'form-control', 'rows' => 3]);?@
+                    </div>";
+            }
+            if (in_array($fieldType[$key], ['koordinate'])) {
+                $formData .= "\n\t\t\t\t\t<div class=\"form-group\">
+                        @?=form_label('".$fieldAlias[$key].$attrLabel."');?@
                         @?=form_input('val_".$value."', '', ['class' => 'form-control']);?@
                     </div>";
+                    
+                    $jsCustom .= "\n\t\t\$('[name=\"val_".$value."\"]').keyup(function(){\n\t\t\tvar str = $('[name=\"val_".$value."\"]').val();\n\t\t\t$('[name=\"val_".$value."\"]').val(str.replace(/[^\d.-]/g, \"\"));\n\t\t});";
+            }
+            if (in_array($fieldType[$key], ['rupiah'])) {
+                $formData .= "\n\t\t\t\t\t<div class=\"form-group\">
+                        @?=form_label('".$fieldAlias[$key].$attrLabel."');?@
+                        @?=form_input('val_".$value."', '', ['class' => 'form-control']);?@
+                    </div>";
+                $jsCustom .= "\n\t\t\t\$('[name=\"val_".$value."\"]').keyup(function(){\n\t\t\tvar str = $('[name=\"val_".$value."\"]').val();\n\t\t\t$('[name=\"val_".$value."\"]').val(formatRupiah(this.value, ''));\n\t\t});";
+            }
         }
+        $jqReady .= $jsCustom;
+        $jqReady .= "\n\t});";
 
         $editData = '';
         foreach ($fieldTable as $key => $value) {
-            $editData .= "\$('[name=\"val_".$value."\"]').val(response.".$value.");\n\t\t\t\t";
+            if (in_array($fieldType[$key], ['rupiah'])) {
+                $editData .= "\$('[name=\"val_".$value."\"]').val(formatRupiah(response.".$value."));\n\t\t\t\t";
+            } else {
+                $editData .= "\$('[name=\"val_".$value."\"]').val(response.".$value.");\n\t\t\t\t";
+            }
         }
 
         $formDataRules = '';
@@ -567,6 +613,8 @@ $view = "
         table.ajax.reload(null, false);
     }
 
+    ".$jqReady."
+
     function reset_form() {
         var MValid = \$(\"#form".$url."\");
         MValid[0].reset();
@@ -653,11 +701,15 @@ $view = "
             },
             submitHandler: function() {
                 var url = \"@?=base_url('".$routeName."/save_data');?@\";
+                var formData = new FormData($($('#form".$url."'))[0]);
                 \$.ajax({
                     type: \"POST\",
                     url: url,
-                    data: \$('#form".$url."').serialize(),
+                    data: formData,
                     dataType: \"JSON\",
+                    processData: false,
+                    contentType:false,
+                    cache : false,
                     success: function (response) {
                         if(response.errorCode == 1) {
                             alertify.set('notifier', 'position', 'top-right');

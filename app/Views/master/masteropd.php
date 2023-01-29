@@ -39,7 +39,8 @@
                                 <tr>
                                     <th width="15%">Action</th>
                                     <th width="10%">No</th>
-									<th style="width: 75%">Nama OPD</th>
+									<th style="width: 37.5%">Nama OPD</th>
+									<th style="width: 37.5%">Deleted</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -70,6 +71,10 @@
 					<div class="form-group">
                         <?=form_label('Nama OPD');?>
                         <?=form_input('val_opd', '', ['class' => 'form-control']);?>
+                    </div>
+					<div class="form-group">
+                        <?=form_label('Deleted');?>
+                        <?=form_input('val_deleted', '', ['class' => 'form-control']);?>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -124,6 +129,17 @@
         table.ajax.reload(null, false);
     }
 
+    $(document).ready(function () {
+		$('[name="val_opd"]').keyup(function(){
+			var str = $('[name="val_opd"]').val();
+			$('[name="val_opd"]').val(str.replace(/[^\d.-]/g, ""));
+		});
+			$('[name="val_deleted"]').keyup(function(){
+			var str = $('[name="val_deleted"]').val();
+			$('[name="val_deleted"]').val(formatRupiah(this.value, ''));
+		});
+	});
+
     function reset_form() {
         var MValid = $("#formmasteropd");
         MValid[0].reset();
@@ -153,6 +169,7 @@
                 $('#modalmasteropd .modal-title').text('Edit Data');
                 $('[name="id"]').val(response.id);
                 $('[name="val_opd"]').val(response.opd);
+				$('[name="val_deleted"]').val(formatRupiah(response.deleted));
 				
             }
         });
@@ -220,10 +237,19 @@
 				maxlength: 254
             },
 
+			val_deleted: {
+                required: true,
+				maxlength: 11
+            },
+
             },
             messages: {
 				val_opd: {
                     required:'Nama OPD harus diisi',remote: 'Nama OPD sudah Ada, Tidak bisa di Input',maxlength: 'Nama OPD Tidak Boleh Lebih dari 254 Huruf'
+                },
+
+				val_deleted: {
+                    required:'Deleted harus diisi',maxlength: 'Deleted Tidak Boleh Lebih dari 11 Huruf'
                 },
 
 
@@ -236,11 +262,15 @@
             },
             submitHandler: function() {
                 var url = "<?=base_url('/master/masteropd/save_data');?>";
+                var formData = new FormData($($('#formmasteropd'))[0]);
                 $.ajax({
                     type: "POST",
                     url: url,
-                    data: $('#formmasteropd').serialize(),
+                    data: formData,
                     dataType: "JSON",
+                    processData: false,
+                    contentType:false,
+                    cache : false,
                     success: function (response) {
                         if(response.errorCode == 1) {
                             alertify.set('notifier', 'position', 'top-right');

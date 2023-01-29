@@ -18,6 +18,7 @@ class MasterOpdController extends BaseController
 
     public function index()
     {
+        $this->tema->setJudul('Master OPD');
         $this->tema->loadTema('/master/masteropd');
     }
 
@@ -37,6 +38,7 @@ class MasterOpdController extends BaseController
             $row[] = $action;
             $row[] = $no;
 			$row[] = $list->opd;
+			$row[] = number_format($list->deleted, 0, '.', ',');
             $data[] = $row;
         }
         $output = [
@@ -56,6 +58,7 @@ class MasterOpdController extends BaseController
 
         $id = $this->request->getPost('id');
 		$data['opd'] = $this->request->getPost('val_opd');
+		$data['deleted'] = $this->request->getPost('val_deleted') == null ? null : str_replace('.', '', $this->request->getPost('val_deleted'));
 
         if ($method == 'save') {
             $masterOPDModel->insert($data);
