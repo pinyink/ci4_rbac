@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Libraries\Tema;
+use App\Models\CrudModel;
 
 class CrudController extends BaseController
 {
@@ -30,8 +31,11 @@ class CrudController extends BaseController
         $db = db_connect();
         $fields = $db->getFieldData($table);
 
+        $crudModel = new CrudModel();
+        $crudConfig = $crudModel->find($table);
+
         $tema = new Tema();
-        $tema->loadTema('crud/viewTableStrukture', ['table' => $table, 'fields' => $fields]);
+        $tema->loadTema('crud/viewTableStrukture', ['table' => $table, 'fields' => $fields, 'crudConfig' => $crudConfig]);
     }
 
     public function result()
@@ -52,6 +56,29 @@ class CrudController extends BaseController
         $fieldAlias = $request->getPost('fieldAlias');
         $fieldTableRemote = $request->getPost('fieldTableRemote');
         $maxLength = $request->getPost('maxLength');
+
+        $dataSave = [
+            'namespace' => $namespace,
+            'nama' => $nama,
+            'table' => $table,
+            'primaryKey' => $primaryKey,
+            'createdAt' => $createdAt,
+            'updatedAt' => $updatedAt,
+            'deletedAt' => $deletedAt,
+            'orderBy' => $orderBy,
+            'rbac' => $rbac,
+            'fieldTable' => $fieldTable,
+            'fieldAlias' => $fieldAlias,
+            'fieldTableRemote' => $fieldTableRemote,
+            'maxLength' => $maxLength
+        ];
+        $crudModel = new CrudModel();
+        $findCrudTable = $crudModel->find($table);
+        if (empty($findCrudTable)) {
+            $crudModel->insert(['crud_table' => $table, 'crud_config' => json_encode($dataSave)]);
+        } else {
+            $crudModel->update($table, ['crud_table' => $table, 'crud_config' => json_encode($dataSave)]);
+        }
 
         $namaController = str_replace(' ', '', ucwords(strtolower($nama))).'Controller';
         $url = str_replace(' ', '', strtolower($nama));

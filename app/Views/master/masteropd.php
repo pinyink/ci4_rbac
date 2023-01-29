@@ -39,7 +39,7 @@
                                 <tr>
                                     <th width="15%">Action</th>
                                     <th width="10%">No</th>
-									<th style="width: 75%">Opd</th>
+									<th style="width: 75%">Nama OPD</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -68,7 +68,7 @@
                 </div>
                 <div class="modal-body">
 					<div class="form-group">
-                        <?=form_label('Opd');?>
+                        <?=form_label('Nama OPD');?>
                         <?=form_input('val_opd', '', ['class' => 'form-control']);?>
                     </div>
                 </div>
@@ -223,7 +223,7 @@
             },
             messages: {
 				val_opd: {
-                    required:'Opd harus diisi',remote: 'Opd sudah Ada, Tidak bisa di Input',maxlength: 'Opd Tidak Boleh Lebih dari 254 Huruf'
+                    required:'Nama OPD harus diisi',remote: 'Nama OPD sudah Ada, Tidak bisa di Input',maxlength: 'Nama OPD Tidak Boleh Lebih dari 254 Huruf'
                 },
 
 
