@@ -154,6 +154,7 @@
                                 <th>Max Length</th>
                                 <th>Form Field</th>
                                 <th>Datatable</th>
+                                <th>Required</th>
                                 <th>Exist Keyword</th>
                             </tr>
                             <?php $no = 1; ?>

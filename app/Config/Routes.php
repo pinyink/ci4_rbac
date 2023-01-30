@@ -85,3 +85,11 @@ $routes->group('/master/masteropd', ['namespace' => 'App\Controllers\Master'], s
     $routes->delete('delete_data/(:num)', 'MasterOpdController::deleteData/$1', ['filter' => 'auth:N,1,3']);
 	$routes->post('opd_exist', 'MasterOpdController::opdExist', ['filter' => 'auth:N,1,2']);
 });
+
+$routes->group('/master/desa', ['namespace' => 'App\Controllers\Master'], static function($routes) {
+    $routes->get('/', 'DesaController::index', ['filter' => 'auth:Y,2,1']);
+    $routes->post('ajax_list', 'DesaController::ajaxList', ['filter' => 'auth:N,2,1']);
+    $routes->post('save_data', 'DesaController::saveData', ['filter' => 'auth:N,2,2']);
+    $routes->get('get_data/(:num)', 'DesaController::getData/$1', ['filter' => 'auth:N,2,2']);
+    $routes->delete('delete_data/(:num)', 'DesaController::deleteData/$1', ['filter' => 'auth:N,2,3']);
+});

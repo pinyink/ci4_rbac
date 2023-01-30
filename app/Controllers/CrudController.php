@@ -294,6 +294,8 @@ $functionExists .= "public function ".strtolower(str_replace("_", "", $value))."
             
         }
         $validationRequired = '';
+        $viewDetail = '';
+        $no = 1;
         foreach ($fieldTable as $key => $value) {
             if (in_array($fieldType[$key], ['rupiah'])) {
                 $fieldInserts .= "\n\t\t\$data['".$value."'] = \$this->request->getPost('val_".$value."') == null ? null : str_replace('.', '', \$this->request->getPost('val_".$value."'));";
@@ -304,14 +306,23 @@ $functionExists .= "public function ".strtolower(str_replace("_", "", $value))."
 
                 $validationImg .= "\n\t\t\tif (!empty(\$_FILES['val_".$value."']['name'])) {\n\t\t\t\t\$type = \$img".$value."->getClientMimeType();\n\t\t\t\t\$message .= '<li>'.\$img".$value."->getErrorString() . '(' . \$img".$value."->getError() . ' Type File ' . \$type . ' )</li>';\n\t\t\t}";
 
-                $fieldInserts .= "\n\t\tif (!empty(\$_FILES['val_".$value."']['name'])) {\n\t\t\t\$th = date('Y') . '/' . date('m');\n\t\t\t\$path = 'uploads/".$routeName."/';\n\t\t\t\$_dir = \$path . \$th;\n\t\t\t\$dir = ROOTPATH.'/public' . \$path . \$th;\n\t\t\tif (!file_exists(\$dir)) {\n\t\t\t\tmkdir(\$dir, 0777, true);\n\t\t\t}\n\t\t\t\$newName = \$img".$value."->getRandomName();\n\t\t\t\$img".$value."->move(\$dir, \$newName);\n\t\t\t\$data['".$value."'] = \$_dir.'/'.\$newName;\n\t\t}";
+                $fieldInserts .= "\n\t\tif (!empty(\$_FILES['val_".$value."']['name'])) {\n\t\t\t\$th = date('Y') . '/' . date('m').'/'.date('d');\n\t\t\t\$path = 'uploads".$routeName."/';\n\t\t\t\$_dir = \$path . \$th;\n\t\t\t\$dir = ROOTPATH.'/public' . \$path . \$th;\n\t\t\tif (!file_exists(\$dir)) {\n\t\t\t\tmkdir(\$dir, 0777, true);\n\t\t\t}\n\t\t\t\$newName = \$img".$value."->getRandomName();\n\t\t\t\$img".$value."->move(\$dir, \$newName);\n\t\t\t\$data['".$value."'] = \$_dir.'/'.\$newName;\n\t\t}";
             } else {
                 $fieldInserts .= "\n\t\t\$data['".$value."'] = \$this->request->getPost('val_".$value."');";
             }
 
+            // jika required
             if (isset($fieldRequired[$key])) {
                 $validationRequired .= "'val_".$value."' => 'required',";
             }
+
+            // view detail
+            if ($no == 1) {
+                $viewDetail .= $value;
+            } else {
+                $viewDetail .= ','.$value;
+            }
+            $no++;
         }
 
     $controller = "@?php
@@ -411,7 +422,7 @@ class ".$namaController." extends BaseController
     public function getData(\$id)
     {
         \$".$modelVariable." = new ".$namaModel."();
-        \$query = \$".$modelVariable."->find(\$id);
+        \$query = \$".$modelVariable."->select('".$viewDetail."')->find(\$id);
         return \$this->response->setJSON(\$query);
     }
 
