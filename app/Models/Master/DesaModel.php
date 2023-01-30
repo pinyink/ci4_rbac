@@ -14,7 +14,7 @@ class DesaModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = true;
     protected $protectFields    = true;
-    protected $allowedFields    = ['ds', 'kec', 'kab'];
+    protected $allowedFields    = ['ds', 'kec', 'kab', 'image'];
 
     // Dates
     protected $useTimestamps = true;

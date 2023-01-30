@@ -117,12 +117,20 @@ $no = 1;
 foreach ($viewTable as $key => $value) {
     if ($no == 1) {
         $columnSearch .= "'a.".$value."'";
-        $allowedFields .= "'".$value."'";
         $selectFields .= "a.".$value."";
     } else {
         $columnSearch .= ", 'a.".$value."'";
-        $allowedFields .= ", '".$value."'";
         $selectFields .= ", a.".$value."";
+    }
+    $no++;
+}
+// allowed field
+$no = 1;
+foreach ($fieldTable as $key => $value) {
+    if ($no == 1) {
+        $allowedFields .= "'".$value."'";
+    } else {
+        $allowedFields .= ", '".$value."'";
     }
     $no++;
 }
@@ -306,7 +314,7 @@ $functionExists .= "public function ".strtolower(str_replace("_", "", $value))."
 
                 $validationImg .= "\n\t\t\tif (!empty(\$_FILES['val_".$value."']['name'])) {\n\t\t\t\t\$type = \$img".$value."->getClientMimeType();\n\t\t\t\t\$message .= '<li>'.\$img".$value."->getErrorString() . '(' . \$img".$value."->getError() . ' Type File ' . \$type . ' )</li>';\n\t\t\t}";
 
-                $fieldInserts .= "\n\t\tif (!empty(\$_FILES['val_".$value."']['name'])) {\n\t\t\t\$th = date('Y') . '/' . date('m').'/'.date('d');\n\t\t\t\$path = 'uploads".$routeName."/';\n\t\t\t\$_dir = \$path . \$th;\n\t\t\t\$dir = ROOTPATH.'/public' . \$path . \$th;\n\t\t\tif (!file_exists(\$dir)) {\n\t\t\t\tmkdir(\$dir, 0777, true);\n\t\t\t}\n\t\t\t\$newName = \$img".$value."->getRandomName();\n\t\t\t\$img".$value."->move(\$dir, \$newName);\n\t\t\t\$data['".$value."'] = \$_dir.'/'.\$newName;\n\t\t}";
+                $fieldInserts .= "\n\t\tif (!empty(\$_FILES['val_".$value."']['name'])) {\n\t\t\t\$th = date('Y') . '/' . date('m').'/'.date('d');\n\t\t\t\$path = 'uploads".$routeName."/';\n\t\t\t\$_dir = \$path . \$th;\n\t\t\t\$dir = ROOTPATH.'public/' . \$path . \$th;\n\t\t\tif (!file_exists(\$dir)) {\n\t\t\t\tmkdir(\$dir, 0777, true);\n\t\t\t}\n\t\t\t\$newName = \$img".$value."->getRandomName();\n\t\t\t\$img".$value."->move(\$dir, \$newName);\n\t\t\t\$data['".$value."'] = \$_dir.'/'.\$newName;\n\t\t}";
             } else {
                 $fieldInserts .= "\n\t\t\$data['".$value."'] = \$this->request->getPost('val_".$value."');";
             }
@@ -318,9 +326,9 @@ $functionExists .= "public function ".strtolower(str_replace("_", "", $value))."
 
             // view detail
             if ($no == 1) {
-                $viewDetail .= $value;
+                $viewDetail .= $primaryKey.', '.$value;
             } else {
-                $viewDetail .= ','.$value;
+                $viewDetail .= ', '.$value;
             }
             $no++;
         }
@@ -502,10 +510,10 @@ class ".$namaController." extends BaseController
                     </div>
                     <div class=\"row\">
                         <div class=\"col-md-6\">
-                            <img src=\"@?=base_url('theme/img/img-thumb.jpg') ?@\" alt=\"\" class=\"img img-thumbnail img-preview \" id=\"img-preview-".$value."\" style=\"width: 100px; height: 100px;\">
+                            <img src=\"@?=base_url('assets/admincast/dist/assets/img/image.jpg') ?@\" alt=\"\" class=\"img img-thumbnail img-preview \" id=\"img-preview-".$value."\" style=\"width: 100px; height: 100px;\">
                         </div>
                         <div class=\"col-md-6\">
-                            <img src=\"@?=base_url('theme/img/img-thumb.jpg') ?@\" alt=\"\" class=\"img img-thumbnail img-preview\" id=\"img-old\" style=\"width: 100px; height: 100px;\">
+                            <img src=\"@?=base_url('assets/admincast/dist/assets/img/image.jpg') ?@\" alt=\"\" class=\"img img-thumbnail img-preview\" id=\"img-old-".$value."\" style=\"width: 100px; height: 100px;\">
                         </div>
                     </div>";
             }
@@ -517,6 +525,9 @@ class ".$namaController." extends BaseController
         foreach ($fieldTable as $key => $value) {
             if (in_array($fieldType[$key], ['rupiah'])) {
                 $editData .= "\$('[name=\"val_".$value."\"]').val(formatRupiah(response.".$value."));\n\t\t\t\t";
+            } else if (in_array($fieldType[$key], ['image'])) {
+                $editData .= "\$('#img-old-".$value."').attr('src', '@?=base_url('')?@/'+response.".$value.");\n\t\t\t\t";
+                $editData .= "\$('#img-preview-".$value."').attr('src', '@?=base_url('assets/admincast/dist/assets/img/image.jpg')?@');\n\t\t\t\t";
             } else {
                 $editData .= "\$('[name=\"val_".$value."\"]').val(response.".$value.");\n\t\t\t\t";
             }

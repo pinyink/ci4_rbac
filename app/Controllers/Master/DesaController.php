@@ -64,12 +64,12 @@ class DesaController extends BaseController
         ];
 
         
-		// if (!empty($_FILES['val_image']['name'])) {
+		if (!empty($_FILES['val_image']['name'])) {
 			$validation['val_image'] = 'uploaded[val_image]'
 			. '|is_image[val_image]'
 			. '|mime_in[val_image,image/jpg,image/jpeg,image/gif,image/png,image/webp]'
 			. '|max_size[val_image,2048]';
-		// }
+		}
         $validated = $this->validate($validation);
         if ($validated === false) {
             $errors = $this->validator->getErrors();
@@ -94,10 +94,10 @@ class DesaController extends BaseController
 		$data['kec'] = $this->request->getPost('val_kec');
 		$data['kab'] = $this->request->getPost('val_kab');
 		if (!empty($_FILES['val_image']['name'])) {
-			$th = date('Y') . '/' . date('m');
+			$th = date('Y') . '/' . date('m').'/'.date('d');
 			$path = 'uploads/master/desa/';
 			$_dir = $path . $th;
-			$dir = ROOTPATH.'/public' . $path . $th;
+			$dir = ROOTPATH.'public/' . $path . $th;
 			if (!file_exists($dir)) {
 				mkdir($dir, 0777, true);
 			}
@@ -124,7 +124,7 @@ class DesaController extends BaseController
     public function getData($id)
     {
         $desaModel = new DesaModel();
-        $query = $desaModel->select('ds,kec,kab,image')->find($id);
+        $query = $desaModel->select('id_desa, ds, kec, kab, image')->find($id);
         return $this->response->setJSON($query);
     }
 

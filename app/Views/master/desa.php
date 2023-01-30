@@ -87,10 +87,10 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                            <img src="<?=base_url('theme/img/img-thumb.jpg') ?>" alt="" class="img img-thumbnail img-preview " id="img-preview-image" style="width: 100px; height: 100px;">
+                            <img src="<?=base_url('assets/admincast/dist/assets/img/image.jpg') ?>" alt="" class="img img-thumbnail img-preview " id="img-preview-image" style="width: 100px; height: 100px;">
                         </div>
                         <div class="col-md-6">
-                            <img src="<?=base_url('theme/img/img-thumb.jpg') ?>" alt="" class="img img-thumbnail img-preview" id="img-old" style="width: 100px; height: 100px;">
+                            <img src="<?=base_url('assets/admincast/dist/assets/img/image.jpg') ?>" alt="" class="img img-thumbnail img-preview" id="img-old-image" style="width: 100px; height: 100px;">
                         </div>
                     </div>
                 </div>
@@ -180,7 +180,8 @@
                 $('[name="val_ds"]').val(response.ds);
 				$('[name="val_kec"]').val(response.kec);
 				$('[name="val_kab"]').val(response.kab);
-				$('[name="val_image"]').val(response.image);
+				$('#img-old-image').attr('src', '<?=base_url('')?>/'+response.image);
+				$('#img-preview-image').attr('src', '<?=base_url('assets/admincast/dist/assets/img/image.jpg')?>');
 				
             }
         });
