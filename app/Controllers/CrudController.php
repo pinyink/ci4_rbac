@@ -303,6 +303,7 @@ $functionExists .= "public function ".strtolower(str_replace("_", "", $value))."
         }
         $validationRequired = '';
         $viewDetail = '';
+        $viewArray = '';
         $no = 1;
         foreach ($fieldTable as $key => $value) {
             if (in_array($fieldType[$key], ['rupiah'])) {

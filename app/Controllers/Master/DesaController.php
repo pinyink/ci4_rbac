@@ -124,7 +124,15 @@ class DesaController extends BaseController
     public function getData($id)
     {
         $desaModel = new DesaModel();
-        $query = $desaModel->select('id_desa, ds, kec, kab, image')->find($id);
+        $query = $desaModel->select('id_desa, ds, kec, kab, image, AsText(the_geom) the_geom')->find($id);
+        $data = [
+            'id_desa' => $query['id_desa'],
+            'ds' => $query['ds'],
+            'kec' => $query['kec'],
+            'kab' => $query['kab'],
+            'image' => $query['image'],
+            'the_geom' => json_decode($query['the_geom'])
+        ];
         return $this->response->setJSON($query);
     }
 
