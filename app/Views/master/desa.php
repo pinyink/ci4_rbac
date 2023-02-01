@@ -162,9 +162,15 @@
 	});
     
 	function shpRequired() {
-		$('[name="the_geom"]').attr('required', 'true');
-		$('[name="the_geom_shx"]').attr('required', 'true');
-		$('[name="the_geom_dbf"]').attr('required', 'true');
+		$('[name="val_the_geom"]').attr('required', 'true');
+		$('[name="val_the_geom_shx"]').attr('required', 'true');
+		$('[name="val_the_geom_dbf"]').attr('required', 'true');
+	};
+
+	function resetShpRequired() {
+		$('[name="val_the_geom"]').removeAttr('required');
+		$('[name="val_the_geom_shx"]').removeAttr('required');
+		$('[name="val_the_geom_dbf"]').removeAttr('required');
 	};
 
     function reset_form() {
@@ -172,6 +178,7 @@
         MValid[0].reset();
         MValid.find(".is-invalid").removeClass("is-invalid");
         MValid.find(".is-valid").removeClass("is-valid");
+        resetShpRequired();
     }
 
     function tambah_data() {

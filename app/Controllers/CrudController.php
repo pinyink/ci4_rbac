@@ -304,6 +304,8 @@ $functionExists .= "public function ".strtolower(str_replace("_", "", $value))."
         $validationRequired = '';
         $viewDetail = '';
         $viewArray = '';
+        $useFunction = '';
+        $ifGeometryEmpty = '';
         $no = 1;
         foreach ($fieldTable as $key => $value) {
             if (in_array($fieldType[$key], ['rupiah'])) {
@@ -316,6 +318,8 @@ $functionExists .= "public function ".strtolower(str_replace("_", "", $value))."
                 $validationImg .= "\n\t\t\tif (!empty(\$_FILES['val_".$value."']['name'])) {\n\t\t\t\t\$type = \$img".$value."->getClientMimeType();\n\t\t\t\t\$message .= '<li>'.\$img".$value."->getErrorString() . '(' . \$img".$value."->getError() . ' Type File ' . \$type . ' )</li>';\n\t\t\t}";
 
                 $fieldInserts .= "\n\t\tif (!empty(\$_FILES['val_".$value."']['name'])) {\n\t\t\t\$th = date('Y') . '/' . date('m').'/'.date('d');\n\t\t\t\$path = 'uploads".$routeName."/';\n\t\t\t\$_dir = \$path . \$th;\n\t\t\t\$dir = ROOTPATH.'public/' . \$path . \$th;\n\t\t\tif (!file_exists(\$dir)) {\n\t\t\t\tmkdir(\$dir, 0777, true);\n\t\t\t}\n\t\t\t\$newName = \$img".$value."->getRandomName();\n\t\t\t\$img".$value."->move(\$dir, \$newName);\n\t\t\t\$data['".$value."'] = \$_dir.'/'.\$newName;\n\t\t}";
+            } else if(in_array($fieldType[$key], ['geometry'])) {
+                $fieldInserts .= "\n\t\tif (!empty(\$_FILES['val_".$value."']['name'])) {\n\t\t\t\$uniqId = uniqid();\n\t\t\t\$th = date('Y') . '/' . date('m').'/'.date('d').'/'.\$uniqId;\n\t\t\t\$path = 'uploads".$routeName."';\n\t\t\t\$_dir = \$path . \$th;\n\t\t\t\$dir = ROOTPATH.'public/' . \$path . \$th;\n\t\t\tif (!file_exists(\$dir)) {\n\t\t\t\tmkdir(\$dir, 0777, true);\n\t\t\t\t\$create = fopen(\$dir.'/index.php', \"w\") or die(\"Change your permision folder for application and harviacode folder to 777\");\n\t\t\t\tfwrite(\$create, '<h1>ACCESS DENIED</h1>');\n\t\t\t\tfclose(\$create);\n\t\t\t}\n\t\t\t\$fileShp = \$this->request->getFile('val_".$value."');\n\t\t\t\$fileShp->move(\$dir, \$uniqId.'.shp');\n\t\t\t\$fileShx = \$this->request->getFile('val_".$value."_shx');\n\t\t\t\$fileShx->move(\$dir, \$uniqId.'.shx');\n\t\t\t\$fileDbf = \$this->request->getFile('val_".$value."_dbf');\n\t\t\t\$fileDbf->move(\$dir, \$uniqId.'.dbf');\n\t\t\t\$Shapefile = new ShapefileReader(\$dir.'/'.\$uniqId.'.shp');\n\t\t\t\$jsonData = '';\n\t\t\twhile (\$Geometry = \$Shapefile->fetchRecord()) {\n\t\t\t\t\$jsonData = \$Geometry->getWKT();\n\t\t\t}\n\t\t\t\$data['".$value."'] = new RawSql(\"ST_GeomFromText('\".\$jsonData.\"')\");\n\t\t}";
             } else {
                 $fieldInserts .= "\n\t\t\$data['".$value."'] = \$this->request->getPost('val_".$value."');";
             }
@@ -332,12 +336,18 @@ $functionExists .= "public function ".strtolower(str_replace("_", "", $value))."
             } else if(in_array($fieldType[$key], ['image'])) {
 
             } else if(in_array($fieldType[$key], ['geometry'])) {
-                $_value = 'AsText('.$value.') as '.$value;
+                $_value = 'ST_AsGeoJson('.$value.') as '.$value;
+                $useFunction .= "use Shapefile\Shapefile;\nuse Shapefile\ShapefileException;\nuse Shapefile\ShapefileReader;";
             }
             if ($no == 1) {
                 $viewDetail .= $primaryKey.', '.$_value;
             } else {
                 $viewDetail .= ', '.$_value;
+            }
+
+            // if save empty
+            if(in_array($fieldType[$key], ['geometry'])) {
+                $ifGeometryEmpty = "\n\t\t\tif(!isset(\$data['".$value."'])){\n\t\t\t\t\$data['".$value."'] = new RawSql(\"ST_GeomFromText('POINT(0 0)')\");\n\t\t\t}";
             }
             $no++;
         }
@@ -348,7 +358,9 @@ namespace App\Controllers".$namespace.";
 
 use App\Controllers\BaseController;
 use App\Libraries\Tema;
+use CodeIgniter\Database\RawSql;
 use App\Models".$namespace.'\\'.$namaModel.";
+".$useFunction."
 
 class ".$namaController." extends BaseController
 {
@@ -421,7 +433,7 @@ class ".$namaController." extends BaseController
 
         \$id = \$this->request->getPost('".$primaryKey."');".$fieldInserts."
 
-        if (\$method == 'save') {
+        if (\$method == 'save') {".$ifGeometryEmpty."
             \$".$modelVariable."->insert(\$data);
             \$log['errorCode'] = 1;
             \$log['errorMessage'] = 'Simpan Data Berhasil';
@@ -480,6 +492,7 @@ class ".$namaController." extends BaseController
         $attrLabel = '';
         $jsCustom = '';
         $jqFungsi = '';
+        $jqReset = '';
         $jqReady = "\$(document).ready(function () {";
         foreach ($fieldTable as $key => $value) {
             if (isset($fieldAttrLabel[$key]) && $fieldAttrLabel[$key] != null) {
@@ -538,7 +551,9 @@ class ".$namaController." extends BaseController
                         @?=form_label('".$fieldAlias[$key].' ( dbf )'."');?@
                         @?=form_upload('val_".$value."_dbf', '', ['class' => 'form-control', 'accept' => '.dbf', 'onchange' => 'shpRequired()', 'onkeyup' => 'shpRequired()']);?@
                     </div>";
-                $jqFungsi .= "\n\tfunction shpRequired() {\n\t\t$('[name=\"".$value."\"]').attr('required', 'true');\n\t\t$('[name=\"".$value."_shx\"]').attr('required', 'true');\n\t\t$('[name=\"".$value."_dbf\"]').attr('required', 'true');\n\t};";
+                $jqFungsi .= "\n\tfunction shpRequired() {\n\t\t$('[name=\"val_".$value."\"]').attr('required', 'true');\n\t\t$('[name=\"val_".$value."_shx\"]').attr('required', 'true');\n\t\t$('[name=\"val_".$value."_dbf\"]').attr('required', 'true');\n\t};";
+                $jqFungsi .= "\n\n\tfunction resetShpRequired() {\n\t\t$('[name=\"val_".$value."\"]').removeAttr('required');\n\t\t$('[name=\"val_".$value."_shx\"]').removeAttr('required');\n\t\t$('[name=\"val_".$value."_dbf\"]').removeAttr('required');\n\t};";
+                $jqReset .= 'resetShpRequired();';
             }
         }
         $jqReady .= $jsCustom;
@@ -736,6 +751,7 @@ $view = "
         MValid[0].reset();
         MValid.find(\".is-invalid\").removeClass(\"is-invalid\");
         MValid.find(\".is-valid\").removeClass(\"is-valid\");
+        ".$jqReset."
     }
 
     function tambah_data() {

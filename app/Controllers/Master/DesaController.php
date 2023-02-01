@@ -4,7 +4,11 @@ namespace App\Controllers\Master;
 
 use App\Controllers\BaseController;
 use App\Libraries\Tema;
+use CodeIgniter\Database\RawSql;
 use App\Models\Master\DesaModel;
+use Shapefile\Shapefile;
+use Shapefile\ShapefileException;
+use Shapefile\ShapefileReader;
 
 class DesaController extends BaseController
 {
@@ -90,7 +94,31 @@ class DesaController extends BaseController
         }
 
         $id = $this->request->getPost('id_desa');
-		$data['the_geom'] = $this->request->getPost('val_the_geom');
+		if (!empty($_FILES['val_the_geom']['name'])) {
+			$uniqId = uniqid();
+			$th = date('Y') . '/' . date('m').'/'.date('d').'/'.$uniqId;
+			$path = 'uploads/master/desa';
+			$_dir = $path . $th;
+			$dir = ROOTPATH.'public/' . $path . $th;
+			if (!file_exists($dir)) {
+				mkdir($dir, 0777, true);
+				$create = fopen($dir.'/index.php', "w") or die("Change your permision folder for application and harviacode folder to 777");
+				fwrite($create, '<h1>ACCESS DENIED</h1>');
+				fclose($create);
+			}
+			$fileShp = $this->request->getFile('val_the_geom');
+			$fileShp->move($dir, $uniqId.'.shp');
+			$fileShx = $this->request->getFile('val_the_geom_shx');
+			$fileShx->move($dir, $uniqId.'.shx');
+			$fileDbf = $this->request->getFile('val_the_geom_dbf');
+			$fileDbf->move($dir, $uniqId.'.dbf');
+			$Shapefile = new ShapefileReader($dir.'/'.$uniqId.'.shp');
+			$jsonData = '';
+			while ($Geometry = $Shapefile->fetchRecord()) {
+				$jsonData = $Geometry->getWKT();
+			}
+			$data['the_geom'] = new RawSql("ST_GeomFromText('".$jsonData."')");
+		}
 		$data['ds'] = $this->request->getPost('val_ds');
 		$data['kec'] = $this->request->getPost('val_kec');
 		$data['kab'] = $this->request->getPost('val_kab');
@@ -108,6 +136,9 @@ class DesaController extends BaseController
 		}
 
         if ($method == 'save') {
+			if(!isset($data['the_geom'])){
+				$data['the_geom'] = new RawSql("ST_GeomFromText('POINT(0 0)')");
+			}
             $desaModel->insert($data);
             $log['errorCode'] = 1;
             $log['errorMessage'] = 'Simpan Data Berhasil';
@@ -125,7 +156,7 @@ class DesaController extends BaseController
     public function getData($id)
     {
         $desaModel = new DesaModel();
-        $query = $desaModel->select('id_desa, AsText(the_geom) as the_geom, ds, kec, kab, image')->find($id);
+        $query = $desaModel->select('id_desa, ST_AsGeoJson(the_geom) as the_geom, ds, kec, kab, image')->find($id);
         return $this->response->setJSON($query);
     }
 
