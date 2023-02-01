@@ -326,10 +326,18 @@ $functionExists .= "public function ".strtolower(str_replace("_", "", $value))."
             }
 
             // view detail
+            $_value = $value;
+            if (in_array($fieldType[$key], ['rupiah'])) {
+
+            } else if(in_array($fieldType[$key], ['image'])) {
+
+            } else if(in_array($fieldType[$key], ['geometry'])) {
+                $_value = 'AsText('.$value.') as '.$value;
+            }
             if ($no == 1) {
-                $viewDetail .= $primaryKey.', '.$value;
+                $viewDetail .= $primaryKey.', '.$_value;
             } else {
-                $viewDetail .= ', '.$value;
+                $viewDetail .= ', '.$_value;
             }
             $no++;
         }

@@ -180,7 +180,8 @@
                                         'textarea' => 'textarea',
                                         'koordinate' => 'koordinate',
                                         'rupiah' => 'rupiah',
-                                        'image' => 'image'
+                                        'image' => 'image',
+                                        'geometry' => 'geometry'
                                     ], $type, ['class' => 'form-control'])?>
                                 </td>
                                 <td>

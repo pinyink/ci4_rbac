@@ -39,9 +39,9 @@
                                 <tr>
                                     <th width="15%">Action</th>
                                     <th width="10%">No</th>
-									<th style="width: 18.75%">Ds</th>
-									<th style="width: 18.75%">Kec</th>
-									<th style="width: 18.75%">Kab</th>
+									<th style="width: 15%">Ds</th>
+									<th style="width: 15%">Kec</th>
+									<th style="width: 15%">Kab</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -177,7 +177,8 @@
                 $('#modaldesa').modal('show');
                 $('#modaldesa .modal-title').text('Edit Data');
                 $('[name="id_desa"]').val(response.id_desa);
-                $('[name="val_ds"]').val(response.ds);
+                $('[name="val_the_geom"]').val(response.the_geom);
+				$('[name="val_ds"]').val(response.ds);
 				$('[name="val_kec"]').val(response.kec);
 				$('[name="val_kab"]').val(response.kab);
 				$('#img-old-image').attr('src', '<?=base_url('')?>/'+response.image);
@@ -228,6 +229,10 @@
         $('#formdesa').validate({
             errorClass: "invalid-feedback",
             rules: {
+			val_the_geom: {
+                
+            },
+
 			val_ds: {
                 required: true,
 				maxlength: 25
@@ -250,6 +255,10 @@
 
             },
             messages: {
+				val_the_geom: {
+                    
+                },
+
 				val_ds: {
                     required:'Ds harus diisi',maxlength: 'Ds Tidak Boleh Lebih dari 25 Huruf'
                 },

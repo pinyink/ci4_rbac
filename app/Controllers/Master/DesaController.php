@@ -90,6 +90,7 @@ class DesaController extends BaseController
         }
 
         $id = $this->request->getPost('id_desa');
+		$data['the_geom'] = $this->request->getPost('val_the_geom');
 		$data['ds'] = $this->request->getPost('val_ds');
 		$data['kec'] = $this->request->getPost('val_kec');
 		$data['kab'] = $this->request->getPost('val_kab');
@@ -124,15 +125,7 @@ class DesaController extends BaseController
     public function getData($id)
     {
         $desaModel = new DesaModel();
-        $query = $desaModel->select('id_desa, ds, kec, kab, image, AsText(the_geom) the_geom')->find($id);
-        $data = [
-            'id_desa' => $query['id_desa'],
-            'ds' => $query['ds'],
-            'kec' => $query['kec'],
-            'kab' => $query['kab'],
-            'image' => $query['image'],
-            'the_geom' => json_decode($query['the_geom'])
-        ];
+        $query = $desaModel->select('id_desa, AsText(the_geom) as the_geom, ds, kec, kab, image')->find($id);
         return $this->response->setJSON($query);
     }
 
