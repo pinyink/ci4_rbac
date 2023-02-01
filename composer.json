@@ -10,7 +10,8 @@
 		"codeigniter4/framework": "^4",
 		"casbin/codeigniter-permission": "^1.0",
 		"mpdf/mpdf": "^8.1",
-		"phpoffice/phpspreadsheet": "^1.24"
+		"phpoffice/phpspreadsheet": "^1.24",
+		"gasparesganga/php-shapefile": "^3.4"
 	},
 	"require-dev": {
 		"fzaninotto/faker": "^1.9@dev",

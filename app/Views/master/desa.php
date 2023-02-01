@@ -70,6 +70,18 @@
                 </div>
                 <div class="modal-body">
 					<div class="form-group">
+                        <?=form_label('The Geom ( shp )');?>
+                        <?=form_upload('val_the_geom', '', ['class' => 'form-control', 'accept' => '.shp', 'onchange' => 'shpRequired()', 'onkeyup' => 'shpRequired()']);?>
+                    </div>
+					<div class="form-group">
+                        <?=form_label('The Geom ( shx )');?>
+                        <?=form_upload('val_the_geom_shx', '', ['class' => 'form-control', 'accept' => '.shx', 'onchange' => 'shpRequired()', 'onkeyup' => 'shpRequired()']);?>
+                    </div>
+					<div class="form-group">
+                        <?=form_label('The Geom ( dbf )');?>
+                        <?=form_upload('val_the_geom_dbf', '', ['class' => 'form-control', 'accept' => '.dbf', 'onchange' => 'shpRequired()', 'onkeyup' => 'shpRequired()']);?>
+                    </div>
+					<div class="form-group">
                         <?=form_label('Ds');?>
                         <?=form_input('val_ds', '', ['class' => 'form-control'], 'text');?>
                     </div>
@@ -148,6 +160,12 @@
 
     $(document).ready(function () {
 	});
+    
+	function shpRequired() {
+		$('[name="the_geom"]').attr('required', 'true');
+		$('[name="the_geom_shx"]').attr('required', 'true');
+		$('[name="the_geom_dbf"]').attr('required', 'true');
+	};
 
     function reset_form() {
         var MValid = $("#formdesa");
@@ -177,8 +195,7 @@
                 $('#modaldesa').modal('show');
                 $('#modaldesa .modal-title').text('Edit Data');
                 $('[name="id_desa"]').val(response.id_desa);
-                $('[name="val_the_geom"]').val(response.the_geom);
-				$('[name="val_ds"]').val(response.ds);
+                $('[name="val_ds"]').val(response.ds);
 				$('[name="val_kec"]').val(response.kec);
 				$('[name="val_kab"]').val(response.kab);
 				$('#img-old-image').attr('src', '<?=base_url('')?>/'+response.image);

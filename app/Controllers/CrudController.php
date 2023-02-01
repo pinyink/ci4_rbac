@@ -479,6 +479,7 @@ class ".$namaController." extends BaseController
         $formData = '';
         $attrLabel = '';
         $jsCustom = '';
+        $jqFungsi = '';
         $jqReady = "\$(document).ready(function () {";
         foreach ($fieldTable as $key => $value) {
             if (isset($fieldAttrLabel[$key]) && $fieldAttrLabel[$key] != null) {
@@ -526,6 +527,19 @@ class ".$namaController." extends BaseController
                         </div>
                     </div>";
             }
+            if (in_array($fieldType[$key], ['geometry'])) {
+                $formData .= "\n\t\t\t\t\t<div class=\"form-group\">
+                        @?=form_label('".$fieldAlias[$key].' ( shp )'."');?@
+                        @?=form_upload('val_".$value."', '', ['class' => 'form-control', 'accept' => '.shp', 'onchange' => 'shpRequired()', 'onkeyup' => 'shpRequired()']);?@
+                    </div>\n\t\t\t\t\t<div class=\"form-group\">
+                        @?=form_label('".$fieldAlias[$key].' ( shx )'."');?@
+                        @?=form_upload('val_".$value."_shx', '', ['class' => 'form-control', 'accept' => '.shx', 'onchange' => 'shpRequired()', 'onkeyup' => 'shpRequired()']);?@
+                    </div>\n\t\t\t\t\t<div class=\"form-group\">
+                        @?=form_label('".$fieldAlias[$key].' ( dbf )'."');?@
+                        @?=form_upload('val_".$value."_dbf', '', ['class' => 'form-control', 'accept' => '.dbf', 'onchange' => 'shpRequired()', 'onkeyup' => 'shpRequired()']);?@
+                    </div>";
+                $jqFungsi .= "\n\tfunction shpRequired() {\n\t\t$('[name=\"".$value."\"]').attr('required', 'true');\n\t\t$('[name=\"".$value."_shx\"]').attr('required', 'true');\n\t\t$('[name=\"".$value."_dbf\"]').attr('required', 'true');\n\t};";
+            }
         }
         $jqReady .= $jsCustom;
         $jqReady .= "\n\t});";
@@ -537,6 +551,8 @@ class ".$namaController." extends BaseController
             } else if (in_array($fieldType[$key], ['image'])) {
                 $editData .= "\$('#img-old-".$value."').attr('src', '@?=base_url('')?@/'+response.".$value.");\n\t\t\t\t";
                 $editData .= "\$('#img-preview-".$value."').attr('src', '@?=base_url('assets/admincast/dist/assets/img/image.jpg')?@');\n\t\t\t\t";
+            } else if (in_array($fieldType[$key], ['geometry'])) {
+
             } else {
                 $editData .= "\$('[name=\"val_".$value."\"]').val(response.".$value.");\n\t\t\t\t";
             }
@@ -713,6 +729,7 @@ $view = "
     }
 
     ".$jqReady."
+    ".$jqFungsi."
 
     function reset_form() {
         var MValid = \$(\"#form".$url."\");
