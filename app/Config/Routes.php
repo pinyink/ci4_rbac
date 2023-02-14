@@ -32,6 +32,7 @@ $routes->get('/home', 'Home::index', ['filter' => 'auth:Y']);
 $routes->get('/login', 'Login::index');
 $routes->get('/logout', 'Login::logout');
 $routes->post('auth', 'Login::loginAksi');
+$routes->get('/setting', 'SettingController::index', ['filter' => 'admin', 'namespace' => 'App\Controllers']);
 $routes->get('/setting/profil', 'Profil::index', ['filter' => 'auth:N', 'namespace' => 'App\Controllers\Setting']);
 $routes->get('/setting/profil/getData', 'Profil::getData', ['filter' => 'auth:N' , 'namespace' => 'App\Controllers\Setting']);
 $routes->post('/setting/profil/update', 'Profil::update', ['filter' => 'auth:N', 'namespace' => 'App\Controllers\Setting']);
