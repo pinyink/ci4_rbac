@@ -46,13 +46,13 @@
                         <div id="jstree">
                             <ul>
                                 <?php foreach($menu as $key => $vMenu): ?>
-                                    <li id="<?=$vMenu->menu_id;?>"><?=$vMenu->menu_id.' - '.$vMenu->menu_desc;?>
-                                        <ul id="ul_<?=$vMenu->menu_id;?>">
+                                    <li id="<?=$vMenu['menu_id'];?>"><?=$vMenu['menu_id'].' - '.$vMenu['menu_desc'];?>
+                                        <ul id="ul_<?=$vMenu['menu_id'];?>">
                                         <?php foreach($data as $kData => $vData): ?>
-                                            <?php if($vMenu->menu_id == $vData['menu_id']): ?>
-                                            <li id="<?=$vMenu->menu_id.'_'.$vData['menu_id'];?>">
+                                            <?php if($vMenu['menu_id'] == $vData['menu_id']): ?>
+                                            <li id="<?=$vMenu['menu_id'].'_'.$vData['menu_id'];?>">
                                                 <label class="ui-checkbox">
-                                                    <input type="checkbox" class="checkbox" name="<?=$vMenu->menu_id.'_'.$vData['menu_akses_id'];?>" value="<?=$vData['akses_id'];?>" <?=$vData['check']=='Y'?'checked':'';?>>
+                                                    <input type="checkbox" class="checkbox" name="<?=$vMenu['menu_id'].'_'.$vData['menu_akses_id'];?>" value="<?=$vData['akses_id'];?>" <?=$vData['check']=='Y'?'checked':'';?>>
                                                     <span class="input-span"></span><?=$vData['menu_akses_id'].' - '.$vData['menu_akses_desc'];?></label>
                                             </li>
                                             <?php endif ?>

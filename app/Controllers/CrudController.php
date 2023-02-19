@@ -389,7 +389,7 @@ class ".$namaController." extends BaseController
             \$no++;
             \$row = [];
             \$id = \$list->".$primaryKey.";
-            \$action = '<a href=\"javascript:;\" class=\"\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Edit Data\" onclick=\"edit_data('.\$id.')\"><i class=\"fa fa-edit\"></i></a><a href=\"javascript:;\" class=\"text-red ml-2\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Delete Data\" onclick=\"delete_data('.\$id.')\"><i class=\"fa fa-trash\"></i></a>';
+            \$action = '<a href=\"javascript:;\" class=\"\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Edit Data\" onclick=\"edit_data('.\$id.')\"><i class=\"fa fa-edit\"></i></a><a href=\"javascript:;\" class=\"text-danger ml-2\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Delete Data\" onclick=\"delete_data('.\$id.')\"><i class=\"fa fa-trash\"></i></a>';
             
             \$row[] = \$action;
             \$row[] = \$no;".$rowFields."
@@ -481,7 +481,7 @@ class ".$namaController." extends BaseController
 
     $breadCumb = ucwords(str_replace('\\', '', $namespace));
     $viewBreadCumb = '';
-        $countfieldTable = count($fieldTable);
+        $countfieldTable = count($viewTable);
         $width = 75/$countfieldTable;
         $tableTh = '';
         foreach ($viewTable as $key => $value) {

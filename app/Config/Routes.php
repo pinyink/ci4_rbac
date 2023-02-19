@@ -69,13 +69,20 @@ $routes->get('admin/policy/menuList/(:num)', 'Policy::menuList/$1', ['filter' =>
 $routes->post('admin/policy/saveSubMenu', 'Policy::saveSubMenu', ['filter' => 'adminjson', 'namespace' => 'App\Controllers\Admin']);
 $routes->post('admin/policy/addPolicy', 'Policy::addPolicy', ['filter' => 'adminjson', 'namespace' => 'App\Controllers\Admin']);
 $routes->post('admin/policy/removePolicy', 'Policy::removePolicy', ['filter' => 'adminjson', 'namespace' => 'App\Controllers\Admin']);
-$routes->get('admin/menu', 'Menu::index', ['filter' => 'adminjson', 'namespace' => 'App\Controllers\Admin']);
-$routes->post('admin/menu/saveMenu', 'Menu::saveMenu', ['filter' => 'adminjson', 'namespace' => 'App\Controllers\Admin']);
-$routes->get('admin/menu/getMenu/(:num)', 'Menu::getMenu/$1', ['filter' => 'adminjson', 'namespace' => 'App\Controllers\Admin']);
-$routes->post('admin/menu/updateMenu', 'Menu::updateMenu', ['filter' => 'adminjson', 'namespace' => 'App\Controllers\Admin']);
-$routes->get('admin/menu/getMenuAkses/(:num)', 'Menu::getMenuAkses/$1', ['filter' => 'adminjson', 'namespace' => 'App\Controllers\Admin']);
-$routes->post('admin/menu/updateMenuAkses', 'Menu::updateMenuAkses', ['filter' => 'adminjson', 'namespace' => 'App\Controllers\Admin']);
-$routes->post('admin/menu/tambahMenuAkses', 'Menu::tambahMenuAkses', ['filter' => 'adminjson', 'namespace' => 'App\Controllers\Admin']);
+
+$routes->group('/admin/menu', ['namespace' => 'App\Controllers\Admin'], static function($routes) {
+    $routes->get('/', 'MenuController::index', ['filter' => 'admin']);
+    $routes->post('ajax_list', 'MenuController::ajaxList', ['filter' => 'adminjson']);
+    $routes->post('save_data', 'MenuController::saveData', ['filter' => 'adminjson']);
+    $routes->get('get_data/(:num)', 'MenuController::getData/$1', ['filter' => 'adminjson']);
+    $routes->delete('delete_data/(:num)', 'MenuController::deleteData/$1', ['filter' => 'adminjson']);
+	$routes->post('menu_desc_exist', 'MenuController::menudescExist', ['filter' => 'adminjson']);
+});
+$routes->group('/admin/menuakses', ['namespace' => 'App\Controllers\Admin'], static function($routes) {
+    $routes->post('save_data', 'MenuAksesController::saveData', ['filter' => 'adminjson']);
+    $routes->get('get_data/(:num)', 'MenuAksesController::getData/$1', ['filter' => 'adminjson']);
+    $routes->delete('delete_data/(:num)', 'MenuAksesController::deleteData/$1', ['filter' => 'adminjson']);
+});
 /**
  * Menu Content
  */

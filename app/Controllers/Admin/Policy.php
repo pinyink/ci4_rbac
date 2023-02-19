@@ -105,8 +105,9 @@ class Policy extends BaseController
     public function userList()
     {
         $request = \Config\Services::request();
-        $this->userModel = new UserModel($request);
-        $lists = $this->userModel->get_datatables();
+        $this->userModel = new UserModel();
+        $this->userModel->setRequest($this->request);
+        $lists = $this->userModel->getDatatables();
         $data = [];
         $no = $this->req->getPost("start");
         $policy_id = $this->req->getPost('policy');
@@ -130,8 +131,8 @@ class Policy extends BaseController
         }
         $output = [
             "draw" => $request->getPost('draw'),
-            "recordsTotal" => $this->userModel->count_all(),
-            "recordsFiltered" => $this->userModel->count_filtered(),
+            "recordsTotal" => $this->userModel->countAll(),
+            "recordsFiltered" => $this->userModel->countFiltered(),
             "data" => $data
         ];
         echo json_encode($output);
@@ -175,14 +176,14 @@ class Policy extends BaseController
         $menu = $menuAksesModel->orderBy('menu_akses_id', 'asc')->findAll();
         foreach ($allMenu as $key => $vAllMenu) {
             foreach ($menu as $key => $vMenu) {
-                if ($vAllMenu->menu_id == $vMenu->menu_id) {
+                if ($vAllMenu['menu_id'] == $vMenu['menu_id']) {
                     $array = [
-                        'akses_id' => $vMenu->akses_id,
-                        'menu_akses_id' => $vMenu->menu_akses_id,
-                        'menu_akses_desc' => $vMenu->menu_akses_desc,
-                        'menu_id' => $vMenu->menu_id
+                        'akses_id' => $vMenu['akses_id'],
+                        'menu_akses_id' => $vMenu['menu_akses_id'],
+                        'menu_akses_desc' => $vMenu['menu_akses_desc'],
+                        'menu_id' => $vMenu['menu_id']
                     ];
-                    if (hasPolicy($policyId, $vMenu->menu_id, $vMenu->menu_akses_id)) {
+                    if (hasPolicy($policyId, $vMenu['menu_id'], $vMenu['menu_akses_id'])) {
                         $array['check'] = 'Y';
                     } else {
                         $array['check'] = 'N';
@@ -227,7 +228,7 @@ class Policy extends BaseController
         $policy_id = $this->req->getPost('policy_id');
         $menuAksesModel = new MenuAksesModel();
         $query = $menuAksesModel->find($aksesId);
-        addPolicy($policy_id, $query->menu_id, $query->menu_akses_id);
+        addPolicy($policy_id, $query['menu_id'], $query['menu_akses_id']);
         $log['errorCode'] = 1;
         $log['errorMessage'] = 'Tambah Akses Menu Berhasil';
         $log['errorType'] = 'success';
@@ -242,7 +243,7 @@ class Policy extends BaseController
         $policy_id = $this->req->getPost('policy_id');
         $menuAksesModel = new MenuAksesModel();
         $query = $menuAksesModel->find($aksesId);
-        removePolicy($policy_id, $query->menu_id, $query->menu_akses_id);
+        removePolicy($policy_id, $query['menu_id'], $query['menu_akses_id']);
         $log['errorCode'] = 1;
         $log['errorMessage'] = 'Hapus Akses Menu Berhasil';
         $log['errorType'] = 'success';
