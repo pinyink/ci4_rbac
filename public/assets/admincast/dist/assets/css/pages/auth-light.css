@@ -6,12 +6,14 @@
 }
 
 .content {
-	max-width: 400px;
+	width: 400px;
 	margin:0 auto;
+	margin-top: 10vh;
 }
 .content form {
 	padding: 15px 20px 20px 20px;
 	background-color: #fff;
+	border-radius: 10px;
 }
 .login-header {margin:10px 0 20px 0;}
 .login-img {

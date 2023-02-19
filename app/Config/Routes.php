@@ -48,11 +48,15 @@ $routes->group('crud', ['namespace' => 'App\Controllers', 'filter' => 'admin'], 
 /**
  * Admin
  */
-$routes->get('admin/user', 'User::index', ['filter' => 'admin', 'namespace' => 'App\Controllers\Admin']);
-$routes->post('admin/user/ajaxList', 'User::ajaxList', ['filter' => 'adminjson', 'namespace' => 'App\Controllers\Admin']);
-$routes->post('admin/user/resetPassword', 'User::resetPassword', ['filter' => 'adminjson', 'namespace' => 'App\Controllers\Admin']);
-$routes->post('admin/user/nonAktifUser', 'User::nonAktifUser', ['filter' => 'adminjson', 'namespace' => 'App\Controllers\Admin']);
-$routes->post('admin/user/saveData', 'User::saveData', ['filter' => 'adminjson', 'namespace' => 'App\Controllers\Admin']);
+$routes->group('/admin/user', ['namespace' => 'App\Controllers\Admin'], static function($routes) {
+    $routes->get('/', 'UserController::index', ['filter' => 'admin']);
+    $routes->post('ajax_list', 'UserController::ajaxList', ['filter' => 'adminjson']);
+    $routes->post('save_data', 'UserController::saveData', ['filter' => 'adminjson']);
+    $routes->get('get_data/(:num)', 'UserController::getData/$1', ['filter' => 'adminjson']);
+    $routes->delete('delete_data/(:num)', 'UserController::deleteData/$1', ['filter' => 'adminjson']);
+	$routes->post('user_username_exist', 'UserController::userusernameExist', ['filter' => 'adminjson']);
+});
+
 $routes->get('admin/policy', 'Policy::index', ['filter' => 'admin', 'namespace' => 'App\Controllers\Admin']);
 $routes->post('admin/policy/ajaxList', 'Policy::ajaxList', ['filter' => 'adminjson', 'namespace' => 'App\Controllers\Admin']);
 $routes->post('admin/policy/saveData', 'Policy::saveData', ['filter' => 'adminjson', 'namespace' => 'App\Controllers\Admin']);

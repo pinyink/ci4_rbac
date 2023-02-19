@@ -6,39 +6,70 @@ use CodeIgniter\Model;
 
 class UserModel extends Model
 {
-    protected $table         = 'user';
-    protected $primaryKey   = 'user_id';
-
+    protected $DBGroup          = 'default';
+    protected $table            = 'user';
+    protected $primaryKey       = 'user_id';
     protected $useAutoIncrement = true;
+    protected $insertID         = 0;
+    protected $returnType       = 'array';
+    protected $useSoftDeletes   = true;
+    protected $protectFields    = true;
+    protected $allowedFields    = ['user_username', 'user_password', 'user_superadmin', 'user_aktif'];
 
-    protected $returnType     = 'object';
-    protected $useSoftDeletes = true;
-
-    protected $allowedFields = ['user_username', 'user_password', 'user_aktif', 'user_deleted_at'];
-
-    protected $useTimestamps = false;
+    // Dates
+    protected $useTimestamps = true;
+    protected $dateFormat    = 'datetime';
     protected $createdField  = 'user_created_at';
     protected $updatedField  = 'user_updated_at';
     protected $deletedField  = 'user_deleted_at';
 
-    public $column_order  = array(null, null, 'a.user_username', 'a.user_updated_at', 'a.user_aktif');
-    public $column_search = array('a.user_username');
-    public $order         = array('a.user_id' => 'desc');
+    // Validation
+    protected $validationRules      = [];
+    protected $validationMessages   = [];
+    protected $skipValidation       = false;
+    protected $cleanValidationRules = true;
 
-    public function __construct($request)
+    // Callbacks
+    protected $allowCallbacks = true;
+    protected $beforeInsert   = [];
+    protected $afterInsert    = [];
+    protected $beforeUpdate   = [];
+    protected $afterUpdate    = [];
+    protected $beforeFind     = [];
+    protected $afterFind      = [];
+    protected $beforeDelete   = [];
+    protected $afterDelete    = [];
+    public $column_order  = array(null, null, 'a.user_username', 'a.user_superadmin', 'a.user_updated_at');
+    public $column_search = array('a.user_username', 'a.user_superadmin', 'a.user_updated_at');
+    public $order         = array('a.user_username' => 'asc');
+
+    private $request = '';
+    private $dt;
+    private $where = [];
+    
+    public function setWhere($where = [])
     {
-        parent::__construct();
+        $this->where = $where;
+    }
+
+    public function setRequest($request)
+    {
         $this->request = $request;
+    }
+
+    public function initDatatables()
+    {
         $this->dt = $this->db->table($this->table . ' a');
     }
 
-    private function _get_datatables_query()
+    private function _getDatatablesQuery()
     {
-        $this->dt->select('a.user_id, a.user_username, a.user_superadmin, a.user_updated_at, a.user_aktif, a.user_deleted_at, a.user_updated_at');
-        $this->dt->where('a.user_superadmin', 2);
+        $this->dt->select('a.user_id, a.user_username, a.user_superadmin, a.user_updated_at, a.user_aktif');
+        $this->dt->where($this->deletedField, null);
+        $this->dt->where($this->where);
         $i = 0;
         foreach ($this->column_search as $item) {
-            if ($this->request->getPost('search')['value']) {
+            if (isset($this->request->getPost('search')['value'])) {
                 if ($i === 0) {
                     $this->dt->groupStart();
                     $this->dt->like($item, $this->request->getPost('search')['value']);
@@ -59,23 +90,27 @@ class UserModel extends Model
         }
     }
 
-    public function get_datatables()
+    public function getDatatables()
     {
-        $this->_get_datatables_query();
+        $this->initDatatables();
+        $this->_getDatatablesQuery();
         if ($this->request->getPost('length') != -1) {
             $this->dt->limit($this->request->getPost('length'), $this->request->getPost('start'));
         }
         $query = $this->dt->get();
         return $query->getResult();
     }
-    public function count_filtered()
+
+    public function countFiltered()
     {
-        $this->_get_datatables_query();
+        $this->initDatatables();
+        $this->_getDatatablesQuery();
         return $this->dt->countAllResults();
     }
-    public function count_all()
+
+    public function countAll()
     {
-        $tbl_storage = $this->db->table($this->table);
-        return $tbl_storage->countAllResults();
+        $tblStorage = $this->db->table($this->table);
+        return $tblStorage->countAllResults();
     }
 }
