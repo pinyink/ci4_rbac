@@ -89,19 +89,10 @@ $routes->group('/admin/menuakses', ['namespace' => 'App\Controllers\Admin'], sta
 $routes->get('/menu_dua', 'Menu_dua::index', ['filter' => 'auth:N, 2, 1', 'namespace' => 'App\Controllers']);
 $routes->get('/menu_satu', 'Menu_satu::index', ['filter' => 'auth:N, 1, 1', 'namespace' => 'App\Controllers']);
 
-$routes->group('/master/masteropd', ['namespace' => 'App\Controllers\Master'], static function($routes) {
-    $routes->get('/', 'MasterOpdController::index', ['filter' => 'auth:Y,1,1']);
-    $routes->post('ajax_list', 'MasterOpdController::ajaxList', ['filter' => 'auth:N,1,1']);
-    $routes->post('save_data', 'MasterOpdController::saveData', ['filter' => 'auth:N,1,2']);
-    $routes->get('get_data/(:num)', 'MasterOpdController::getData/$1', ['filter' => 'auth:N,1,2']);
-    $routes->delete('delete_data/(:num)', 'MasterOpdController::deleteData/$1', ['filter' => 'auth:N,1,3']);
-	$routes->post('opd_exist', 'MasterOpdController::opdExist', ['filter' => 'auth:N,1,2']);
-});
-
-$routes->group('/master/desa', ['namespace' => 'App\Controllers\Master'], static function($routes) {
-    $routes->get('/', 'DesaController::index', ['filter' => 'auth:Y,2,1']);
-    $routes->post('ajax_list', 'DesaController::ajaxList', ['filter' => 'auth:N,2,1']);
-    $routes->post('save_data', 'DesaController::saveData', ['filter' => 'auth:N,2,2']);
-    $routes->get('get_data/(:num)', 'DesaController::getData/$1', ['filter' => 'auth:N,2,2']);
-    $routes->delete('delete_data/(:num)', 'DesaController::deleteData/$1', ['filter' => 'auth:N,2,3']);
+$routes->group('/siswa', ['namespace' => 'App\Controllers'], static function($routes) {
+    $routes->get('/', 'SiswaController::index', ['filter' => 'auth:Y,4,1']);
+    $routes->post('ajax_list', 'SiswaController::ajaxList', ['filter' => 'auth:N,4,1']);
+    $routes->post('save_data', 'SiswaController::saveData', ['filter' => 'auth:N,4,2']);
+    $routes->get('(:num)/get_data', 'SiswaController::getData/$1', ['filter' => 'auth:N,4,2']);
+    $routes->delete('(:num)/delete_data', 'SiswaController::deleteData/$1', ['filter' => 'auth:N,4,3']);
 });

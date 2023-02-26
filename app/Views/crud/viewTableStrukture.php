@@ -61,7 +61,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="orderBy">orderBy</label>
                                     <select class="form-control" name="orderBy" required>
@@ -77,6 +77,26 @@
                                                 <option value="<?=$value->name;?>"><?=$value->name;?></option>
                                             <?php endif ?>
                                         <?php endforeach ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="asc">Asc</label>
+                                    <select class="form-control" name="asc" required>
+                                        <option value="">-</option>
+                                        <?php if(isset($crudConfig->asc)):?>
+                                            <?php if($crudConfig->asc == 'asc'):?>
+                                                <option value="asc" selected>asc</option>
+                                                <option value="desc">desc</option>
+                                            <?php else: ?>
+                                                <option value="asc">asc</option>
+                                                <option value="desc" selected>desc</option>
+                                            <?php endif ?>
+                                        <?php else: ?>
+                                            <option value="asc">asc</option>
+                                            <option value="desc">desc</option>
+                                        <?php endif ?>
                                     </select>
                                 </div>
                             </div>
@@ -181,7 +201,8 @@
                                         'koordinate' => 'koordinate',
                                         'rupiah' => 'rupiah',
                                         'image' => 'image',
-                                        'geometry' => 'geometry'
+                                        'geometry' => 'geometry',
+                                        'date' => 'date'
                                     ], $type, ['class' => 'form-control'])?>
                                 </td>
                                 <td>

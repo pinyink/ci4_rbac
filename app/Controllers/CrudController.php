@@ -50,6 +50,7 @@ class CrudController extends BaseController
         $updatedAt = $request->getPost('updatedAt');
         $deletedAt = $request->getPost('deletedAt');
         $orderBy = $request->getPost('orderBy');
+        $asc = $request->getPost('asc');
         $rbac = $request->getPost('rbac');
 
         $fieldTable = $request->getPost('fieldTable');
@@ -70,6 +71,7 @@ class CrudController extends BaseController
             'updatedAt' => $updatedAt,
             'deletedAt' => $deletedAt,
             'orderBy' => $orderBy,
+            'asc' => $asc,
             'rbac' => $rbac,
             'fieldTable' => $fieldTable,
             'fieldAlias' => $fieldAlias,
@@ -103,8 +105,8 @@ $route = "
     \$routes->get('/', '".$namaController."::index', ['filter' => 'auth:Y,".$rbac.",1']);
     \$routes->post('ajax_list', '".$namaController."::ajaxList', ['filter' => 'auth:N,".$rbac.",1']);
     \$routes->post('save_data', '".$namaController."::saveData', ['filter' => 'auth:N,".$rbac.",2']);
-    \$routes->get('get_data/(:num)', '".$namaController."::getData/$1', ['filter' => 'auth:N,".$rbac.",2']);
-    \$routes->delete('delete_data/(:num)', '".$namaController."::deleteData/$1', ['filter' => 'auth:N,".$rbac.",3']);".$routeExistField."
+    \$routes->get('(:num)/get_data', '".$namaController."::getData/$1', ['filter' => 'auth:N,".$rbac.",2']);
+    \$routes->delete('(:num)/delete_data', '".$namaController."::deleteData/$1', ['filter' => 'auth:N,".$rbac.",3']);".$routeExistField."
 });";
 
     echo "<pre>".$route."</pre>";
@@ -177,7 +179,7 @@ class ".$namaModel." extends Model
     protected \$afterDelete    = [];
     public \$column_order  = array(null, null, ".$columnSearch.");
     public \$column_search = array(".$columnSearch.");
-    public \$order         = array('a.".$orderBy."' => 'asc');
+    public \$order         = array('a.".$orderBy."' => '".$asc."');
 
     private \$request = '';
     private \$dt;
@@ -296,6 +298,8 @@ $functionExists .= "public function ".strtolower(str_replace("_", "", $value))."
         foreach ($viewTable as $key => $value) {
             if (in_array($fieldType[$key], ['rupiah'])) {
                 $rowFields .= "\n\t\t\t"."\$row[] = number_format(\$list->".$value.", 0, '.', ',');";
+            } else if (in_array($fieldType[$key], ['date'])) {
+                $rowFields .= "\n\t\t\t"."\$row[] = date('d-m-Y', strtotime(\$list->".$value."));";
             } else {
                 $rowFields .= "\n\t\t\t"."\$row[] = \$list->".$value.";";
             }
@@ -320,6 +324,8 @@ $functionExists .= "public function ".strtolower(str_replace("_", "", $value))."
                 $fieldInserts .= "\n\t\tif (!empty(\$_FILES['val_".$value."']['name'])) {\n\t\t\t\$th = date('Y') . '/' . date('m').'/'.date('d');\n\t\t\t\$path = 'uploads".$routeName."/';\n\t\t\t\$_dir = \$path . \$th;\n\t\t\t\$dir = ROOTPATH.'public/' . \$path . \$th;\n\t\t\tif (!file_exists(\$dir)) {\n\t\t\t\tmkdir(\$dir, 0777, true);\n\t\t\t}\n\t\t\t\$newName = \$img".$value."->getRandomName();\n\t\t\t\$img".$value."->move(\$dir, \$newName);\n\t\t\t\$data['".$value."'] = \$_dir.'/'.\$newName;\n\t\t}";
             } else if(in_array($fieldType[$key], ['geometry'])) {
                 $fieldInserts .= "\n\t\tif (!empty(\$_FILES['val_".$value."']['name'])) {\n\t\t\t\$uniqId = uniqid();\n\t\t\t\$th = date('Y') . '/' . date('m').'/'.date('d').'/'.\$uniqId;\n\t\t\t\$path = 'uploads".$routeName."';\n\t\t\t\$_dir = \$path . \$th;\n\t\t\t\$dir = ROOTPATH.'public/' . \$path . \$th;\n\t\t\tif (!file_exists(\$dir)) {\n\t\t\t\tmkdir(\$dir, 0777, true);\n\t\t\t\t\$create = fopen(\$dir.'/index.php', \"w\") or die(\"Change your permision folder for application and harviacode folder to 777\");\n\t\t\t\tfwrite(\$create, '<h1>ACCESS DENIED</h1>');\n\t\t\t\tfclose(\$create);\n\t\t\t}\n\t\t\t\$fileShp = \$this->request->getFile('val_".$value."');\n\t\t\t\$fileShp->move(\$dir, \$uniqId.'.shp');\n\t\t\t\$fileShx = \$this->request->getFile('val_".$value."_shx');\n\t\t\t\$fileShx->move(\$dir, \$uniqId.'.shx');\n\t\t\t\$fileDbf = \$this->request->getFile('val_".$value."_dbf');\n\t\t\t\$fileDbf->move(\$dir, \$uniqId.'.dbf');\n\t\t\t\$Shapefile = new ShapefileReader(\$dir.'/'.\$uniqId.'.shp');\n\t\t\t\$jsonData = '';\n\t\t\twhile (\$Geometry = \$Shapefile->fetchRecord()) {\n\t\t\t\t\$jsonData = \$Geometry->getWKT();\n\t\t\t}\n\t\t\t\$data['".$value."'] = new RawSql(\"ST_GeomFromText('\".\$jsonData.\"')\");\n\t\t}";
+            } else if (in_array($fieldType[$key], ['date'])) {
+                $fieldInserts .= "\n\t\t\$data['".$value."'] = \$this->request->getPost('val_".$value."') == null ? null : date('Y-m-d', strtotime(\$this->request->getPost('val_".$value."')));"; 
             } else {
                 $fieldInserts .= "\n\t\t\$data['".$value."'] = \$this->request->getPost('val_".$value."');";
             }
@@ -331,8 +337,8 @@ $functionExists .= "public function ".strtolower(str_replace("_", "", $value))."
 
             // view detail
             $_value = $value;
-            if (in_array($fieldType[$key], ['rupiah'])) {
-
+            if (in_array($fieldType[$key], ['date'])) {
+                $_value = 'DATE_FORMAT('.$value.', \'%d-%m-%Y\') as '.$value;
             } else if(in_array($fieldType[$key], ['image'])) {
 
             } else if(in_array($fieldType[$key], ['geometry'])) {
@@ -451,7 +457,7 @@ class ".$namaController." extends BaseController
     public function getData(\$id)
     {
         \$".$modelVariable." = new ".$namaModel."();
-        \$query = \$".$modelVariable."->select('".$viewDetail."')->find(\$id);
+        \$query = \$".$modelVariable."->select(\"".$viewDetail."\")->find(\$id);
         return \$this->response->setJSON(\$query);
     }
 
@@ -555,6 +561,13 @@ class ".$namaController." extends BaseController
                 $jqFungsi .= "\n\n\tfunction resetShpRequired() {\n\t\t$('[name=\"val_".$value."\"]').removeAttr('required');\n\t\t$('[name=\"val_".$value."_shx\"]').removeAttr('required');\n\t\t$('[name=\"val_".$value."_dbf\"]').removeAttr('required');\n\t};";
                 $jqReset .= 'resetShpRequired();';
             }
+            if (in_array($fieldType[$key], ['date'])) {
+                $formData .= "\n\t\t\t\t\t<div class=\"form-group\">
+                        @?=form_label('".$fieldAlias[$key].$attrLabel."');?@
+                        @?=form_input('val_".$value."', '', ['class' => 'form-control']);?@
+                    </div>";
+                $jqFungsi .= "\n\n\t$('[name=\"val_".$value."\"]').datepicker({\n\t\ttodayBtn: \"linked\",\n\t\tkeyboardNavigation: false,\n\t\tforceParse: false,\n\t\tcalendarWeeks: true,\n\t\tautoclose: true,\n\t\tformat: \"dd-mm-yyyy\"\n\t});";
+            }
         }
         $jqReady .= $jsCustom;
         $jqReady .= "\n\t});";
@@ -629,6 +642,8 @@ $view = "
 <link href=\"@?=base_url();?@/assets/alertifyjs/css/alertify.min.css\" rel=\"stylesheet\" type=\"text/css\" />
 <link href=\"@?=base_url();?@/assets/alertifyjs/css/themes/bootstrap.min.css\" rel=\"stylesheet\" type=\"text/css\" />
 <link href=\"@?=base_url();?@/assets/admincast/dist/assets/vendors/DataTables/datatables.min.css\" rel=\"stylesheet\" type=\"text/css\" />
+<link href=\"@?=base_url();?@/assets/admincast/dist/assets/vendors/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css\" rel=\"stylesheet\" type=\"text/css\" />
+
 @?=\$this->endSection();?@
 
 @?=\$this->section('content'); ?@
@@ -704,6 +719,8 @@ $view = "
 <script src=\"@?=base_url(); ?@/assets/alertifyjs/alertify.min.js\" type=\"text/javascript\"> </script>
 <script src=\"@?=base_url(); ?@/assets/admincast/dist/assets/vendors/jquery-validation/dist/jquery.validate.min.js\" type=\"text/javascript\"> </script>
 <script src=\"@?=base_url(); ?@/assets/admincast/dist/assets/vendors/DataTables/datatables.min.js\" type=\"text/javascript\"> </script>
+<script src=\"@?=base_url(); ?@/assets/admincast/dist/assets/vendors/moment/min/moment.min.js\" type=\"text/javascript\"> </script>
+<script src=\"@?=base_url(); ?@/assets/admincast/dist/assets/vendors/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js\" type=\"text/javascript\"> </script>
 
 <script>
     var table;
@@ -769,7 +786,7 @@ $view = "
         \$('[name=\"method\"]').val('update');
         \$.ajax({
             type: \"GET\",
-            url: \"@?=base_url('".$routeName."/get_data');?@/\"+id,
+            url: \"@?=base_url('".$routeName."');?@/\"+id+'/get_data',
             dataType: \"JSON\",
             success: function (response) {
                 \$('#modal".$url."').modal('show');
@@ -793,7 +810,7 @@ $view = "
         if (result.isConfirmed) {
             \$.ajax({
                 type: \"DELETE\",
-                url: \"@?=base_url('".$routeName."/delete_data')?@/\"+id,
+                url: \"@?=base_url('".$routeName."')?@/\"+id+'/delete_data',
                 dataType: \"json\",
                 success: function (response) {
                     if(response.errorCode == 1) {
