@@ -1,7 +1,7 @@
 <?php $this->extend('tema/tema'); ?>
 <?php $this->section('css'); ?>
 <style>
-    .nav, .tab-content {
+    #v-pills-tab, .tab-content {
         border: 1px solid rgba(10, 10, 10, 0.3);
         border-radius: 5px;
         padding: 5px;
