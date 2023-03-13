@@ -1,0 +1,208 @@
+body {
+    overflow-x: hidden;
+    font-family: 'Open Sans', sans-serif;
+    background-color: #fff;
+    color: rgb(0, 1, 6, 0.90);
+}
+
+.header {
+    background-color: rgb(2, 28, 224);
+    box-shadow: 0 2px 4px rgba(141, 5, 232, 0.08);
+    height: 40px;
+}
+
+.header .page-brand {
+    height: 60px;
+    border-right: 1px solid rgb(2, 28, 224);
+    border-bottom: 1px solid rgb(2, 28, 224);
+    background-color: #fff;
+    color: rgb(0, 1, 6, 0.90);
+}
+
+.header .flexbox .nav li a {
+    color: #fff;
+}
+
+.page-sidebar {
+    border: 1px solid rgb(2, 28, 224);
+    background-color: #fff;
+    color: #3d43e3;
+    box-shadow: 9px 3px 20px 1px rgba(0, 0, 0, 0.2);
+}
+
+.page-sidebar .admin-block {
+    border-radius: 0 0 10px 10px;
+    margin-bottom: 1px;
+}
+
+.page-sidebar .admin-block .admin-info {
+    color: #3d43e3;
+}
+
+.page-sidebar .side-menu {
+    margin: 0 10px;
+}
+
+.side-menu>li a {
+    color: #3d43e3;
+}
+
+.side-menu>li a:focus,
+.side-menu>li a.active,
+.side-menu>li a:hover {
+    color: #3d43e3;
+    background-color: rgb(220, 221, 247);
+    border-radius: 3px 15px 15px 3px;
+}
+
+.side-menu>li.active {
+    background-color: #fff;
+}
+
+.side-menu>li.active>a,
+.side-menu>li.active>a:hover {
+    color: #3d43e3;
+    background-color: rgb(220, 221, 247);
+    border-radius: 15px;
+}
+
+.side-menu>li.active>a:focus {
+    color: #3d43e3;
+    background-color: rgb(220, 221, 247);
+    border-radius: 15px;
+}
+
+.side-menu li a.active {
+    color: #3d43e3;
+}
+
+.side-menu .nav-2-level {
+    margin-top: 2px;
+    margin-left: 30px;
+}
+
+.side-menu .nav-2-level>li>a {
+    padding: 7px 10px 7px 15px;
+}
+
+.sidebar-mini .side-menu {
+    margin: 0;
+}
+
+.sidebar-mini .side-menu .nav-2-level {
+    margin-left: 5px;
+    border-radius: 15px;
+    box-shadow: 9px 3px 20px 1px rgba(0, 0, 0, 0.2);
+}
+
+.sidebar-mini .side-menu>li:hover>a {
+    background-color: #fff;
+    color: #3d43e3;
+    border-radius: 15px;
+    box-shadow: 9px 3px 20px 1px rgba(0, 0, 0, 0.2);
+}
+
+.sidebar-mini .side-menu>li:hover .nav-2-level {
+    background-color: #fff;
+}
+
+.content-wrapper {
+    background-color: #fff;
+}
+
+.content-wrapper .page-heading .breadcrumb {
+    background-color: rgb(2, 28, 224, 0.76);
+    padding: 7px 0 7px 10px;
+}
+
+.content-wrapper .page-heading .breadcrumb li,
+.content-wrapper .page-heading .breadcrumb li a {
+    color: #fff;
+}
+
+.ibox {
+    background-color: #fff;
+    border: 1px solid rgba(64, 86, 247, 0.28);
+    border-radius: 5px;
+    box-shadow: none;
+}
+
+.ibox .ibox-head {
+    background-color: rgb(2, 28, 224);
+    color: #fff;
+    border-radius: 5px 5px 0 0;
+    margin-right: -1px;
+    margin-left: -1px;
+    height: 30px !important;
+}
+
+.ibox .ibox-head .ibox-tools>a {
+    color: #fff;
+}
+
+.ibox .ibox-body {
+    font-size: 12px;
+}
+
+.ibox .ibox-body .table {
+    font-size: 11px;
+}
+
+.pagination .page-link {
+    color: inherit;
+}
+
+.pagination .page-link:focus,
+.pagination .page-link:hover {
+    color: rgb(2, 28, 224);
+}
+
+.pagination .active>a,
+.pagination .active>a:focus,
+.pagination .active>a:hover,
+.pagination .active>span,
+.pagination .active>span:focus,
+.pagination .active>span:hover,
+.pagination .page-item.active .page-link {
+    background-color: rgb(2, 28, 224);
+    border-color: rgb(2, 28, 224);
+    color: #fff
+}
+
+.page-footer {
+    border-top: 1px solid rgba(64, 86, 247, 0.28);
+}
+
+.to-top:hover {
+    background-color: rgb(2, 28, 224);
+}
+
+.to-top:hover i {
+    display: block;
+    color: #fff
+}
+
+.modal .modal-dialog .modal-content .modal-header {
+    height: 42px;
+    background-color: rgb(2, 28, 224);
+}
+
+.modal .modal-dialog .modal-content .modal-header .modal-title {
+    font-size: 12pt;
+    color: #fff;
+}
+
+.modal .modal-dialog .modal-content .modal-header button {
+    font-size: 12pt;
+    color: #fff;
+}
+
+.btn-primary {
+    background-color: rgb(2, 28, 224);
+    color: #fff;   
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: rgba(64, 86, 247, 0.90);
+}

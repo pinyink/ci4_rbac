@@ -4557,11 +4557,11 @@ a.text-danger:hover {
 }
 
 .side-menu .nav-2-level>li>a {
-    padding: 7px 10px 7px 45px
+    padding: 7px 10px 7px 45px;
 }
 
 .side-menu .nav-3-level>li>a {
-    padding: 7px 10px 7px 55px
+    padding: 7px 10px 7px 55px;
 }
 
 body:not(.fixed-layout).sidebar-mini .content-wrapper {
