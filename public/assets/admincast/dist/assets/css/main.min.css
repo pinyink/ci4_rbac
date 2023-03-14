@@ -5226,3 +5226,16 @@ table.dataTable {
         justify-content: start !important
     }
 }
+
+.form-view-detail {
+    border-top: none;
+    border-right: none;
+    border-left: none;
+    font-weight: bold;
+    height: auto;
+    padding-left: 0 !important;
+}
+
+.form-view-detail[disabled] {
+    background-color: inherit;
+}

@@ -44,7 +44,7 @@ class MenuController extends BaseController
             
             $row[] = $action;
             $row[] = $no;
-			$row[] = $list->menu_desc;
+			$row[] = $list->menu_id.' - '.$list->menu_desc;
 
             $menuAkses = '';
             $queryMenuAksesModel = $menuAksesModel->where(['menu_id' => $id])->findAll();

@@ -105,8 +105,9 @@ $route = "
     \$routes->get('/', '".$namaController."::index', ['filter' => 'auth:Y,".$rbac.",1']);
     \$routes->post('ajax_list', '".$namaController."::ajaxList', ['filter' => 'auth:N,".$rbac.",1']);
     \$routes->post('save_data', '".$namaController."::saveData', ['filter' => 'auth:N,".$rbac.",2']);
-    \$routes->get('(:num)/get_data', '".$namaController."::getData/$1', ['filter' => 'auth:N,".$rbac.",2']);
-    \$routes->delete('(:num)/delete_data', '".$namaController."::deleteData/$1', ['filter' => 'auth:N,".$rbac.",3']);".$routeExistField."
+    \$routes->post('update_data', '".$namaController."::saveData', ['filter' => 'auth:N,".$rbac.",3']);
+    \$routes->get('(:num)/get_data', '".$namaController."::getData/$1', ['filter' => 'auth:N,".$rbac.",1']);
+    \$routes->delete('(:num)/delete_data', '".$namaController."::deleteData/$1', ['filter' => 'auth:N,".$rbac.",4']);".$routeExistField."
 });";
 
     echo "<pre>".$route."</pre>";
@@ -395,7 +396,15 @@ class ".$namaController." extends BaseController
             \$no++;
             \$row = [];
             \$id = \$list->".$primaryKey.";
-            \$action = '<a href=\"javascript:;\" class=\"\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Edit Data\" onclick=\"edit_data('.\$id.')\"><i class=\"fa fa-edit\"></i></a><a href=\"javascript:;\" class=\"text-danger ml-2\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Delete Data\" onclick=\"delete_data('.\$id.')\"><i class=\"fa fa-trash\"></i></a>';
+            \$aksi = '<a href=\"javascript:;\" class=\"\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Lihat Data\" onclick=\"lihat_data('.\$id.')\"><i class=\"fa fa-search\"></i></a>';
+            if(enforce(".$rbac.", 3)) {
+                \$aksi .= '<a href=\"javascript:;\" class=\"ml-2\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Edit Data\" onclick=\"edit_data('.\$id.')\"><i class=\"fa fa-edit\"></i></a>';
+            }
+
+            if(enforce(".$rbac.", 4)) {
+                \$aksi .= '<a href=\"javascript:;\" class=\"text-danger ml-2\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Delete Data\" onclick=\"delete_data('.\$id.')\"><i class=\"fa fa-trash\"></i></a>';
+            }
+            \$action = \$aksi;
             
             \$row[] = \$action;
             \$row[] = \$no;".$rowFields."
@@ -668,7 +677,9 @@ $view = "
                     <div class=\"ibox-title\">Data ".$nama."</div>
                     <div class=\"ibox-tools\">
                         <a onclick=\"reload_table()\" class=\"refresh\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"reload data\"><i class=\"fa fa-refresh\"></i></a>
-                        <a class=\"\" onclick=\"tambah_data()\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"tambah data\"><i class=\"fa fa-plus-square\"></i></a>
+                        @?php if(enforce(".$rbac.", 2)): ?@
+                            <a class=\"\" onclick=\"tambah_data()\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"tambah data\"><i class=\"fa fa-plus-square\"></i></a>
+                        @?php endif ?@
                     </div>
                 </div>
                 <div class=\"ibox-body\">
@@ -771,6 +782,28 @@ $view = "
         ".$jqReset."
     }
 
+    function lihat_data(id) {
+        reset_form();
+        save_method = 'update';
+        \$('#form".$url."').valid();
+        \$('[name=\"method\"]').val('update');
+        \$('#form".$url." .form-control').addClass('form-view-detail');
+        \$('#form".$url." .form-control').prop('disabled', true);
+        \$('#form".$url." button[type=\"submit\"]').hide();
+        \$.ajax({
+            type: \"GET\",
+            url: \"@?=base_url('".$routeName."');?@/\"+id+'/get_data',
+            dataType: \"JSON\",
+            success: function (response) {
+                \$('#modal".$url."').modal('show');
+                \$('#modal".$url." .modal-title').text('Detail Data');
+                \$('[name=\"".$primaryKey."\"]').val(response.".$primaryKey.");
+                ".$editData."
+            }
+        });
+    }
+
+    @?php if(enforce(".$rbac.", 2)): ?@
     function tambah_data() {
         save_method = 'save';
         reset_form();
@@ -779,11 +812,17 @@ $view = "
         \$('[name=\"method\"]').val('save');
         \$('[name=\"".$primaryKey."\"]').val(null);
     }
+    @?php endif ?@
 
+    @?php if(enforce(".$rbac.", 3)): ?@
     function edit_data(id) {
         reset_form();
+        save_method = 'update';
         \$('#form".$url."').valid();
         \$('[name=\"method\"]').val('update');
+        \$('#form".$url." .form-control').removeClass('form-view-detail');
+        \$('#form".$url." .form-control').prop('disabled', false);
+        \$('#form".$url." button[type=\"submit\"]').show();
         \$.ajax({
             type: \"GET\",
             url: \"@?=base_url('".$routeName."');?@/\"+id+'/get_data',
@@ -796,7 +835,9 @@ $view = "
             }
         });
     }
+    @?php endif ?@
 
+    @?php if(enforce(".$rbac.", 4)): ?@
     function delete_data(id) {
         Swal.fire({
         title: 'Apa Anda Yakin?',
@@ -833,6 +874,7 @@ $view = "
         })
 
     }
+    @?php endif ?@
 
     \$(function() {
         \$('#form".$url."').validate({
@@ -849,7 +891,13 @@ $view = "
                 \$(e).closest(\".form-control\").removeClass(\"is-invalid\").addClass(\"is-valid\");
             },
             submitHandler: function() {
-                var url = \"@?=base_url('".$routeName."/save_data');?@\";
+                var url = '';
+                if(save_method == 'update') {
+                    url = \"@?=base_url('".$routeName."/update_data');?@\";
+                }
+                if(save_method == 'save') {
+                    url = \"@?=base_url('".$routeName."/save_data');?@\";
+                }
                 var formData = new FormData($($('#form".$url."'))[0]);
                 \$.ajax({
                     type: \"POST\",
