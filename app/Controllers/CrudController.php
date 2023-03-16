@@ -509,6 +509,8 @@ class ".$namaController." extends BaseController
         $jqFungsi = '';
         $jqReset = '';
         $jqReady = "\$(document).ready(function () {";
+        $jsScript = '';
+        $cssScript = '';
         foreach ($fieldTable as $key => $value) {
             if (isset($fieldAttrLabel[$key]) && $fieldAttrLabel[$key] != null) {
                 $attrLabel = ' ( '.$fieldAttrLabel[$key].' )';
@@ -565,10 +567,60 @@ class ".$namaController." extends BaseController
                     </div>\n\t\t\t\t\t<div class=\"form-group\">
                         @?=form_label('".$fieldAlias[$key].' ( dbf )'."');?@
                         @?=form_upload('val_".$value."_dbf', '', ['class' => 'form-control', 'accept' => '.dbf', 'onchange' => 'shpRequired()', 'onkeyup' => 'shpRequired()']);?@
-                    </div>";
+                    </div>\n\t\t\t\t\t<div id=\"map_".$value."\"></div>";
                 $jqFungsi .= "\n\tfunction shpRequired() {\n\t\t$('[name=\"val_".$value."\"]').attr('required', 'true');\n\t\t$('[name=\"val_".$value."_shx\"]').attr('required', 'true');\n\t\t$('[name=\"val_".$value."_dbf\"]').attr('required', 'true');\n\t};";
                 $jqFungsi .= "\n\n\tfunction resetShpRequired() {\n\t\t$('[name=\"val_".$value."\"]').removeAttr('required');\n\t\t$('[name=\"val_".$value."_shx\"]').removeAttr('required');\n\t\t$('[name=\"val_".$value."_dbf\"]').removeAttr('required');\n\t};";
                 $jqReset .= 'resetShpRequired();';
+                $cssScript = "<style>
+                #map_".$value." {
+                    width: 100%;
+                    height: 40vh;
+                }
+            </style>";
+                $jsScript = "<script src=\"https://unpkg.com/leaflet@1.8.0/dist/leaflet.js\"
+                integrity=\"sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ==\"
+                crossorigin=\"\"></script>
+        
+        <script src=\"https://maps.google.com/maps/api/js?v=3.2&key=AIzaSyBy8irzccEOp7ezf5nQ2UPaLGcte_AEsOQ\"></script>
+        <script src='https://unpkg.com/leaflet.gridlayer.googlemutant@latest/dist/Leaflet.GoogleMutant.js'></script>
+        
+        <script>
+            var no = 1;
+            var layers = new Array();
+            
+            var map = L.map('map_".$value."').setView(['-6.588706', '110.775882'], 12);
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '© OpenStreetMap'
+            }).addTo(map);
+        
+            var osm = L.tileLayer(\"http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png\");
+        
+            var google_satelit = L.gridLayer.googleMutant({
+                type: 'satellite' // valid values are 'roadmap', 'satellite', 'terrain' and 'hybrid' 
+            })
+        
+            var baseMaps = {
+                \"OpenStreetMap\": osm,
+                \"Google Satellite\": google_satelit,
+            };
+        
+            var overlays = { //add any overlays here
+        
+            };
+        
+            L.control.layers(baseMaps, overlays, {
+                position: 'bottomleft'
+            }).addTo(map);
+        
+            // var tabMap = document.getElementById('tab-map');
+            // var observer1 = new MutationObserver(function(){
+            //     if(tabMap.style.display != 'none'){
+            //         map.invalidateSize();
+            //     }
+            // });
+            // observer1.observe(tabMap, {attributes: true}); 
+        </script>";
             }
             if (in_array($fieldType[$key], ['date'])) {
                 $formData .= "\n\t\t\t\t\t<div class=\"form-group\">
@@ -652,7 +704,7 @@ $view = "
 <link href=\"@?=base_url();?@/assets/alertifyjs/css/themes/bootstrap.min.css\" rel=\"stylesheet\" type=\"text/css\" />
 <link href=\"@?=base_url();?@/assets/admincast/dist/assets/vendors/DataTables/datatables.min.css\" rel=\"stylesheet\" type=\"text/css\" />
 <link href=\"@?=base_url();?@/assets/admincast/dist/assets/vendors/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css\" rel=\"stylesheet\" type=\"text/css\" />
-
+".$cssScript."
 @?=\$this->endSection();?@
 
 @?=\$this->section('content'); ?@
@@ -732,7 +784,7 @@ $view = "
 <script src=\"@?=base_url(); ?@/assets/admincast/dist/assets/vendors/DataTables/datatables.min.js\" type=\"text/javascript\"> </script>
 <script src=\"@?=base_url(); ?@/assets/admincast/dist/assets/vendors/moment/min/moment.min.js\" type=\"text/javascript\"> </script>
 <script src=\"@?=base_url(); ?@/assets/admincast/dist/assets/vendors/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js\" type=\"text/javascript\"> </script>
-
+".$jsScript."
 <script>
     var table;
     var save_method;
