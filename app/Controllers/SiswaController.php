@@ -12,7 +12,7 @@ class SiswaController extends BaseController
 {
     private $tema;
 
-    function __construct()
+    function __construct() 
     {
         helper(['form']);
         $this->tema = new Tema();
