@@ -127,3 +127,7 @@ nb-configuration.xml
 /.phpunit.*.cache
 
 /.php-cs-fixer.php
+
+# upload
+/uploads
+/upload
