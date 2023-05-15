@@ -90,6 +90,19 @@
                         <?=form_label('Tanggal Lahir');?>
                         <?=form_input('val_siswa_tanggal_lahir', '', ['class' => 'form-control']);?>
                     </div>
+					<div class="form-group" id="divform_siswa_photo">
+                        <?=form_label('Foto Siswa', 'val_siswa_photo');?>
+                        <?=form_upload('val_siswa_photo', '', ['class' => 'form-control', 'id' => 'val_siswa_photo', 'accept' => ".png,.jpg,.jpeg", 'onchange' => "readURL(this, 'img-preview-siswa_photo');"]);?>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6" id="divimage_siswa_photo">
+                            <h6 id="himage_siswa_photo">Foto Siswa</h6>
+                            <img src="<?=base_url('assets/admincast/dist/assets/img/image.jpg') ?>" alt="" class="img img-thumbnail img-preview " id="img-preview-siswa_photo" style="width: 100px; height: 100px;">
+                        </div>
+                        <div class="col-md-6" id="divcol_siswa_photo">
+                            <img src="<?=base_url('assets/admincast/dist/assets/img/image.jpg') ?>" alt="" class="img img-thumbnail img-preview" id="img-old-siswa_photo" style="width: 100px; height: 100px;">
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
@@ -163,7 +176,8 @@
         MValid[0].reset();
         MValid.find(".is-invalid").removeClass("is-invalid");
         MValid.find(".is-valid").removeClass("is-valid");
-        
+        $('#img-old-siswa_photo').attr('src', '<?=base_url('assets/admincast/dist/assets/img/image.jpg')?>');
+$('#divform_siswa_photo').show();$('#divcol_siswa_photo').show();$('#himage_siswa_photo').hide();
     }
 
     function lihat_data(id) {
@@ -182,10 +196,12 @@
                 $('#modalsiswa').modal('show');
                 $('#modalsiswa .modal-title').text('Detail Data');
                 $('[name="siswa_id"]').val(response.siswa_id);
-                $('[name="val_siswa_nama"]').val(response.siswa_nama);
+                $('#divform_siswa_photo').hide();$('#divcol_siswa_photo').hide();$('#himage_siswa_photo').show();$('[name="val_siswa_nama"]').val(response.siswa_nama);
 				$('[name="val_siswa_alamat"]').val(response.siswa_alamat);
 				$('[name="val_siswa_tempat_lahir"]').val(response.siswa_tempat_lahir);
 				$('[name="val_siswa_tanggal_lahir"]').val(response.siswa_tanggal_lahir);
+				$('#img-old-siswa_photo').attr('src', '<?=base_url('')?>/'+response.siswa_photo);
+				$('#img-preview-siswa_photo').attr('src', '<?=base_url('assets/admincast/dist/assets/img/image.jpg')?>');
 				
             }
         });
@@ -199,6 +215,9 @@
         $('#modalsiswa .modal-title').text('Tambah Data');
         $('[name="method"]').val('save');
         $('[name="siswa_id"]').val(null);
+        $('#formsiswa .form-control').removeClass('form-view-detail');
+        $('#formsiswa .form-control').prop('disabled', false);
+        $('#formsiswa button[type="submit"]').show();
     }
     <?php endif ?>
 
@@ -223,6 +242,8 @@
 				$('[name="val_siswa_alamat"]').val(response.siswa_alamat);
 				$('[name="val_siswa_tempat_lahir"]').val(response.siswa_tempat_lahir);
 				$('[name="val_siswa_tanggal_lahir"]').val(response.siswa_tanggal_lahir);
+				$('#img-old-siswa_photo').attr('src', '<?=base_url('')?>/'+response.siswa_photo);
+				$('#img-preview-siswa_photo').attr('src', '<?=base_url('assets/admincast/dist/assets/img/image.jpg')?>');
 				
             }
         });
@@ -278,7 +299,7 @@
             },
 
 			val_siswa_alamat: {
-                
+                required: true,
             },
 
 			val_siswa_tempat_lahir: {
@@ -290,6 +311,10 @@
                 required: true,
             },
 
+			val_siswa_photo: {
+                
+            },
+
             },
             messages: {
 				val_siswa_nama: {
@@ -297,7 +322,7 @@
                 },
 
 				val_siswa_alamat: {
-                    
+                    required:'Alamat harus diisi',
                 },
 
 				val_siswa_tempat_lahir: {
@@ -306,6 +331,10 @@
 
 				val_siswa_tanggal_lahir: {
                     required:'Tanggal Lahir harus diisi',
+                },
+
+				val_siswa_photo: {
+                    
                 },
 
 

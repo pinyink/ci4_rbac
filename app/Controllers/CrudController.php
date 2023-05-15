@@ -511,6 +511,7 @@ class ".$namaController." extends BaseController
         $jqReady = "\$(document).ready(function () {";
         $jsScript = '';
         $cssScript = '';
+        $lihatDataJs = '';
         foreach ($fieldTable as $key => $value) {
             if (isset($fieldAttrLabel[$key]) && $fieldAttrLabel[$key] != null) {
                 $attrLabel = ' ( '.$fieldAttrLabel[$key].' )';
@@ -544,18 +545,22 @@ class ".$namaController." extends BaseController
                 $jsCustom .= "\n\t\t\$('[name=\"val_".$value."\"]').keyup(function(){\n\t\t\tvar str = $('[name=\"val_".$value."\"]').val();\n\t\t\t$('[name=\"val_".$value."\"]').val(formatRupiah(this.value, ''));\n\t\t});";
             }
             if (in_array($fieldType[$key], ['image'])) {
-                $formData .= "\n\t\t\t\t\t<div class=\"form-group\">
+                $formData .= "\n\t\t\t\t\t<div class=\"form-group\" id=\"divform_".$value."\">
                         @?=form_label('".$fieldAlias[$key].$attrLabel."', 'val_".$value."');?@
                         @?=form_upload('val_".$value."', '', ['class' => 'form-control', 'id' => 'val_".$value."', 'accept' => \".png,.jpg,.jpeg\", 'onchange' => \"readURL(this, 'img-preview-".$value."');\"]);?@
                     </div>
                     <div class=\"row\">
-                        <div class=\"col-md-6\">
+                        <div class=\"col-md-6\" id=\"divimage_".$value."\">
+                            <h6 id=\"himage_".$value."\">".$fieldAlias[$key].$attrLabel."</h6>
                             <img src=\"@?=base_url('assets/admincast/dist/assets/img/image.jpg') ?@\" alt=\"\" class=\"img img-thumbnail img-preview \" id=\"img-preview-".$value."\" style=\"width: 100px; height: 100px;\">
                         </div>
-                        <div class=\"col-md-6\">
+                        <div class=\"col-md-6\" id=\"divcol_".$value."\">
                             <img src=\"@?=base_url('assets/admincast/dist/assets/img/image.jpg') ?@\" alt=\"\" class=\"img img-thumbnail img-preview\" id=\"img-old-".$value."\" style=\"width: 100px; height: 100px;\">
                         </div>
                     </div>";
+                $jqReset .= "\$('#img-old-".$value."').attr('src', '@?=base_url('assets/admincast/dist/assets/img/image.jpg')?@');\n";
+                $jqReset .= "\$('#divform_".$value."').show();\$('#divcol_".$value."').show();\$('#himage_".$value."').hide();";
+                $lihatDataJs .= "\$('#divform_".$value."').hide();\$('#divcol_".$value."').hide();\$('#himage_".$value."').show();";
             }
             if (in_array($fieldType[$key], ['geometry'])) {
                 $formData .= "\n\t\t\t\t\t<div class=\"form-group\">
@@ -850,7 +855,7 @@ $view = "
                 \$('#modal".$url."').modal('show');
                 \$('#modal".$url." .modal-title').text('Detail Data');
                 \$('[name=\"".$primaryKey."\"]').val(response.".$primaryKey.");
-                ".$editData."
+                ".$lihatDataJs."".$editData."
             }
         });
     }
@@ -863,6 +868,9 @@ $view = "
         \$('#modal".$url." .modal-title').text('Tambah Data');
         \$('[name=\"method\"]').val('save');
         \$('[name=\"".$primaryKey."\"]').val(null);
+        \$('#form".$url." .form-control').removeClass('form-view-detail');
+        \$('#form".$url." .form-control').prop('disabled', false);
+        \$('#form".$url." button[type=\"submit\"]').show();
     }
     @?php endif ?@
 

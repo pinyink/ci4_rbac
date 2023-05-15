@@ -14,7 +14,7 @@ class SiswaModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = true;
     protected $protectFields    = true;
-    protected $allowedFields    = ['siswa_nama', 'siswa_alamat', 'siswa_tempat_lahir', 'siswa_tanggal_lahir'];
+    protected $allowedFields    = ['siswa_nama', 'siswa_alamat', 'siswa_tempat_lahir', 'siswa_tanggal_lahir', 'siswa_photo'];
 
     // Dates
     protected $useTimestamps = true;

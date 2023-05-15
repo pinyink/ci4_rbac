@@ -68,12 +68,19 @@ class SiswaController extends BaseController
 
         $method = $this->request->getPost('method');
         
+		$imgsiswa_photo = $this->request->getFile('val_siswa_photo');
 
         $validation = [
-            'val_siswa_nama' => 'required','val_siswa_tempat_lahir' => 'required','val_siswa_tanggal_lahir' => 'required',
+            'val_siswa_nama' => 'required','val_siswa_alamat' => 'required','val_siswa_tempat_lahir' => 'required','val_siswa_tanggal_lahir' => 'required',
         ];
 
         
+		if (!empty($_FILES['val_siswa_photo']['name'])) {
+			$validation['val_siswa_photo'] = 'uploaded[val_siswa_photo]'
+			. '|is_image[val_siswa_photo]'
+			. '|mime_in[val_siswa_photo,image/jpg,image/jpeg,image/gif,image/png,image/webp]'
+			. '|max_size[val_siswa_photo,2048]';
+		}
         $validated = $this->validate($validation);
         if ($validated === false) {
             $errors = $this->validator->getErrors();
@@ -82,6 +89,10 @@ class SiswaController extends BaseController
                 $message .= '<li>'.$value.'</li>';
             }
             
+			if (!empty($_FILES['val_siswa_photo']['name'])) {
+				$type = $imgsiswa_photo->getClientMimeType();
+				$message .= '<li>'.$imgsiswa_photo->getErrorString() . '(' . $imgsiswa_photo->getError() . ' Type File ' . $type . ' )</li>';
+			}
             $message .= '</ul>';
 
             $log['errorCode'] = 2;
@@ -94,6 +105,18 @@ class SiswaController extends BaseController
 		$data['siswa_alamat'] = $this->request->getPost('val_siswa_alamat');
 		$data['siswa_tempat_lahir'] = $this->request->getPost('val_siswa_tempat_lahir');
 		$data['siswa_tanggal_lahir'] = $this->request->getPost('val_siswa_tanggal_lahir') == null ? null : date('Y-m-d', strtotime($this->request->getPost('val_siswa_tanggal_lahir')));
+		if (!empty($_FILES['val_siswa_photo']['name'])) {
+			$th = date('Y') . '/' . date('m').'/'.date('d');
+			$path = 'uploads/master/siswa/';
+			$_dir = $path . $th;
+			$dir = ROOTPATH.'public/' . $path . $th;
+			if (!file_exists($dir)) {
+				mkdir($dir, 0777, true);
+			}
+			$newName = $imgsiswa_photo->getRandomName();
+			$imgsiswa_photo->move($dir, $newName);
+			$data['siswa_photo'] = $_dir.'/'.$newName;
+		}
 
         if ($method == 'save') {
             $siswaModel->insert($data);
@@ -113,7 +136,7 @@ class SiswaController extends BaseController
     public function getData($id)
     {
         $siswaModel = new SiswaModel();
-        $query = $siswaModel->select("siswa_id, siswa_nama, siswa_alamat, siswa_tempat_lahir, DATE_FORMAT(siswa_tanggal_lahir, '%d-%m-%Y') as siswa_tanggal_lahir")->find($id);
+        $query = $siswaModel->select("siswa_id, siswa_nama, siswa_alamat, siswa_tempat_lahir, DATE_FORMAT(siswa_tanggal_lahir, '%d-%m-%Y') as siswa_tanggal_lahir, siswa_photo")->find($id);
         return $this->response->setJSON($query);
     }
 

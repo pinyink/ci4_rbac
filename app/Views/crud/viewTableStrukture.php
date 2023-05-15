@@ -181,20 +181,20 @@
                             <?php foreach($fields as $value): ?>
                             <tr>
                                 <td>
-                                    <input type="text" class="form-control" name="fieldName[<?=$no;?>]"
+                                    <input type="text" class="form-control" name="fieldName[<?=$value->name;?>]"
                                         value="<?=$value->name;?>" readonly>
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control" name="fieldAlias[<?=$no;?>]"
-                                        value="<?=isset($fieldAlias[$no]) ? $fieldAlias[$no] : ucwords(str_replace('_', ' ', str_replace($table.'_', '', $value->name)))?>">
+                                    <input type="text" class="form-control" name="fieldAlias[<?=$value->name;?>]"
+                                        value="<?=isset($fieldAlias[$value->name]) ? $fieldAlias[$value->name] : ucwords(str_replace('_', ' ', str_replace($table.'_', '', $value->name)))?>">
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control" name="fieldAttrLabel[<?=$no;?>]"
-                                        value="<?=isset($fieldAttrLabel[$no]) ? $fieldAttrLabel[$no] : '';?>">
+                                    <input type="text" class="form-control" name="fieldAttrLabel[<?=$value->name;?>]"
+                                        value="<?=isset($fieldAttrLabel[$value->name]) ? $fieldAttrLabel[$value->name] : '';?>">
                                 </td>
                                 <td>
-                                    <?php $type = isset($fieldType[$no]) ? $fieldType[$no] : '';?>
-                                    <?=form_dropdown('fieldType['.$no.']', [
+                                    <?php $type = isset($fieldType[$value->name]) ? $fieldType[$value->name] : '';?>
+                                    <?=form_dropdown('fieldType['.$value->name.']', [
                                         'text' => 'text',
                                         'number' => 'number',
                                         'textarea' => 'textarea',
@@ -206,31 +206,31 @@
                                     ], $type, ['class' => 'form-control'])?>
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control" name="maxLength[<?=$no;?>]"
-                                        value="<?= isset($maxLength[$no]) ? $maxLength[$no] : $value->max_length;?>">
+                                    <input type="text" class="form-control" name="maxLength[<?=$value->name;?>]"
+                                        value="<?= isset($maxLength[$value->name]) ? $maxLength[$value->name] : $value->max_length;?>">
                                 </td>
                                 <td>
-                                    <label for="fieldTable_<?=$no;?>">
-                                        <input type="checkbox" id="fieldTable_<?=$no?>" name="fieldTable[<?=$no;?>]"
-                                            value="<?=$value->name;?>" <?=isset($fieldTable[$no]) ? 'checked' : '';?>> <?=$value->name;?>
+                                    <label for="fieldTable_<?=$value->name;?>">
+                                        <input type="checkbox" id="fieldTable_<?=$value->name?>" name="fieldTable[<?=$value->name;?>]"
+                                            value="<?=$value->name;?>" <?=isset($fieldTable[$value->name]) ? 'checked' : '';?>> <?=$value->name;?>
                                     </label>
                                 </td>
                                 <td>
-                                    <label for="viewTable_<?=$no;?>">
-                                        <input type="checkbox" id="viewTable_<?=$no?>" name="viewTable[<?=$no;?>]"
-                                            value="<?=$value->name;?>" <?=isset($viewTable[$no]) ? 'checked' : '';?>> <?=$value->name;?>
+                                    <label for="viewTable_<?=$value->name;?>">
+                                        <input type="checkbox" id="viewTable_<?=$value->name?>" name="viewTable[<?=$value->name;?>]"
+                                            value="<?=$value->name;?>" <?=isset($viewTable[$value->name]) ? 'checked' : '';?>> <?=$value->name;?>
                                     </label>
                                 </td>
                                 <td>
-                                    <label for="fieldRequired_<?=$no;?>">
-                                        <input type="checkbox" id="fieldRequired_<?=$no?>" name="fieldRequired[<?=$no;?>]"
-                                            value="<?=$value->name;?>" <?=isset($fieldRequired[$no]) ? 'checked' : '';?>> <?=$value->name;?>
+                                    <label for="fieldRequired_<?=$value->name;?>">
+                                        <input type="checkbox" id="fieldRequired_<?=$value->name?>" name="fieldRequired[<?=$value->name;?>]"
+                                            value="<?=$value->name;?>" <?=isset($fieldRequired[$value->name]) ? 'checked' : '';?>> <?=$value->name;?>
                                     </label>
                                 </td>
                                 <td>
-                                    <label for="fieldTableRemote_<?=$no?>">
-                                        <input type="checkbox" id="fieldTableRemote_<?=$no?>"
-                                            name="fieldTableRemote[<?=$no;?>]" value="<?=$value->name;?>" <?=isset($fieldTableRemote[$no]) ? 'checked' : '';?>> Ya
+                                    <label for="fieldTableRemote_<?=$value->name?>">
+                                        <input type="checkbox" id="fieldTableRemote_<?=$value->name?>"
+                                            name="fieldTableRemote[<?=$value->name;?>]" value="<?=$value->name;?>" <?=isset($fieldTableRemote[$value->name]) ? 'checked' : '';?>> Ya
                                     </label>
                                 </td>
                             </tr>
