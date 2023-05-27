@@ -714,7 +714,7 @@ $view = "
 
 @?=\$this->section('content'); ?@
 <div class=\"page-heading\">
-    <h1 class=\"page-title\">Admin</h1>
+    <h1 class=\"page-title\">".ucwords($nama)."</h1>
     <ol class=\"breadcrumb\">
         <li class=\"breadcrumb-item\">
             <a href=\"@?=base_url('home');?@\"><i class=\"fa fa-home font-20\"></i></a>
