@@ -14,7 +14,7 @@ class UserModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = true;
     protected $protectFields    = true;
-    protected $allowedFields    = ['user_username', 'user_password', 'user_superadmin', 'user_aktif'];
+    protected $allowedFields    = ['user_username', 'user_password', 'user_superadmin', 'user_aktif', 'user_level'];
 
     // Dates
     protected $useTimestamps = true;
@@ -39,8 +39,8 @@ class UserModel extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
-    public $column_order  = array(null, null, 'a.user_username', 'a.user_superadmin', 'a.user_updated_at');
-    public $column_search = array('a.user_username', 'a.user_superadmin', 'a.user_updated_at');
+    public $column_order  = array(null, null, 'a.user_username', 'a.user_superadmin', 'a.user_level', 'a.user_updated_at');
+    public $column_search = array('a.user_username', 'a.user_superadmin', 'a.user_level');
     public $order         = array('a.user_username' => 'asc');
 
     private $request = '';
@@ -64,7 +64,7 @@ class UserModel extends Model
 
     private function _getDatatablesQuery()
     {
-        $this->dt->select('a.user_id, a.user_username, a.user_superadmin, a.user_updated_at, a.user_aktif');
+        $this->dt->select('a.user_id, a.user_username, a.user_superadmin, a.user_updated_at, a.user_aktif, a.user_level');
         $this->dt->where($this->deletedField, null);
         $this->dt->where($this->where);
         $i = 0;
@@ -112,5 +112,15 @@ class UserModel extends Model
     {
         $tblStorage = $this->db->table($this->table);
         return $tblStorage->countAllResults();
+    }
+
+    public function details($where = [])
+    {
+        $table = $this->db->table($this->table.' a');
+        $table->select('a.user_id, profil.profil_firstname, profil.profil_nomor_hp');
+        $table->join('profil', 'a.user_id = profil.user_id', 'left');
+        $table->where('a.'.$this->deletedField, null);
+        $table->where($where);
+        return $table->get();
     }
 }

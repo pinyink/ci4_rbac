@@ -19,9 +19,9 @@ class MenuModel extends Model
     // Dates
     protected $useTimestamps = true;
     protected $dateFormat    = 'datetime';
-    protected $createdField  = 'created_at';
-    protected $updatedField  = 'updated_at';
-    protected $deletedField  = 'deleted_at';
+    protected $createdField  = 'menu_created_at';
+    protected $updatedField  = 'menu_updated_at';
+    protected $deletedField  = 'menu_deleted_at';
 
     // Validation
     protected $validationRules      = [];
@@ -39,8 +39,8 @@ class MenuModel extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
-    public $column_order  = array(null, null, 'a.menu_desc', 'a.created_at');
-    public $column_search = array('a.menu_desc', 'a.created_at');
+    public $column_order  = array(null, null, 'a.menu_desc', 'a.menu_created_at');
+    public $column_search = array('a.menu_desc', 'a.menu_created_at');
     public $order         = array('a.menu_desc' => 'asc');
 
     private $request = '';
@@ -64,7 +64,7 @@ class MenuModel extends Model
 
     private function _getDatatablesQuery()
     {
-        $this->dt->select('a.menu_id, a.menu_desc, a.created_at');
+        $this->dt->select('a.menu_id, a.menu_desc, a.menu_created_at');
         $this->dt->where($this->deletedField, null);
         $this->dt->where($this->where);
         $i = 0;

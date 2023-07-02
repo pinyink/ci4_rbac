@@ -8,6 +8,8 @@ use App\Models\Setting\ProfilModel;
 
 class Login extends Controller
 {
+    private $session;
+
     public function __construct()
     {
         $this->session = session();
@@ -33,7 +35,8 @@ class Login extends Controller
                 $dataSession = [
                     'user_id' => $query->user_id,
                     'user' => $query->user_username,
-                    'level' => $query->user_superadmin
+                    'level' => $query->user_superadmin,
+                    'user_level' => $query->user_level
                 ];
                 if (!empty($data)) {
                     if (empty($data['profil_image'])) {
@@ -41,7 +44,7 @@ class Login extends Controller
                     } else {
                         $dataSession['profil_image'] = base_url() . '/' . $data['profil_image'];
                     }
-                    $dataSession['fullname'] = $data['profil_firstname'] . ' ' . $data['profil_lastname'];
+                    $dataSession['fullname'] = $data['profil_firstname'];
                 } else {
                     $dataSession['profil_image'] = base_url() . '/assets/admincast/dist/assets/img/image.jpg';
                     $dataSession['fullname'] = '';

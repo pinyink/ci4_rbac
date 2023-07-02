@@ -57,18 +57,19 @@ $routes->group('/admin/user', ['namespace' => 'App\Controllers\Admin'], static f
 	$routes->post('user_username_exist', 'UserController::userusernameExist', ['filter' => 'adminjson']);
 });
 
-$routes->get('admin/policy', 'Policy::index', ['filter' => 'admin', 'namespace' => 'App\Controllers\Admin']);
-$routes->post('admin/policy/ajaxList', 'Policy::ajaxList', ['filter' => 'adminjson', 'namespace' => 'App\Controllers\Admin']);
-$routes->post('admin/policy/saveData', 'Policy::saveData', ['filter' => 'adminjson', 'namespace' => 'App\Controllers\Admin']);
-$routes->put('admin/policy/getData/(:num)/', 'Policy::getData/$1', ['filter' => 'adminjson', 'namespace' => 'App\Controllers\Admin']);
-$routes->post('admin/policy/updateData', 'Policy::updateData', ['filter' => 'adminjson', 'namespace' => 'App\Controllers\Admin']);
-$routes->post('admin/policy/userList', 'Policy::userList', ['filter' => 'adminjson', 'namespace' => 'App\Controllers\Admin']);
-$routes->post('admin/policy/addRole', 'Policy::addRole', ['filter' => 'adminjson', 'namespace' => 'App\Controllers\Admin']);
-$routes->post('admin/policy/removeRole', 'Policy::removeRole', ['filter' => 'adminjson', 'namespace' => 'App\Controllers\Admin']);
-$routes->get('admin/policy/menuList/(:num)', 'Policy::menuList/$1', ['filter' => 'adminjson', 'namespace' => 'App\Controllers\Admin']);
-$routes->post('admin/policy/saveSubMenu', 'Policy::saveSubMenu', ['filter' => 'adminjson', 'namespace' => 'App\Controllers\Admin']);
-$routes->post('admin/policy/addPolicy', 'Policy::addPolicy', ['filter' => 'adminjson', 'namespace' => 'App\Controllers\Admin']);
-$routes->post('admin/policy/removePolicy', 'Policy::removePolicy', ['filter' => 'adminjson', 'namespace' => 'App\Controllers\Admin']);
+$routes->group('/admin/policy', ['namespace' => 'App\Controllers\Admin'], static function($routes) {
+    $routes->get('/', 'PolicyController::index', ['filter' => 'admin']);
+    $routes->post('ajax_list', 'PolicyController::ajaxList', ['filter' => 'adminjson']);
+    $routes->post('save_data', 'PolicyController::saveData', ['filter' => 'adminjson']);
+    $routes->post('update_data', 'PolicyController::saveData', ['filter' => 'adminjson']);
+    $routes->get('(:any)/get_data', 'PolicyController::getData/$1', ['filter' => 'adminjson']);
+    $routes->delete('(:any)/delete_data', 'PolicyController::deleteData/$1', ['filter' => 'adminjson']);
+	$routes->post('policy_id_exist', 'PolicyController::policyidExist', ['filter' => 'adminjson']);
+    $routes->get('menuList/(:any)', 'PolicyController::menuList/$1', ['filter' => 'adminjson']);
+    $routes->post('saveSubMenu', 'PolicyController::saveSubMenu', ['filter' => 'adminjson', 'namespace' => 'App\Controllers\Admin']);
+    $routes->post('addPolicy', 'PolicyController::addPolicy', ['filter' => 'adminjson']);
+    $routes->post('removePolicy', 'PolicyController::removePolicy', ['filter' => 'adminjson']);
+});
 
 $routes->group('/admin/menu', ['namespace' => 'App\Controllers\Admin'], static function($routes) {
     $routes->get('/', 'MenuController::index', ['filter' => 'admin']);

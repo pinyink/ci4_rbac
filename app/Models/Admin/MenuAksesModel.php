@@ -19,9 +19,9 @@ class MenuAksesModel extends Model
     // Dates
     protected $useTimestamps = true;
     protected $dateFormat    = 'datetime';
-    protected $createdField  = 'created_at';
-    protected $updatedField  = 'updated_at';
-    protected $deletedField  = 'deleted_at';
+    protected $createdField  = 'menu_akses_created_at';
+    protected $updatedField  = 'menu_akses_updated_at';
+    protected $deletedField  = 'menu_akses_deleted_at';
 
     // Validation
     protected $validationRules      = [];

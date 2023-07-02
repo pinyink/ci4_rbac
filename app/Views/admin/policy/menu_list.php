@@ -73,7 +73,7 @@
 <?= $this->section('js'); ?>
 <script src="<?= base_url(); ?>/assets/alertifyjs/alertify.min.js"></script>
 <script type="text/javascript">
-    var policy_Id = <?=$policyId;?>;
+    var policy_Id = '<?=$policyId;?>';
 
     $( "input.checkbox" ).on( "click", function() {
         var val = $(this).val();
