@@ -1,0 +1,178 @@
+:root {
+    --background : rgb(7, 230, 37),
+}
+
+body {
+    overflow-x: hidden;
+    font-family: 'Open Sans', sans-serif;
+    background-color: #fff;
+    color: rgb(0, 1, 6, 0.90);
+}
+
+.header {
+    background-color: rgb(69, 3, 252);
+    box-shadow: 0 2px 4px rgba(141, 5, 232, 0.08);
+    height: 40px;
+}
+
+.header .page-brand {
+    height: 60px;
+    background-color: rgb(69, 3, 252);
+    border-right: 1px solid rgb(250, 250, 250);
+}
+
+.header .flexbox .nav li a {
+    color: #fff;
+}
+
+.page-sidebar {
+    background-color: rgb(69, 3, 252);
+    color: #fff;
+    border-right: 1px solid rgb(250, 250, 250);
+}
+
+.page-sidebar .admin-block {
+    border-radius: 0 0 10px 10px;
+    margin-bottom: 1px;
+}
+
+.side-menu>li a {
+    color: #fff
+}
+
+.side-menu>li a:focus,
+.side-menu>li a.active,
+.side-menu>li a:hover {
+    color: #fff;
+    background-color: rgba(167, 140, 245, 0.28);
+}
+
+.side-menu>li.active {
+    background-color: rgba(167, 140, 245, 0.28);
+}
+
+.side-menu>li.active>a,
+.side-menu>li.active>a:hover {
+    color: #fff;
+    background-color: rgba(167, 140, 245, 0.28);
+}
+
+.side-menu>li.active>a:focus {
+    color: #fff;
+    background-color: rgb(69, 3, 252);
+}
+
+.side-menu li a.active {
+    color: #fff;
+}
+
+.sidebar-mini .side-menu>li:hover>a {
+    background-color: rgb(69, 3, 252, 0.76);
+    color: #fff;
+    z-index: 100;
+}
+
+.sidebar-mini .side-menu>li:hover .nav-2-level {
+    background-color: rgb(69, 3, 252);
+}
+
+.content-wrapper {
+    background-color: #fff;
+}
+
+.content-wrapper .page-heading .breadcrumb {
+    background-color: rgb(69, 3, 252, 0.76);
+    padding: 7px 0 7px 10px;
+}
+
+.content-wrapper .page-heading .breadcrumb li,
+.content-wrapper .page-heading .breadcrumb li a {
+    color: #fff;
+}
+
+.ibox {
+    background-color: #fff;
+    border: 1px solid rgba(167, 140, 245, 0.28);
+    border-radius: 5px;
+    box-shadow: none;
+}
+
+.ibox .ibox-head {
+    background-color: rgb(69, 3, 252);
+    color: #fff;
+    border-radius: 5px 5px 0 0;
+    margin-right: -1px;
+    margin-left: -1px;
+    height: 30px !important;
+}
+
+.ibox .ibox-head .ibox-tools>a {
+    color: #fff;
+}
+
+.ibox .ibox-body {
+    font-size: 12px;
+}
+
+.ibox .ibox-body .table {
+    font-size: 11px;
+}
+
+.pagination .page-link {
+    color: inherit;
+}
+
+.pagination .page-link:focus,
+.pagination .page-link:hover {
+    color: rgb(69, 3, 252);
+}
+
+.pagination .active>a,
+.pagination .active>a:focus,
+.pagination .active>a:hover,
+.pagination .active>span,
+.pagination .active>span:focus,
+.pagination .active>span:hover,
+.pagination .page-item.active .page-link {
+    background-color: rgb(69, 3, 252);
+    border-color: rgb(69, 3, 252);
+    color: #fff
+}
+
+.page-footer {
+    border-top: 1px solid rgba(167, 140, 245, 0.28);
+}
+
+.to-top:hover {
+    background-color: rgb(69, 3, 252);
+}
+
+.to-top:hover i {
+    display: block;
+    color: #fff
+}
+
+.modal .modal-dialog .modal-content .modal-header {
+    height: 42px;
+    background-color: rgb(69, 3, 252);
+}
+
+.modal .modal-dialog .modal-content .modal-header .modal-title {
+    font-size: 12pt;
+    color: #fff;
+}
+
+.modal .modal-dialog .modal-content .modal-header button {
+    font-size: 12pt;
+    color: #fff;
+}
+
+.btn-primary {
+    background-color: rgb(69, 3, 252);
+    color: #fff;   
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: rgba(167, 140, 245, 0.90);
+}
