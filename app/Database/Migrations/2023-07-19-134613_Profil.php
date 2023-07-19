@@ -25,7 +25,7 @@ class Profil extends Migration
                 'constraint' => '64',
                 'default' => null,
             ],
-            'profil_emaul' => [
+            'profil_email' => [
                 'type' => 'VARCHAR',
                 'constraint' => '64',
                 'default' => null
