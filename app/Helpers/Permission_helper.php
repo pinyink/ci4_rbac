@@ -50,6 +50,7 @@ function enforce($menu, $menu_akses)
         return true;
     } else {
         $enforcer = \Config\Services::enforcer();
-        return $enforcer->enforce(session('user'), $menu, $menu_akses);
+        // return $enforcer->enforce(session('user'), $menu, $menu_akses);
+        return $enforcer->hasPolicy(session('user_level'), $menu, $menu_akses);
     }
 }
