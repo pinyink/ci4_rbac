@@ -8,14 +8,14 @@
     <?= csrf_meta() ?>
     <title><?= isset($judul) ? $judul : ''; ?></title>
     <!-- GLOBAL MAINLY STYLES-->
-    <link href="<?= base_url(); ?>/assets/admincast/dist/assets/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="<?= base_url(); ?>/assets/admincast/dist/assets/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
-    <link href="<?= base_url(); ?>/assets/admincast/dist/assets/vendors/themify-icons/css/themify-icons.css" rel="stylesheet" />
+    <link href="<?= base_url('assets/admincast/dist/assets/vendors/bootstrap/dist/css/bootstrap.min.css'); ?>" rel="stylesheet" />
+    <link href="<?= base_url('assets/admincast/dist/assets/vendors/font-awesome/css/font-awesome.min.css'); ?>" rel="stylesheet" />
+    <link href="<?= base_url('assets/admincast/dist/assets/vendors/themify-icons/css/themify-icons.css'); ?>" rel="stylesheet" />
     <!-- PLUGINS STYLES-->
     <!-- THEME STYLES-->
-    <link href="<?= base_url(); ?>/assets/admincast/dist/assets/css/main.min.css" rel="stylesheet" />
-    <link href="<?= base_url(); ?>/assets/admincast/dist/assets/css/themes/purplee.css" rel="stylesheet" />
-    <link href="<?=base_url();?>/assets/admincast/dist/assets/vendors/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css">
+    <link href="<?= base_url('assets/admincast/dist/assets/css/main.min.css'); ?>" rel="stylesheet" />
+    <link href="<?= base_url('assets/admincast/dist/assets/css/themes/purplee.css'); ?>" rel="stylesheet" />
+    <link href="<?=base_url('assets/admincast/dist/assets/vendors/sweetalert2/sweetalert2.min.css');?>" rel="stylesheet" type="text/css">
     <?= $this->renderSection('css'); ?>
     <!-- PAGE LEVEL STYLES-->
 </head>
@@ -43,15 +43,15 @@
     </div>
     <!-- END PAGA BACKDROPS-->
     <!-- CORE PLUGINS-->
-    <script src="<?= base_url(); ?>/assets/admincast/dist/assets/vendors/jquery/dist/jquery.min.js" type="text/javascript"></script>
-    <script src="<?= base_url(); ?>/assets/admincast/dist/assets/vendors/popper.js/dist/umd/popper.min.js" type="text/javascript"></script>
-    <script src="<?= base_url(); ?>/assets/admincast/dist/assets/vendors/bootstrap/dist/js/bootstrap.min.js" type="text/javascript"></script>
-    <script src="<?= base_url(); ?>/assets/admincast/dist/assets/vendors/metisMenu/dist/metisMenu.min.js" type="text/javascript"></script>
-    <script src="<?= base_url(); ?>/assets/admincast/dist/assets/vendors/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+    <script src="<?= base_url('assets/admincast/dist/assets/vendors/jquery/dist/jquery.min.js'); ?>"></script>
+    <script src="<?= base_url('assets/admincast/dist/assets/vendors/popper.js/dist/umd/popper.min.js'); ?>"></script>
+    <script src="<?= base_url('assets/admincast/dist/assets/vendors/bootstrap/dist/js/bootstrap.min.js'); ?>"></script>
+    <script src="<?= base_url('assets/admincast/dist/assets/vendors/metisMenu/dist/metisMenu.min.js'); ?>"></script>
+    <script src="<?= base_url('assets/admincast/dist/assets/vendors/jquery-slimscroll/jquery.slimscroll.min.js'); ?>"></script>
     <!-- PAGE LEVEL PLUGINS-->
-    <script src="<?=base_url();?>/assets/admincast/dist/assets/vendors/sweetalert2/sweetalert2.min.js"></script>
+    <script src="<?=base_url('assets/admincast/dist/assets/vendors/sweetalert2/sweetalert2.min.js');?>"></script>
     <!-- CORE SCRIPTS-->
-    <script src="<?= base_url(); ?>/assets/admincast/dist/assets/js/app.min.js" type="text/javascript"></script>
+    <script src="<?= base_url('assets/admincast/dist/assets/js/app.min.js'); ?>"></script>
     <script>
         $(document)
             .ajaxStart(function() {

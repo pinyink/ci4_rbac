@@ -11,7 +11,7 @@
         </div>
         <ul class="side-menu metismenu">
             <li>
-                <a href="<?= base_url() . '/home'; ?>"><i class="sidebar-item-icon fa fa-th-large"></i>
+                <a href="<?= base_url('home'); ?>"><i class="sidebar-item-icon fa fa-th-large"></i>
                     <span class="nav-label">Dashboard</span>
                 </a>
             </li>
@@ -21,12 +21,12 @@
                 <ul class="nav-2-level collapse">
                     <?php if (enforce(1, 1)) : ?>
                         <li>
-                            <a href="<?= base_url() . '/menu_satu'; ?>">Menu 1</a>
+                            <a href="<?= base_url('menu_satu'); ?>">Menu 1</a>
                         </li>
                     <?php endif ?>
                     <?php if (enforce(2, 1)) : ?>
                         <li>
-                            <a href="<?= base_url() . '/menu_dua'; ?>">Menu 2</a>
+                            <a href="<?= base_url('menu_dua'); ?>">Menu 2</a>
                         </li>
                     <?php endif ?>
                 </ul>
@@ -37,16 +37,16 @@
                         <span class="nav-label">Admin Menu</span><i class="fa fa-angle-left arrow"></i></a>
                     <ul class="nav-2-level collapse">
                         <li>
-                            <a href="<?= base_url() . '/admin/user'; ?>">User</a>
+                            <a href="<?= base_url('admin/user'); ?>">User</a>
                         </li>
                         <li>
-                            <a href="<?= base_url() . '/admin/policy'; ?>">Policy</a>
+                            <a href="<?= base_url('admin/policy'); ?>">Policy</a>
                         </li>
                         <li>
-                            <a href="<?= base_url() . '/admin/menu'; ?>">Menu</a>
+                            <a href="<?= base_url('admin/menu'); ?>">Menu</a>
                         </li>
                         <li>
-                            <a href="<?= base_url() . '/crud'; ?>">Crud</a>
+                            <a href="<?= base_url('crud'); ?>">Crud</a>
                         </li>
                     </ul>
                 </li>
