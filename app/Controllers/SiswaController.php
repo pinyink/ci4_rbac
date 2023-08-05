@@ -12,7 +12,7 @@ class SiswaController extends BaseController
 {
     private $tema;
 
-    function __construct() 
+    function __construct()
     {
         helper(['form']);
         $this->tema = new Tema();
@@ -35,7 +35,15 @@ class SiswaController extends BaseController
             $no++;
             $row = [];
             $id = $list->siswa_id;
-            $action = '<a href="javascript:;" class="" data-toggle="tooltip" data-placement="top" title="Edit Data" onclick="edit_data('.$id.')"><i class="fa fa-edit"></i></a><a href="javascript:;" class="text-danger ml-2" data-toggle="tooltip" data-placement="top" title="Delete Data" onclick="delete_data('.$id.')"><i class="fa fa-trash"></i></a>';
+            $aksi = '<a href="javascript:;" class="" data-toggle="tooltip" data-placement="top" title="Lihat Data" onclick="lihat_data('.$id.')"><i class="fa fa-search"></i></a>';
+            if(enforce(1, 3)) {
+                $aksi .= '<a href="javascript:;" class="ml-2" data-toggle="tooltip" data-placement="top" title="Edit Data" onclick="edit_data('.$id.')"><i class="fa fa-edit"></i></a>';
+            }
+
+            if(enforce(1, 4)) {
+                $aksi .= '<a href="javascript:;" class="text-danger ml-2" data-toggle="tooltip" data-placement="top" title="Delete Data" onclick="delete_data('.$id.')"><i class="fa fa-trash"></i></a>';
+            }
+            $action = $aksi;
             
             $row[] = $action;
             $row[] = $no;
@@ -62,7 +70,7 @@ class SiswaController extends BaseController
         
 
         $validation = [
-            'val_siswa_nama' => 'required','val_siswa_tempat_lahir' => 'required','val_siswa_tanggal_lahir' => 'required',
+            'val_siswa_nama' => 'required','val_siswa_alamat' => 'required','val_siswa_tempat_lahir' => 'required','val_siswa_tanggal_lahir' => 'required',
         ];
 
         

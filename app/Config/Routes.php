@@ -90,7 +90,7 @@ $routes->group('/admin/menuakses', ['namespace' => 'App\Controllers\Admin'], sta
 $routes->get('/menu_dua', 'Menu_dua::index', ['filter' => 'auth:N, 2, 1', 'namespace' => 'App\Controllers']);
 $routes->get('/menu_satu', 'Menu_satu::index', ['filter' => 'auth:N, 1, 1', 'namespace' => 'App\Controllers']);
 
-$routes->group('/master/siswa', ['namespace' => 'App\Controllers\Master'], static function($routes) {
+$routes->group('/siswa', ['namespace' => 'App\Controllers'], static function($routes) {
     $routes->get('/', 'SiswaController::index', ['filter' => 'auth:Y,1,1']);
     $routes->post('ajax_list', 'SiswaController::ajaxList', ['filter' => 'auth:N,1,1']);
     $routes->post('save_data', 'SiswaController::saveData', ['filter' => 'auth:N,1,2']);

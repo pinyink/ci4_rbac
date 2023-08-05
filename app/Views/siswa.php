@@ -11,12 +11,12 @@
 
 <?=$this->section('content'); ?>
 <div class="page-heading">
-    <h1 class="page-title">Admin</h1>
+    <h1 class="page-title">Siswa</h1>
     <ol class="breadcrumb">
         <li class="breadcrumb-item">
             <a href="<?=base_url('home');?>"><i class="fa fa-home font-20"></i></a>
         </li>
-        <li class="breadcrumb-item"></li>
+        
         <li class="breadcrumb-item">Siswa</li>
     </ol>
 </div>
@@ -31,7 +31,9 @@
                     <div class="ibox-title">Data Siswa</div>
                     <div class="ibox-tools">
                         <a onclick="reload_table()" class="refresh" data-toggle="tooltip" data-placement="top" title="reload data"><i class="fa fa-refresh"></i></a>
-                        <a class="" onclick="tambah_data()" data-toggle="tooltip" data-placement="top" title="tambah data"><i class="fa fa-plus-square"></i></a>
+                        <?php if(enforce(1, 2)): ?>
+                            <a class="" onclick="tambah_data()" data-toggle="tooltip" data-placement="top" title="tambah data"><i class="fa fa-plus-square"></i></a>
+                        <?php endif ?>
                     </div>
                 </div>
                 <div class="ibox-body">
@@ -90,8 +92,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-sm btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Simpan</button>
                 </div>
             </div>
         <?=form_close();?>
@@ -164,6 +166,32 @@
         
     }
 
+    function lihat_data(id) {
+        reset_form();
+        save_method = 'update';
+        $('#formsiswa').valid();
+        $('[name="method"]').val('update');
+        $('#formsiswa .form-control').addClass('form-view-detail');
+        $('#formsiswa .form-control').prop('disabled', true);
+        $('#formsiswa button[type="submit"]').hide();
+        $.ajax({
+            type: "GET",
+            url: "<?=base_url('/siswa');?>/"+id+'/get_data',
+            dataType: "JSON",
+            success: function (response) {
+                $('#modalsiswa').modal('show');
+                $('#modalsiswa .modal-title').text('Detail Data');
+                $('[name="siswa_id"]').val(response.siswa_id);
+                $('[name="val_siswa_nama"]').val(response.siswa_nama);
+				$('[name="val_siswa_alamat"]').val(response.siswa_alamat);
+				$('[name="val_siswa_tempat_lahir"]').val(response.siswa_tempat_lahir);
+				$('[name="val_siswa_tanggal_lahir"]').val(response.siswa_tanggal_lahir);
+				
+            }
+        });
+    }
+
+    <?php if(enforce(1, 2)): ?>
     function tambah_data() {
         save_method = 'save';
         reset_form();
@@ -171,12 +199,21 @@
         $('#modalsiswa .modal-title').text('Tambah Data');
         $('[name="method"]').val('save');
         $('[name="siswa_id"]').val(null);
+        $('#formsiswa .form-control').removeClass('form-view-detail');
+        $('#formsiswa .form-control').prop('disabled', false);
+        $('#formsiswa button[type="submit"]').show();
     }
+    <?php endif ?>
 
+    <?php if(enforce(1, 3)): ?>
     function edit_data(id) {
         reset_form();
+        save_method = 'update';
         $('#formsiswa').valid();
         $('[name="method"]').val('update');
+        $('#formsiswa .form-control').removeClass('form-view-detail');
+        $('#formsiswa .form-control').prop('disabled', false);
+        $('#formsiswa button[type="submit"]').show();
         $.ajax({
             type: "GET",
             url: "<?=base_url('/siswa');?>/"+id+'/get_data',
@@ -193,7 +230,9 @@
             }
         });
     }
+    <?php endif ?>
 
+    <?php if(enforce(1, 4)): ?>
     function delete_data(id) {
         Swal.fire({
         title: 'Apa Anda Yakin?',
@@ -230,6 +269,7 @@
         })
 
     }
+    <?php endif ?>
 
     $(function() {
         $('#formsiswa').validate({
@@ -241,7 +281,7 @@
             },
 
 			val_siswa_alamat: {
-                
+                required: true,
             },
 
 			val_siswa_tempat_lahir: {
@@ -260,7 +300,7 @@
                 },
 
 				val_siswa_alamat: {
-                    
+                    required:'Alamat harus diisi',
                 },
 
 				val_siswa_tempat_lahir: {
@@ -280,7 +320,13 @@
                 $(e).closest(".form-control").removeClass("is-invalid").addClass("is-valid");
             },
             submitHandler: function() {
-                var url = "<?=base_url('/siswa/save_data');?>";
+                var url = '';
+                if(save_method == 'update') {
+                    url = "<?=base_url('/siswa/update_data');?>";
+                }
+                if(save_method == 'save') {
+                    url = "<?=base_url('/siswa/save_data');?>";
+                }
                 var formData = new FormData($($('#formsiswa'))[0]);
                 $.ajax({
                     type: "POST",
