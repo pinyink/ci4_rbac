@@ -35,7 +35,7 @@ class Filters extends BaseConfig
             // 'honeypot',
             // 'csrf',
             // 'invalidchars',
-            'csrf' => ['except' => ''],
+            'csrf',
         ],
         'after' => [
             'toolbar',
@@ -56,7 +56,7 @@ class Filters extends BaseConfig
      * with a method you don’t expect could bypass the filter.
      */
     public array $methods = [
-        'POST'
+        'post' => ['csrf']
     ];
 
     /**

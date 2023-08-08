@@ -93,6 +93,7 @@
                     'X-Requested-With': 'XMLHttpRequest'
                 },
                 'data': {
+                    <?=csrf_token();?>: '<?=csrf_hash()?>',
                     akses_id: akses_id,
                     policy_id: policy_Id
                 }
@@ -117,6 +118,7 @@
                     'X-Requested-With': 'XMLHttpRequest'
                 },
                 'data': {
+                    <?=csrf_token();?>: '<?=csrf_hash()?>',
                     akses_id: akses_id,
                     policy_id: policy_Id
                 }

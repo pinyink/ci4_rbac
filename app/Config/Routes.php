@@ -90,11 +90,32 @@ $routes->group('/admin/menuakses', ['namespace' => 'App\Controllers\Admin'], sta
 $routes->get('/menu_dua', 'Menu_dua::index', ['filter' => 'auth:N, 2, 1', 'namespace' => 'App\Controllers']);
 $routes->get('/menu_satu', 'Menu_satu::index', ['filter' => 'auth:N, 1, 1', 'namespace' => 'App\Controllers']);
 
-$routes->group('/master/siswa', ['namespace' => 'App\Controllers\Master'], static function($routes) {
+$routes->group('/siswa', ['namespace' => 'App\Controllers'], static function($routes) {
     $routes->get('/', 'SiswaController::index', ['filter' => 'auth:Y,1,1']);
     $routes->post('ajax_list', 'SiswaController::ajaxList', ['filter' => 'auth:N,1,1']);
     $routes->post('save_data', 'SiswaController::saveData', ['filter' => 'auth:N,1,2']);
     $routes->post('update_data', 'SiswaController::saveData', ['filter' => 'auth:N,1,3']);
     $routes->get('(:num)/get_data', 'SiswaController::getData/$1', ['filter' => 'auth:N,1,1']);
     $routes->delete('(:num)/delete_data', 'SiswaController::deleteData/$1', ['filter' => 'auth:N,1,4']);
+});
+
+$routes->group('/blog/categories', ['namespace' => 'App\Controllers\Blog'], static function($routes) {
+    $routes->get('/', 'CategoriesController::index', ['filter' => 'auth:Y,1,1']);
+    $routes->post('ajax_list', 'CategoriesController::ajaxList', ['filter' => 'auth:N,1,1']);
+    $routes->post('save_data', 'CategoriesController::saveData', ['filter' => 'auth:N,1,2']);
+    $routes->post('update_data', 'CategoriesController::saveData', ['filter' => 'auth:N,1,3']);
+    $routes->get('(:num)/get_data', 'CategoriesController::getData/$1', ['filter' => 'auth:N,1,1']);
+    $routes->delete('(:num)/delete_data', 'CategoriesController::deleteData/$1', ['filter' => 'auth:N,1,4']);
+	$routes->post('categories_desc_exist', 'CategoriesController::categoriesdescExist', ['filter' => 'auth:N,1,2']);
+});
+
+$routes->group('/blog/filemanager', ['namespace' => 'App\Controllers\Blog'], static function($routes) {
+    $routes->get('/', 'FileManagerController::index', ['filter' => 'auth:Y,2,1']);
+    $routes->post('get_list', 'FileManagerController::getList', ['filter' => 'auth:N,2,1']);
+    $routes->post('ajax_list', 'FileManagerController::ajaxList', ['filter' => 'auth:N,2,1']);
+    $routes->post('save_data', 'FileManagerController::saveData', ['filter' => 'auth:N,2,2']);
+    $routes->post('update_data', 'FileManagerController::saveData', ['filter' => 'auth:N,2,3']);
+    $routes->get('(:num)/get_data', 'FileManagerController::getData/$1', ['filter' => 'auth:N,2,1']);
+    $routes->delete('(:num)/delete_data', 'FileManagerController::deleteData/$1', ['filter' => 'auth:N,2,4']);
+	$routes->post('files_name_exist', 'FileManagerController::filesnameExist', ['filter' => 'auth:N,2,2']);
 });

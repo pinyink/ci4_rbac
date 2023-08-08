@@ -162,7 +162,7 @@
                 $(e).closest(".form-group").removeClass("has-error")
             },
             submitHandler: function() {
-                var dataString = $('#form-setting').serialize() + '&token=' + $('meta[name=TOKEN]').attr("content");
+                var dataString = $('#form-setting').serialize() + '&<?=csrf_token()?>=' + '<?=csrf_hash();?>';
                 $.ajax({
                         'url': '<?= base_url(); ?>/setting/profil/update',
                         'type': 'post',
@@ -208,7 +208,7 @@
                 $(e).closest(".form-group").removeClass("has-error")
             },
             submitHandler: function() {
-                var dataString = $('#form-password').serialize() + '&token=' + $('meta[name=TOKEN]').attr("content");
+                var dataString = $('#form-password').serialize() + '&<?=csrf_token()?>=' + '<?=csrf_hash();?>';
                 $.ajax({
                         'url': '<?= base_url(); ?>/setting/profil/updatePassword',
                         'type': 'post',
@@ -238,7 +238,7 @@
     $('#formFoto').on('submit', function(event) {
         event.preventDefault();
         var dataString = new FormData($('#formFoto')[0]);
-        dataString.append('csrf_test_name', $('meta[name=csrf_cookie_name]').attr("content"));
+        dataString.append('<?=csrf_token()?>', '<?=csrf_hash();?>');
         $.ajax({
                 'url': '<?= base_url(); ?>/setting/profil/updateFoto',
                 'type': 'post',

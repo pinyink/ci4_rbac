@@ -495,7 +495,13 @@ class ".$namaController." extends BaseController
     // view
 
     $breadCumb = ucwords(str_replace('\\', '', $namespace));
+    $explode = explode('/', $breadCumb);
     $viewBreadCumb = '';
+    foreach ($explode as $key => $e) {
+        if ($e != '') {
+            $viewBreadCumb .= "<li class=\"breadcrumb-item\">".$e."</li>";
+        }
+    }
         $countfieldTable = count($viewTable);
         $width = 75/$countfieldTable;
         $tableTh = '';
@@ -719,7 +725,7 @@ $view = "
         <li class=\"breadcrumb-item\">
             <a href=\"@?=base_url('home');?@\"><i class=\"fa fa-home font-20\"></i></a>
         </li>
-        <li class=\"breadcrumb-item\">".$breadCumb."</li>
+        ".$viewBreadCumb."
         <li class=\"breadcrumb-item\">".ucwords($nama)."</li>
     </ol>
 </div>
@@ -775,8 +781,8 @@ $view = "
                 <div class=\"modal-body\">".$formData."
                 </div>
                 <div class=\"modal-footer\">
-                    <button type=\"button\" class=\"btn btn-sm btn-secondary\" data-dismiss=\"modal\">Close</button>
-                    <button type=\"submit\" class=\"btn btn-sm btn-primary\">Save changes</button>
+                    <button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\">Close</button>
+                    <button type=\"submit\" class=\"btn btn-primary\"><i class=\"fa fa-save\"></i> Simpan</button>
                 </div>
             </div>
         @?=form_close();?@
@@ -809,9 +815,7 @@ $view = "
                             'X-Requested-With': 'XMLHttpRequest'
                         },
                         \"type\": \"POST\",
-                        \"data\": function(data) {
-                            data.token = $('meta[name=TOKEN]').attr(\"content\");
-                        },
+                        \"data\": {<?=csrf_token();?>: '<?=csrf_hash()?>'},
                         error: function(jqXHR, textStatus, errorThrown) {
                             console.log(jqXHR.responseText);
                         }

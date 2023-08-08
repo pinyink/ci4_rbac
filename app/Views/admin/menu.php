@@ -142,9 +142,7 @@
                             'X-Requested-With': 'XMLHttpRequest'
                         },
                         "type": "POST",
-                        "data": function(data) {
-                            data.token = $('meta[name=TOKEN]').attr("content");
-                        },
+                        "data": {<?=csrf_token();?>: '<?=csrf_hash()?>'},
                         error: function(jqXHR, textStatus, errorThrown) {
                             console.log(jqXHR.responseText);
                         }
@@ -253,8 +251,8 @@
                         menu_id: function() {
                             return $('[name="menu_id"]').val();
                         },
-                        csrf_test_name: function() {
-                            return $('meta[name=X-CSRF-TOKEN]').attr("content");
+                        <?=csrf_token()?>: function() {
+                            return '<?=csrf_hash();?>';
                         },
                     },
                 },
@@ -312,7 +310,6 @@
         MValid[0].reset();
         MValid.find(".is-invalid").removeClass("is-invalid");
         MValid.find(".is-valid").removeClass("is-valid");
-        
     }
 
     function tambah_data_akses(id) {

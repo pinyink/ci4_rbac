@@ -210,7 +210,7 @@
                 $(e).closest(".form-group").removeClass("has-error")
             },
             submitHandler: function() {
-                var dataString = $('#formMenu').serialize() + '&token=' + $('meta[name=TOKEN]').attr("content");
+                var dataString = $('#formMenu').serialize() + '&<?=csrf_token()?>=' + '<?=csrf_hash();?>';
                 var url;
                 if (saveMethod == 'tambah_menu') {
                     url = '<?= base_url(); ?>/admin/menu/saveMenu';

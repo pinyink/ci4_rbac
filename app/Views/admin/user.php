@@ -125,9 +125,7 @@
                             'X-Requested-With': 'XMLHttpRequest'
                         },
                         "type": "POST",
-                        "data": function(data) {
-                            data.token = $('meta[name=TOKEN]').attr("content");
-                        },
+                        "data": {<?=csrf_token();?>: '<?=csrf_hash()?>'},
                         error: function(jqXHR, textStatus, errorThrown) {
                             console.log(jqXHR.responseText);
                         }
