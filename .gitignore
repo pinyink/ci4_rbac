@@ -129,5 +129,5 @@ nb-configuration.xml
 /.php-cs-fixer.php
 
 # upload
-/uploads
-/upload
+/public/uploads/*
+/public/upload/*
