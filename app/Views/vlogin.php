@@ -23,6 +23,7 @@
             <a class="link" href="index.html">CodeIgniter RBAC</a>
         </div>
         <form id="login-form" action="<?= base_url(); ?>/auth" method="post">
+            <?=csrf_field(); ?>
             <h2 class="login-title">Log in</h2>
             <div class="form-group">
                 <div class="input-group-icon right">
