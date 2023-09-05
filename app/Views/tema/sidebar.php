@@ -15,22 +15,6 @@
                     <span class="nav-label">Dashboard</span>
                 </a>
             </li>
-            <li>
-                <a href="javascript:;"><i class="sidebar-item-icon fa fa-podcast"></i>
-                    <span class="nav-label">Blog</span><i class="fa fa-angle-left arrow"></i></a>
-                <ul class="nav-2-level collapse">
-                    <?php if (enforce(1, 1)) : ?>
-                        <li>
-                            <a href="<?= base_url('blog/categories'); ?>">Categories</a>
-                        </li>
-                    <?php endif ?>
-                    <?php if (enforce(2, 1)) : ?>
-                        <li>
-                            <a href="<?= base_url('blog/filemanager'); ?>">File Manager</a>
-                        </li>
-                    <?php endif ?>
-                </ul>
-            </li>
             <?php if (session('level') == 1) : ?>
                 <li>
                     <a href="javascript:;"><i class="sidebar-item-icon fa fa-gear"></i>
