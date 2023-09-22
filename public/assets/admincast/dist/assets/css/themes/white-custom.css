@@ -55,11 +55,15 @@ body {
 
 .side-menu>li.active,
 .side-menu>li a:hover,
-.side-menu>li a:focus,
-.side-menu>li a.active, 
-.side-menu>li a.active:hover {
+.side-menu>li a:focus {
     color: #797980;
     background-color: #fff;
+}
+
+.side-menu>li a.active,
+.side-menu>li a.active:hover {
+    color: #797980;
+    font-weight: 600;
 }
 
 .side-menu>li>.active {
@@ -109,6 +113,7 @@ body {
 
 .ibox {
     border-radius: 10px 10px 10px 10px;
+    box-shadow: 9px 3px 20px 1px rgba(0, 0, 0, 0.2);
 }
 
 .ibox .ibox-head {
@@ -118,6 +123,7 @@ body {
 
 .ibox .ibox-body {
     font-size: 12px;
+    padding: 15px;
 }
 
 .modal .modal-dialog .modal-content{
