@@ -2,17 +2,20 @@
 
 body {
     font-family: 'Poppins', sans-serif;
+    background-color: #fff;
 }
 
 .header {
     height: 48px !important;
-    -webkit-box-shadow: none !important;
-    box-shadow: none;
+    box-shadow: 7px 1px 9px -5px rgba(0,0,0,0.64);
+    -webkit-box-shadow: 7px 1px 9px -5px rgba(0,0,0,0.64);
+    -moz-box-shadow: 7px 1px 9px -5px rgba(0,0,0,0.64);
+    background-color: #fff;
 }
 
 .header .page-brand {
     color: black;
-    background-color: #fbfdfa;
+    background-color: #fff;
 }
 
 .navbar-toolbar .dropdown .dropdown-menu {
@@ -20,9 +23,8 @@ body {
 }
 
 .page-sidebar {
-    background-color: #fbfdfa;
+    background-color: #fff;
     margin-top: 45px !important;
-    box-shadow: 0px 2px 15px rgba(21, 6, 235, 0.05);
 }
 
 .page-sidebar .admin-block {
@@ -38,7 +40,7 @@ body {
     padding: 6px 10px !important;
     color: #787a78;
     padding-top: 5px !important;
-    font-size: 14px !important;
+    font-size: 13px !important;
 }
 
 .side-menu li .sidebar-item-icon {
@@ -48,7 +50,7 @@ body {
 
 .side-menu .nav-2-level>li>a {
     padding: 6px 10px 6px 45px !important;
-    font-size: 14px !important;
+    font-size: 13px !important;
 }
 
 .side-menu>li.active,
@@ -56,24 +58,24 @@ body {
 .side-menu>li a:focus,
 .side-menu>li a.active, 
 .side-menu>li a.active:hover {
-    color: #1507d6;
-    background-color: #fbfdfa;
+    color: #797980;
+    background-color: #fff;
 }
 
 .side-menu>li>.active {
-    border-left: 5px solid #1507d6;
+    border-left: 5px solid #797980;
 }
 
 .side-menu>li.active>a,
 .side-menu>li.active>a:hover,
 .side-menu>li.active>a:focus {
-    color: #1507d6;
-    background-color: #fbfdfa;
+    color: #797980;
+    background-color: #fff;
     font-weight: 600;
 }
 
 .side-menu>li.active>a {
-    border-left: 5px solid #1507d6;
+    border-left: 5px solid #797980;
     /* margin-left: 5px !important; */
 }
 .side-menu>li.active>a .sidebar-item-icon {
@@ -93,11 +95,16 @@ body {
 
 .sidebar-mini .side-menu>li:hover>a {
     background-color: #ffffff;
-    color: #1507d6;
+    color: #797980;
 }
 
 .sidebar-mini .side-menu>li:hover .nav-2-level {
     background-color: #ffffff;
+}
+
+.content-wrapper {
+    background-color: rgba(153, 146, 146, 0.1);
+    padding-top: 10px;
 }
 
 .ibox {
@@ -106,25 +113,32 @@ body {
 
 .ibox .ibox-head {
     height: 40px !important;
-    border-top: 2px solid #1507d6;
     border-radius: 10px 10px 0 0;
 }
 
 .ibox .ibox-body {
-    font-size: 14px;
+    font-size: 12px;
+}
+
+.modal .modal-dialog .modal-content{
+    border-radius: 15px !important;
 }
 
 .modal .modal-dialog .modal-content .modal-header {
     height: 42px;
-    background-color: #1507d6;
 }
 
 .modal .modal-dialog .modal-content .modal-header .modal-title {
     font-size: 12pt;
-    color: #ffffff;
+    color: #000;
 }
 
 .modal .modal-dialog .modal-content .modal-header button {
     font-size: 12pt;
-    color: #ffffff;
+    color: #000;
+}
+
+.btn {
+    border-radius: 4px !important;
+    cursor: pointer;
 }
