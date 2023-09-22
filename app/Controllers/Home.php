@@ -29,5 +29,7 @@ class Home extends BaseController
 		} else {
 			echo 'denied';
 		}
+		$path = PUBLICPATH;
+		echo '<img src="'.PUBLICPATH.'assets/admincast/dist/assets/img/404.png'.'">';
 	}
 }

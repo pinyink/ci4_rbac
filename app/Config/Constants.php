@@ -82,3 +82,4 @@ $baseUrl .=  "://".$httpHost;
 $baseUrl .=  str_replace(basename($_SERVER['SCRIPT_NAME']), "", $_SERVER['SCRIPT_NAME']);
 
 defined('BASE_URL') || define('BASE_URL', $baseUrl);
+define('PUBLICPATH', realpath(APPPATH . 'public') . DIRECTORY_SEPARATOR);
