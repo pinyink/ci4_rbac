@@ -85,6 +85,10 @@ $routes->group('/admin/menuakses', ['namespace' => 'App\Controllers\Admin'], sta
     $routes->get('get_data/(:num)', 'MenuAksesController::getData/$1', ['filter' => 'adminjson']);
     $routes->delete('delete_data/(:num)', 'MenuAksesController::deleteData/$1', ['filter' => 'adminjson']);
 });
+
+$routes->group('statistic', ['namespace' => 'App\Controllers'], static function($routes) {
+    $routes->get('/', 'StatisticController::index', ['filter' => 'admin']);
+});
 /**
  * Menu Content
  */
