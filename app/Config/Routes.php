@@ -88,6 +88,7 @@ $routes->group('/admin/menuakses', ['namespace' => 'App\Controllers\Admin'], sta
 
 $routes->group('statistic', ['namespace' => 'App\Controllers'], static function($routes) {
     $routes->get('/', 'StatisticController::index', ['filter' => 'admin']);
+    $routes->post('permonth', 'StatisticController::permonth', ['filter' => 'admin']);
 });
 /**
  * Menu Content

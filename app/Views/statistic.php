@@ -33,7 +33,7 @@
                             <?=csrf_field();?>
                             <div class="form-group mb-0">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" value="<?=date('m-Y')?>" name="tanggal">
+                                    <input type="text" class="form-control" value="<?=date('m-Y')?>" name="month">
                                     <div class="input-group-append">
                                         <button class="btn btn-primary" type="submit"><i class="fa fa-filter"></i> Filter</button>
                                     </div>
@@ -43,7 +43,7 @@
                     </div>
                 </div>
                 <div class="ibox-body">
-                    <div id="morris_line_chart" style="height:280px;"></div>
+                    <div id="morris_line_chart" style="height:60vh;"></div>
                 </div>
             </div>
         </div>
@@ -67,29 +67,45 @@
 
     function reload_data()
     {
-        Morris.Line({
-        element: 'morris_line_chart',
-            data: [
-                { year: '2010', value: 5 },
-                { year: '2011', value: 11 },
-                { year: '2012', value: 5 },
-                { year: '2013', value: 7 },
-                { year: '2014', value: 10 },
-                { year: '2015', value: 8 },
-                { year: '2016', value: 15 },
-                { year: '2017', value: 26 },
-            ],
-        xkey: 'year',
-        ykeys: ['value'],
-        resize: true,
-        lineWidth:4,
-        labels: ['Value'],
-        lineColors: ['#3498db'],
-        pointSize:5,
-    });
+        $.ajax({
+            type: "POST",
+            url: "<?=base_url('statistic/permonth')?>",
+            data: $('#formfilter').serialize(),
+            dataType: "JSON",
+            success: function (response) {
+                var data = [];
+                $.each(response.data, function (indexInArray, valueOfElement) { 
+                    var arr = {
+                        'Date' : String(response.tahun+'-'+response.bulan+'-'+valueOfElement.tanggal),
+                        'Total' : valueOfElement.total
+                    };
+                    data.push(arr);
+                });
+                $('#morris_line_chart').empty();
+                Morris.Line({
+                    element: 'morris_line_chart',
+                    data:data,
+                    xkey: 'Date',
+                    ykeys: ['Total'],
+                    resize: true,
+                    lineWidth:4,
+                    labels: ['Total'],
+                    lineColors: ['#3498db'],
+                    pointSize:5,
+                    xLabelAngle: 45,
+                    xLabelMargin: 1,
+                    xLabelFormat: function (d) {
+                        return ("0" + d.getDate()).slice(-2) + '-' + ("0" + (d.getMonth() + 1)).slice(-2) + '-' + d.getFullYear();
+                    }
+                });
+            },
+            error: function(jqXHR) {
+                console.log(jqXHR.responseText);
+            }
+        });
     }
 
-    $('input[name="tanggal"]').datepicker({
+    $('input[name="month"]').datepicker({
         autoclose: true,
         minViewMode: 1,
         format: 'mm-yyyy'
