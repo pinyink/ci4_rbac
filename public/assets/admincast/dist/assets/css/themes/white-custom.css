@@ -64,6 +64,7 @@ body {
 .side-menu>li a.active:hover {
     color: #797980;
     font-weight: 600;
+    background-color: rgb(121, 121, 128, 0.1);
 }
 
 .side-menu>li>.active {
@@ -80,6 +81,7 @@ body {
 
 .side-menu>li.active>a {
     border-left: 5px solid #797980;
+    background-color: rgb(121, 121, 128, 0.1);
     /* margin-left: 5px !important; */
 }
 .side-menu>li.active>a .sidebar-item-icon {
@@ -114,8 +116,13 @@ body {
 .page-title {
     font-size: 18pt !important;
 }
-.content-wrapper .breadcrumb {
-    
+
+.page-heading .page-title{
+    margin-top: 10px;
+}
+
+.page-heading .breadcrumb {
+    margin-top: 10px;
 }
 
 .ibox {
