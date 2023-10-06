@@ -79,7 +79,7 @@
                                     <textarea class="form-control" name="bio"></textarea>
                                 </div>
                                 <div class="form-group">
-                                    <button class="btn btn-info" type="submit">Save</button>
+                                    <button class="btn btn-default" type="submit"><i class="fa fa-save"></i> Save</button>
                                 </div>
                             </form>
                         </div>
@@ -102,7 +102,7 @@
 
                                         <div class="form-group row">
                                             <div class="offset-sm-2 col-sm-10">
-                                                <button type="submit" class="btn btn-danger">simpan</button>
+                                                <button type="submit" class="btn btn-default"><i class="fa fa-save"></i> Save</button>
                                             </div>
                                         </div>
                                     </form>
@@ -126,7 +126,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <button class="btn btn-info" type="submit">Save</button>
+                                    <button class="btn btn-default" type="submit"><i class="fa fa-save"></i> Save</button>
                                 </div>
                             </form>
                         </div>

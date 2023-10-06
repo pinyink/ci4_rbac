@@ -163,3 +163,14 @@
     border-radius: 4px !important;
     cursor: pointer;
 }
+
+.btn-default {
+    color: #fff;
+    background-color: rgba(10, 10, 10);
+}
+
+.btn-default:hover,
+.btn-default:focus {
+    background-color: rgba(10, 10, 10, 0.8) !important;
+    color: #fff !important;
+}
