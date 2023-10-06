@@ -45,7 +45,6 @@
 }
 
 .side-menu>li.active,
-.side-menu>li a:hover,
 .side-menu>li a:focus,
 .side-menu>li a.active,
 .side-menu>li a.active:hover,
@@ -55,6 +54,10 @@
     border-radius: 5px;
     color: #fff;
     background-color: rgba(51, 49, 49, 0.8);
+}
+
+.side-menu>li a:hover {
+    background-color: inherit;
 }
 
 .side-menu .nav-2-level>li>a {
