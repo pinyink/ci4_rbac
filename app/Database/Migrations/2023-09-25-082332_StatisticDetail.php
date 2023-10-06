@@ -41,14 +41,16 @@ class StatisticDetail extends Migration
                 'default' => null,
             ],
             'created_at' => [
-                'type' => 'datetime',
-                'default' => 'current_timestamp'
+                'type' => 'DATETIME'
             ]
         ]);
+
+        $this->forge->addKey('id', true);
+        $this->forge->createTable('statistic_detail');
     }
 
     public function down()
     {
-        //
+        $this->forge->dropTable('statistic_detail');
     }
 }

@@ -30,6 +30,9 @@
                             <a href="<?= base_url('admin/menu'); ?>">Menu</a>
                         </li>
                         <li>
+                            <a href="<?= base_url('statistic'); ?>">Statistik</a>
+                        </li>
+                        <li>
                             <a href="<?= base_url('setting'); ?>">Setting</a>
                         </li>
                         <li>

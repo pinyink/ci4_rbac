@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use CodeIgniter\I18n\Time;
 use CodeIgniter\Model;
 
 class StatisticModel extends Model
@@ -41,12 +42,13 @@ class StatisticModel extends Model
 
     public function updateJumlah()
     {
-        $tanggal = date('d-m-Y');
-        $query = $this->db->query("select * from statistic where DATE_FORMAT(statistic_date, '%d-%m-%Y') = '".$tanggal."'");
+        $time = new Time('now');
+        $id = $time->now()->toLocalizedString('YYYYMMdd');
+        $query = $this->db->query("select * from statistic where statistic_id = '".$id."'");
         if ($query->getNumRows() >= 1) {
-            $this->db->query("update statistic set total = total + 1 where DATE_FORMAT(statistic_date, '%d-%m-%Y') = '".$tanggal."'");
+            $this->db->query("update statistic set total = total + 1 where statistic_id = '".$id."'");
         } else {
-            $this->db->query("insert into statistic (statistic_date, total) values ('".date('Y-m-d')."', 1)");
+            $this->db->query("insert into statistic (statistic_id, statistic_date, total) values ('".$id."', '".date('Y-m-d')."', 1)");
         }
         return true;
     }

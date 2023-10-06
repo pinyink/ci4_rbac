@@ -138,9 +138,9 @@
                     <img src="<?= session('profil_image'); ?>" class="imgProfil" />
                     <span><?= session('fullname'); ?></span><i class="fa fa-angle-down m-l-5"></i></a>
                 <ul class="dropdown-menu dropdown-menu-right">
-                    <a class="dropdown-item" href="<?= base_url(); ?>/setting/profil"><i class="fa fa-user"></i>Profil</a>
+                    <a class="dropdown-item" href="<?= base_url('setting/profil'); ?>"><i class="fa fa-user"></i>Profil</a>
                     <li class="dropdown-divider"></li>
-                    <a class="dropdown-item" href="<?=base_url();?>/logout"><i class="fa fa-power-off"></i>Logout</a>
+                    <a class="dropdown-item" href="<?=base_url('logout');?>"><i class="fa fa-power-off"></i>Logout</a>
                 </ul>
             </li>
         </ul>

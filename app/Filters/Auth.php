@@ -2,6 +2,7 @@
 
 namespace App\Filters;
 
+use App\Libraries\Visitor;
 use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
@@ -47,6 +48,14 @@ class Auth implements FilterInterface
                         $log['errorMessage'] = 'Anda Belum Login';
                         return $response->setJSON($log);
                     }
+                } 
+            }
+
+            if (isset($arguments[0]) && $arguments[0] == 'Y') {
+                if (env('CI_ENVIRONMENT') == 'production') {
+                    $visitor = new Visitor();
+                    $visitor->visit();
+                    $visitor->visitDetail();
                 }
             }
         }

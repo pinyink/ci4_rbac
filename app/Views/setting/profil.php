@@ -60,15 +60,9 @@
                         <div class="tab-pane fade" id="tab-2">
                             <form action="javascript:void(0)" id="form-setting">
                                 <input type="hidden" name="idSetting" value="<?= session('user_id'); ?>">
-                                <div class="row">
-                                    <div class="col-sm-6 form-group">
-                                        <label>First Name</label>
-                                        <input class="form-control" type="text" placeholder="First Name" name="firstName" required>
-                                    </div>
-                                    <div class="col-sm-6 form-group">
-                                        <label>Last Name</label>
-                                        <input class="form-control" type="text" placeholder="Last Name" name="lastName" required>
-                                    </div>
+                                <div class="form-group">
+                                    <label>FullName</label>
+                                    <input class="form-control" type="text" placeholder="First Name" name="firstName" required>
                                 </div>
                                 <div class="form-group">
                                     <label>Email</label>
@@ -146,9 +140,6 @@
             errorClass: "help-block",
             rules: {
                 firstName: {
-                    required: true
-                },
-                lastName: {
                     required: true
                 },
                 email: {
@@ -280,11 +271,10 @@
                 'dataType': 'json',
             })
             .done(function(data) {
-                $('#textName').text(data.data.profil_firstname + ' ' + data.data.profil_lastname);
+                $('#textName').text(data.data.profil_firstname);
                 $('#textEmail').text(data.data.profil_email);
                 $('#textBio').text(data.data.profil_bio);
                 $('[name="firstName"]').val(data.data.profil_firstname);
-                $('[name="lastName"]').val(data.data.profil_lastname);
                 $('[name="email"]').val(data.data.profil_email);
                 $('[name="bio"]').val(data.data.profil_bio);
                 $('.imgProfil').attr('src', data.data.profil_image);
