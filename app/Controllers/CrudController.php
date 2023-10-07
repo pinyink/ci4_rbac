@@ -372,11 +372,13 @@ use App\Models".$namespace.'\\'.$namaModel.";
 class ".$namaController." extends BaseController
 {
     private \$tema;
+    private \$".$modelVariable.";
 
     function __construct()
     {
         helper(['form']);
         \$this->tema = new Tema();
+        \$this->\$".$modelVariable." = new ".$namaModel."();
     }
 
     public function index()
@@ -387,9 +389,8 @@ class ".$namaController." extends BaseController
 
     public function ajaxList()
     {
-        \$".$modelVariable." = new ".$namaModel."();
-        \$".$modelVariable."->setRequest(\$this->request);
-        \$lists = \$".$modelVariable."->getDatatables();
+        \$this->\$".$modelVariable."->setRequest(\$this->request);
+        \$lists = \$this->\$".$modelVariable."->getDatatables();
         \$data = [];
         \$no = \$this->request->getPost(\"start\");
         foreach (\$lists as \$list) {
@@ -412,8 +413,8 @@ class ".$namaController." extends BaseController
         }
         \$output = [
                 \"draw\" => \$this->request->getPost('draw'),
-                \"recordsTotal\" => \$".$modelVariable."->countAll(),
-                \"recordsFiltered\" => \$".$modelVariable."->countFiltered(),
+                \"recordsTotal\" => \$this->\$".$modelVariable."->countAll(),
+                \"recordsFiltered\" => \$this->\$".$modelVariable."->countFiltered(),
                 \"data\" => \$data
             ];
         echo json_encode(\$output);
@@ -421,8 +422,6 @@ class ".$namaController." extends BaseController
 
     public function saveData()
     {
-        \$".$modelVariable." = new ".$namaModel."();
-
         \$method = \$this->request->getPost('method');
         ".$fieldImg."
 
@@ -449,13 +448,13 @@ class ".$namaController." extends BaseController
         \$id = \$this->request->getPost('".$primaryKey."');".$fieldInserts."
 
         if (\$method == 'save') {".$ifGeometryEmpty."
-            \$".$modelVariable."->insert(\$data);
+            \$this->\$".$modelVariable."->insert(\$data);
             \$log['errorCode'] = 1;
             \$log['errorMessage'] = 'Simpan Data Berhasil';
             \$log['errorType'] = 'success';
             return \$this->response->setJSON(\$log);
         } else {
-            \$".$modelVariable."->update(\$id, \$data);
+            \$this->\$".$modelVariable."->update(\$id, \$data);
             \$log['errorCode'] = 1;
             \$log['errorMessage'] = 'Update Data Berhasil';
             \$log['errorType'] = 'success';
@@ -465,15 +464,13 @@ class ".$namaController." extends BaseController
 
     public function getData(\$id)
     {
-        \$".$modelVariable." = new ".$namaModel."();
-        \$query = \$".$modelVariable."->select(\"".$viewDetail."\")->find(\$id);
+        \$query = \$this->\$".$modelVariable."->select(\"".$viewDetail."\")->find(\$id);
         return \$this->response->setJSON(\$query);
     }
 
     public function deleteData(\$id)
     {
-        \$".$modelVariable." = new ".$namaModel."();
-        \$query = \$".$modelVariable."->delete(\$id);
+        \$query = \$this->\$".$modelVariable."->delete(\$id);
         if (\$query) {
             \$log['errorCode'] = 1;
             \$log['errorMessage'] = 'Delete Data Berhasil';
