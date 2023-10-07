@@ -160,9 +160,29 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="rbac">Kode RBAC</label>
-                            <input type="number" class="form-control" name="rbac" placeholder="number" value="<?=isset($crudConfig->rbac) ? $crudConfig->rbac : '';?>">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="rbac">Kode RBAC</label>
+                                    <input type="number" class="form-control" name="rbac" placeholder="number" value="<?=isset($crudConfig->rbac) ? $crudConfig->rbac : '';?>">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="rbac">Export Excel</label>
+                                    <select name="excel" id="excel" class="form-control">
+                                        <?php if(isset($crudConfig->excel) && $crudConfig->excel == 'Ya'): ?>
+                                            <option value="0">-</option>
+                                            <option value="Ya" selected>Ya</option>
+                                            <option value="Tidak">Tidak</option>
+                                        <?php else: ?>
+                                            <option value="0">-</option>
+                                            <option value="Ya">Ya</option>
+                                            <option value="Tidak" selected>Tidak</option>
+                                        <?php endif ?>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
 
                         <table class="table">

@@ -10,7 +10,7 @@ class CrudController extends BaseController
 {
     function __construct()
     {
-        helper(['form', 'FormCustom']);
+        helper(['form', 'FormCustom', 'Alphabet']);
 
     }
 
@@ -52,6 +52,7 @@ class CrudController extends BaseController
         $orderBy = $request->getPost('orderBy');
         $asc = $request->getPost('asc');
         $rbac = $request->getPost('rbac');
+        $excel = $request->getPost('excel');
 
         $fieldTable = $request->getPost('fieldTable');
         $fieldAlias = $request->getPost('fieldAlias');
@@ -73,6 +74,7 @@ class CrudController extends BaseController
             'orderBy' => $orderBy,
             'asc' => $asc,
             'rbac' => $rbac,
+            'excel' => $excel,
             'fieldTable' => $fieldTable,
             'fieldAlias' => $fieldAlias,
             'fieldTableRemote' => $fieldTableRemote,
@@ -99,6 +101,10 @@ class CrudController extends BaseController
             if (isset($fieldTableRemote[$key])) {
                 $routeExistField .= "\n\t\$routes->post('".$value."_exist', '".$namaController."::".strtolower(str_replace('_', '', $value))."Exist', ['filter' => 'auth:N,".$rbac.",2']);";
             }
+        }
+
+        if ($excel == 'Ya') {
+            $routeExistField .= "\n\t\$routes->get('export_excel', '".$namaController."::exportExcel', ['filter' => 'auth:Y,".$rbac.",5']);";
         }
 $route = "
 \$routes->group('".$routeName."', ['namespace' => 'App\Controllers".$namespace."'], static function(\$routes) {
@@ -129,11 +135,18 @@ foreach ($viewTable as $key => $value) {
 }
 // allowed field
 $no = 1;
+$detail = '';
 foreach ($fieldTable as $key => $value) {
     if ($no == 1) {
         $allowedFields .= "'".$value."'";
     } else {
         $allowedFields .= ", '".$value."'";
+    }
+
+    if ($no == 1) {
+        $detail .= 'a.'.$primaryKey.', a.'.$value;
+    } else {
+        $detail .= ', a.'.$value;
     }
     $no++;
 }
@@ -252,6 +265,14 @@ class ".$namaModel." extends Model
         \$tblStorage = \$this->db->table(\$this->table);
         return \$tblStorage->countAllResults();
     }
+
+    public function detail(\$where = [])
+    {
+        \$table = \$this->db->table(\$this->table.' a');
+        \$table->select('".$detail."');
+        \$table->where(\$where);
+        return \$table->get();
+    }
 }
 ";
     echo "<pre>".$model."</pre>";
@@ -277,7 +298,7 @@ class ".$namaModel." extends Model
         $functionExists = "";
         foreach ($fieldTable as $key => $value) {
             if (isset($fieldTableRemote[$key])) {
-$functionExists .= "public function ".strtolower(str_replace("_", "", $value))."Exist()
+$functionExists .= "\n\n\tpublic function ".strtolower(str_replace("_", "", $value))."Exist()
     {
         \$".$modelVariable." = new ".$namaModel."();
         \$".$primaryKey." = \$this->request->getPost('".$primaryKey."');
@@ -296,15 +317,21 @@ $functionExists .= "public function ".strtolower(str_replace("_", "", $value))."
         $fieldImg = '';
         $formValidation = '';
         $validationImg = '';
+        $getDataFields = "\$data['".$primaryKey."'] = \$query['".$primaryKey."'];";
         foreach ($viewTable as $key => $value) {
             if (in_array($fieldType[$key], ['rupiah'])) {
                 $rowFields .= "\n\t\t\t"."\$row[] = number_format(\$list->".$value.", 0, '.', ',');";
+                $getDataFields .= "\n\t\t"."\$data['".$value."'] = number_format(\$query['".$value."'], 0, '.', ',');";
             } else if (in_array($fieldType[$key], ['date'])) {
                 $rowFields .= "\n\t\t\t"."\$row[] = date('d-m-Y', strtotime(\$list->".$value."));";
+                $getDataFields .= "\n\t\t"."\$data['".$value."'] = date('d-m-Y', strtotime(\$query['".$value."']));";
+            } else if (in_array($fieldType[$key], ['number'])) {
+                $rowFields .= "\n\t\t\t"."\$row[] = number_format(\$list->".$value.", 2, ',', '.');";
+                $getDataFields .= "\n\t\t"."\$data['".$value."'] = number_format(\$query['".$value."'], 2, ',', '.');";
             } else {
                 $rowFields .= "\n\t\t\t"."\$row[] = \$list->".$value.";";
+                $getDataFields .= "\n\t\t"."\$data['".$value."'] = \$query['".$value."'];";
             }
-            
         }
         $validationRequired = '';
         $viewDetail = '';
@@ -315,6 +342,9 @@ $functionExists .= "public function ".strtolower(str_replace("_", "", $value))."
         foreach ($fieldTable as $key => $value) {
             if (in_array($fieldType[$key], ['rupiah'])) {
                 $fieldInserts .= "\n\t\t\$data['".$value."'] = \$this->request->getPost('val_".$value."') == null ? null : str_replace('.', '', \$this->request->getPost('val_".$value."'));";
+            } else if (in_array($fieldType[$key], ['number'])) {
+                $fieldInserts .= "\n\t\t\$".$value." = \$this->request->getPost('val_".$value."') == null ? null : str_replace('.', '', \$this->request->getPost('val_".$value."'));";
+                $fieldInserts .= "\n\t\t\$data['".$value."'] = str_replace(',', '.', \$".$value.");";
             } else if(in_array($fieldType[$key], ['image'])) {
                 $fieldImg .= "\n\t\t\$img".$value." = \$this->request->getFile('val_".$value."');";
                 
@@ -359,6 +389,63 @@ $functionExists .= "public function ".strtolower(str_replace("_", "", $value))."
             $no++;
         }
 
+        // if excel Ya
+        $functionExists = '';
+        $helper = '';
+        if ($excel == 'Ya') {
+            $helper .= "'Alphabet_helper'";
+            $useFunction .= "use PhpOffice\PhpSpreadsheet\Spreadsheet;\nuse PhpOffice\PhpSpreadsheet\Writer\Xlsx;\nuse PhpOffice\PhpSpreadsheet\Style\Border;\nuse PhpOffice\PhpSpreadsheet\Style\Color;";
+            $labelExcel = "\$activeWorksheet->setCellValue('A2', 'NO');";
+            $bodyExcel = "\$activeWorksheet->setCellValue('A'.\$no, \$number);";
+            $no = 2;
+            foreach ($fieldTable as $key => $value){
+                $labelExcel .= "\n\t\t\$activeWorksheet->setCellValue('".number_to_alphabet($no)."2', '".$fieldAlias[$key]."');";
+                $bodyExcel .= "\n\t\t\t\$activeWorksheet->setCellValue('".number_to_alphabet($no)."'.\$no, \$value['".$value."']);";
+                $no++;
+            }
+            $lastColumn = number_to_alphabet($no - 1);
+            $functionExists .= "\n\n\tpublic function exportExcel()
+    {
+        \$spreadsheet = new Spreadsheet();
+        \$activeWorksheet = \$spreadsheet->getActiveSheet();
+        \$no = 3;
+        \$number = 1;
+        $labelExcel
+        \$query = \$this->".$modelVariable."->detail()->getResultArray();
+        foreach(\$query as \$value) {
+            $bodyExcel
+            \$no++;
+            \$number++;
+        }
+
+        \$sheet = \$activeWorksheet->getStyle('A2:".$lastColumn."'.\$no-1)
+        ->getBorders()
+        ->getAllBorders()
+        ->setBorderStyle(Border::BORDER_THIN);
+
+        foreach (\$activeWorksheet->getColumnIterator() as \$column) {
+            \$activeWorksheet->getColumnDimension(\$column->getColumnIndex())->setAutoSize(true);
+        }
+
+        \$date = date('d-m-y-'.substr((string)microtime(), 1, 8));
+        \$date = str_replace(\".\", \"\", \$date);
+        \$path = WRITEPATH.\"excel/export_\".\$date.\".xlsx\";
+        \$filename = \"export_\".\$date.\".xlsx\";
+
+        try {
+            \$writer = new Xlsx(\$spreadsheet);
+            \$writer->save(\$path);
+            \$content = file_get_contents(\$path);
+        } catch(\Throwable \$e) {
+            exit(\$e->getMessage());
+        }
+
+        header(\"Content-Disposition: attachment; filename=\".\$filename);
+        unlink(\$path);
+        exit(\$content);
+    }";
+        }
+
     $controller = "@?php
 
 namespace App\Controllers".$namespace.";
@@ -376,9 +463,9 @@ class ".$namaController." extends BaseController
 
     function __construct()
     {
-        helper(['form']);
+        helper(['form', ".$helper."]);
         \$this->tema = new Tema();
-        \$this->\$".$modelVariable." = new ".$namaModel."();
+        \$this->".$modelVariable." = new ".$namaModel."();
     }
 
     public function index()
@@ -389,8 +476,8 @@ class ".$namaController." extends BaseController
 
     public function ajaxList()
     {
-        \$this->\$".$modelVariable."->setRequest(\$this->request);
-        \$lists = \$this->\$".$modelVariable."->getDatatables();
+        \$this->".$modelVariable."->setRequest(\$this->request);
+        \$lists = \$this->".$modelVariable."->getDatatables();
         \$data = [];
         \$no = \$this->request->getPost(\"start\");
         foreach (\$lists as \$list) {
@@ -413,8 +500,8 @@ class ".$namaController." extends BaseController
         }
         \$output = [
                 \"draw\" => \$this->request->getPost('draw'),
-                \"recordsTotal\" => \$this->\$".$modelVariable."->countAll(),
-                \"recordsFiltered\" => \$this->\$".$modelVariable."->countFiltered(),
+                \"recordsTotal\" => \$this->".$modelVariable."->countAll(),
+                \"recordsFiltered\" => \$this->".$modelVariable."->countFiltered(),
                 \"data\" => \$data
             ];
         echo json_encode(\$output);
@@ -448,13 +535,13 @@ class ".$namaController." extends BaseController
         \$id = \$this->request->getPost('".$primaryKey."');".$fieldInserts."
 
         if (\$method == 'save') {".$ifGeometryEmpty."
-            \$this->\$".$modelVariable."->insert(\$data);
+            \$this->".$modelVariable."->insert(\$data);
             \$log['errorCode'] = 1;
             \$log['errorMessage'] = 'Simpan Data Berhasil';
             \$log['errorType'] = 'success';
             return \$this->response->setJSON(\$log);
         } else {
-            \$this->\$".$modelVariable."->update(\$id, \$data);
+            \$this->".$modelVariable."->update(\$id, \$data);
             \$log['errorCode'] = 1;
             \$log['errorMessage'] = 'Update Data Berhasil';
             \$log['errorType'] = 'success';
@@ -464,13 +551,14 @@ class ".$namaController." extends BaseController
 
     public function getData(\$id)
     {
-        \$query = \$this->\$".$modelVariable."->select(\"".$viewDetail."\")->find(\$id);
-        return \$this->response->setJSON(\$query);
+        \$query = \$this->".$modelVariable."->select(\"".$viewDetail."\")->find(\$id);
+        ".$getDataFields."
+        return \$this->response->setJSON(\$data);
     }
 
     public function deleteData(\$id)
     {
-        \$query = \$this->\$".$modelVariable."->delete(\$id);
+        \$query = \$this->".$modelVariable."->delete(\$id);
         if (\$query) {
             \$log['errorCode'] = 1;
             \$log['errorMessage'] = 'Delete Data Berhasil';
@@ -482,9 +570,7 @@ class ".$namaController." extends BaseController
             \$log['errorType'] = 'warning';
             return \$this->response->setJSON(\$log);
         }
-    }
-
-    ".$functionExists."
+    }".$functionExists."
 }
 ";
     echo "<pre>".$controller."</pre>";
@@ -520,11 +606,18 @@ class ".$namaController." extends BaseController
                 $attrLabel = ' ( '.$fieldAttrLabel[$key].' )';
             }
 
-            if (in_array($fieldType[$key], ['text', 'number'])) {
+            if (in_array($fieldType[$key], ['text'])) {
                 $formData .= "\n\t\t\t\t\t<div class=\"form-group\">
                         @?=form_label('".$fieldAlias[$key].$attrLabel."');?@
                         @?=form_input('val_".$value."', '', ['class' => 'form-control'], '".$fieldType[$key]."');?@
                     </div>";
+            }
+            if (in_array($fieldType[$key], ['number'])) {
+                $formData .= "\n\t\t\t\t\t<div class=\"form-group\">
+                        @?=form_label('".$fieldAlias[$key].$attrLabel."');?@
+                        @?=form_input('val_".$value."', '', ['class' => 'form-control']);?@
+                    </div>";
+                $jsCustom .= "\n\t\t\$('[name=\"val_".$value."\"]').keyup(function(){\n\t\t\tvar str = $('[name=\"val_".$value."\"]').val();\n\t\t\t$('[name=\"val_".$value."\"]').val(formatRupiah(this.value, ''));\n\t\t});";
             }
             if (in_array($fieldType[$key], ['textarea'])) {
                 $formData .= "\n\t\t\t\t\t<div class=\"form-group\">
@@ -704,6 +797,11 @@ $formDataMessages .= "\n\t\t\t\tval_".$value.": {
 ";
         }
 
+        $btn = '';
+        if ($excel == 'Ya') {
+            $btn .= "<a href='@?php echo base_url('".$routeName."/export_excel') ?@' target='_blank' data-toggle=\"tooltip\" data-placement=\"top\" title=\"Export Excel\"><i class=\"fa fa-file-excel-o\"></i></a>";
+        }
+
 $view = "
 @?= \$this->extend('tema/tema'); ?@ 
 @?=\$this->section('css');?@
@@ -739,6 +837,9 @@ $view = "
                         <a onclick=\"reload_table()\" class=\"refresh\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"reload data\"><i class=\"fa fa-refresh\"></i></a>
                         @?php if(enforce(".$rbac.", 2)): ?@
                             <a class=\"\" onclick=\"tambah_data()\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"tambah data\"><i class=\"fa fa-plus-square\"></i></a>
+                        @?php endif ?@
+                        @?php if(enforce(".$rbac.", 5)): ?@
+                            $btn
                         @?php endif ?@
                     </div>
                 </div>
