@@ -55,7 +55,8 @@ class Auth implements FilterInterface
                 if (env('CI_ENVIRONMENT') == 'production') {
                     $visitor = new Visitor();
                     $visitor->visit();
-                    $visitor->visitDetail();
+                    // uncomment to get visitor details
+                    // $visitor->visitDetail();
                 }
             }
         }
