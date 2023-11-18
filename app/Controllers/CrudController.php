@@ -1015,9 +1015,6 @@ $view = "
                 type: \"DELETE\",
                 url: \"@?=base_url('".$routeName."')?@/\"+id+'/delete_data',
                 dataType: \"json\",
-                data: JSON.stringify({
-                    '@?=csrf_token();?@': '@?=csrf_hash()?@',
-                }),
                 success: function (response) {
                     if(response.errorCode == 1) {
                         Swal.fire(
