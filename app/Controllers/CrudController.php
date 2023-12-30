@@ -390,7 +390,6 @@ $functionExists .= "\n\n\tpublic function ".strtolower(str_replace("_", "", $val
         }
 
         // if excel Ya
-        $functionExists = '';
         $helper = '';
         if ($excel == 'Ya') {
             $helper .= "'Alphabet_helper'";

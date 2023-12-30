@@ -11,24 +11,25 @@ use App\Models\SiswaModel;
 class SiswaController extends BaseController
 {
     private $tema;
+    private $siswaModel;
 
     function __construct()
     {
-        helper(['form']);
+        helper(['form', ]);
         $this->tema = new Tema();
+        $this->siswaModel = new SiswaModel();
     }
 
     public function index()
     {
-        $this->tema->setJudul('Siswa');
+        $this->tema->setJudul('siswa');
         $this->tema->loadTema('/siswa');
     }
 
     public function ajaxList()
     {
-        $siswaModel = new SiswaModel();
-        $siswaModel->setRequest($this->request);
-        $lists = $siswaModel->getDatatables();
+        $this->siswaModel->setRequest($this->request);
+        $lists = $this->siswaModel->getDatatables();
         $data = [];
         $no = $this->request->getPost("start");
         foreach ($lists as $list) {
@@ -55,8 +56,8 @@ class SiswaController extends BaseController
         }
         $output = [
                 "draw" => $this->request->getPost('draw'),
-                "recordsTotal" => $siswaModel->countAll(),
-                "recordsFiltered" => $siswaModel->countFiltered(),
+                "recordsTotal" => $this->siswaModel->countAll(),
+                "recordsFiltered" => $this->siswaModel->countFiltered(),
                 "data" => $data
             ];
         echo json_encode($output);
@@ -64,13 +65,11 @@ class SiswaController extends BaseController
 
     public function saveData()
     {
-        $siswaModel = new SiswaModel();
-
         $method = $this->request->getPost('method');
         
 
         $validation = [
-            'val_siswa_nama' => 'required','val_siswa_alamat' => 'required','val_siswa_tempat_lahir' => 'required','val_siswa_tanggal_lahir' => 'required',
+            'val_siswa_nama' => 'required',
         ];
 
         
@@ -96,13 +95,13 @@ class SiswaController extends BaseController
 		$data['siswa_tanggal_lahir'] = $this->request->getPost('val_siswa_tanggal_lahir') == null ? null : date('Y-m-d', strtotime($this->request->getPost('val_siswa_tanggal_lahir')));
 
         if ($method == 'save') {
-            $siswaModel->insert($data);
+            $this->siswaModel->insert($data);
             $log['errorCode'] = 1;
             $log['errorMessage'] = 'Simpan Data Berhasil';
             $log['errorType'] = 'success';
             return $this->response->setJSON($log);
         } else {
-            $siswaModel->update($id, $data);
+            $this->siswaModel->update($id, $data);
             $log['errorCode'] = 1;
             $log['errorMessage'] = 'Update Data Berhasil';
             $log['errorType'] = 'success';
@@ -112,15 +111,18 @@ class SiswaController extends BaseController
 
     public function getData($id)
     {
-        $siswaModel = new SiswaModel();
-        $query = $siswaModel->select("siswa_id, siswa_nama, siswa_alamat, siswa_tempat_lahir, DATE_FORMAT(siswa_tanggal_lahir, '%d-%m-%Y') as siswa_tanggal_lahir")->find($id);
-        return $this->response->setJSON($query);
+        $query = $this->siswaModel->select("siswa_id, siswa_nama, siswa_alamat, siswa_tempat_lahir, DATE_FORMAT(siswa_tanggal_lahir, '%d-%m-%Y') as siswa_tanggal_lahir")->find($id);
+        $data['siswa_id'] = $query['siswa_id'];
+		$data['siswa_nama'] = $query['siswa_nama'];
+		$data['siswa_alamat'] = $query['siswa_alamat'];
+		$data['siswa_tempat_lahir'] = $query['siswa_tempat_lahir'];
+		$data['siswa_tanggal_lahir'] = date('d-m-Y', strtotime($query['siswa_tanggal_lahir']));
+        return $this->response->setJSON($data);
     }
 
     public function deleteData($id)
     {
-        $siswaModel = new SiswaModel();
-        $query = $siswaModel->delete($id);
+        $query = $this->siswaModel->delete($id);
         if ($query) {
             $log['errorCode'] = 1;
             $log['errorMessage'] = 'Delete Data Berhasil';
@@ -134,5 +136,15 @@ class SiswaController extends BaseController
         }
     }
 
-    
+	public function siswanamaExist()
+    {
+        $siswaModel = new SiswaModel();
+        $siswa_id = $this->request->getPost('siswa_id');
+        $siswa_nama = $this->request->getPost('siswa_nama');
+        $query = $siswaModel->where(['siswa_id !=' => $siswa_id, 'siswa_nama' => $siswa_nama])->first();
+        if (!empty($query)) {
+            return $this->response->setJSON(false);
+        }
+        return $this->response->setJSON(true);
+    }
 }

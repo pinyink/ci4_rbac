@@ -41,7 +41,7 @@ class SiswaModel extends Model
     protected $afterDelete    = [];
     public $column_order  = array(null, null, 'a.siswa_nama', 'a.siswa_alamat', 'a.siswa_tempat_lahir', 'a.siswa_tanggal_lahir');
     public $column_search = array('a.siswa_nama', 'a.siswa_alamat', 'a.siswa_tempat_lahir', 'a.siswa_tanggal_lahir');
-    public $order         = array('a.siswa_nama' => 'asc');
+    public $order         = array('a.siswa_id' => 'desc');
 
     private $request = '';
     private $dt;
@@ -112,5 +112,13 @@ class SiswaModel extends Model
     {
         $tblStorage = $this->db->table($this->table);
         return $tblStorage->countAllResults();
+    }
+
+    public function detail($where = [])
+    {
+        $table = $this->db->table($this->table.' a');
+        $table->select('a.siswa_id, a.siswa_nama, a.siswa_alamat, a.siswa_tempat_lahir, a.siswa_tanggal_lahir');
+        $table->where($where);
+        return $table->get();
     }
 }

@@ -28,11 +28,14 @@
         <div class="col-xl-12 col-lg-12 col-md-12">
             <div class="ibox">
                 <div class="ibox-head">
-                    <div class="ibox-title">Data Siswa</div>
+                    <div class="ibox-title">Data siswa</div>
                     <div class="ibox-tools">
                         <a onclick="reload_table()" class="refresh" data-toggle="tooltip" data-placement="top" title="reload data"><i class="fa fa-refresh"></i></a>
                         <?php if(enforce(1, 2)): ?>
                             <a class="" onclick="tambah_data()" data-toggle="tooltip" data-placement="top" title="tambah data"><i class="fa fa-plus-square"></i></a>
+                        <?php endif ?>
+                        <?php if(enforce(1, 5)): ?>
+                            
                         <?php endif ?>
                     </div>
                 </div>
@@ -80,7 +83,7 @@
                     </div>
 					<div class="form-group">
                         <?=form_label('Alamat');?>
-                        <?=form_textarea('val_siswa_alamat', '', ['class' => 'form-control', 'rows' => 3]);?>
+                        <?=form_input('val_siswa_alamat', '', ['class' => 'form-control'], 'text');?>
                     </div>
 					<div class="form-group">
                         <?=form_label('Tempat Lahir');?>
@@ -126,9 +129,7 @@
                             'X-Requested-With': 'XMLHttpRequest'
                         },
                         "type": "POST",
-                        "data": function(data) {
-                            data.token = $('meta[name=TOKEN]').attr("content");
-                        },
+                        "data": {<?=csrf_token();?>: '<?=csrf_hash()?>'},
                         error: function(jqXHR, textStatus, errorThrown) {
                             console.log(jqXHR.responseText);
                         }
@@ -248,6 +249,9 @@
                 type: "DELETE",
                 url: "<?=base_url('/siswa')?>/"+id+'/delete_data',
                 dataType: "json",
+                data: JSON.stringify({
+                    '<?=csrf_token();?>': '<?=csrf_hash()?>',
+                }),
                 success: function (response) {
                     if(response.errorCode == 1) {
                         Swal.fire(
@@ -277,38 +281,54 @@
             rules: {
 			val_siswa_nama: {
                 required: true,
+				remote: {
+                    url: "<?=base_url('/siswa/siswa_nama_exist'); ?>",
+                    type: "post",
+                    data: {
+                        siswa_nama: function() {
+                            return $('[name="val_siswa_nama"]').val();
+                        },
+                        siswa_id: function() {
+                            return $('[name="siswa_id"]').val();
+                        },
+                        csrf_test_name: function() {
+                            return $('meta[name=X-CSRF-TOKEN]').attr("content");
+                        },
+                    },
+                },
+
 				maxlength: 128
             },
 
 			val_siswa_alamat: {
-                required: true,
+                
             },
 
 			val_siswa_tempat_lahir: {
-                required: true,
+                
 				maxlength: 32
             },
 
 			val_siswa_tanggal_lahir: {
-                required: true,
+                
             },
 
             },
             messages: {
 				val_siswa_nama: {
-                    required:'Nama harus diisi',maxlength: 'Nama Tidak Boleh Lebih dari 128 Huruf'
+                    required:'Nama harus diisi',remote: 'Nama sudah Ada, Tidak bisa di Input',maxlength: 'Nama Tidak Boleh Lebih dari 128 Huruf'
                 },
 
 				val_siswa_alamat: {
-                    required:'Alamat harus diisi',
+                    
                 },
 
 				val_siswa_tempat_lahir: {
-                    required:'Tempat Lahir harus diisi',maxlength: 'Tempat Lahir Tidak Boleh Lebih dari 32 Huruf'
+                    maxlength: 'Tempat Lahir Tidak Boleh Lebih dari 32 Huruf'
                 },
 
 				val_siswa_tanggal_lahir: {
-                    required:'Tanggal Lahir harus diisi',
+                    
                 },
 
 
