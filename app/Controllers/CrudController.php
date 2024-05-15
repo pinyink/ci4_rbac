@@ -462,7 +462,7 @@ class ".$namaController." extends BaseController
 
     function __construct()
     {
-        helper(['form', ".$helper."]);
+        helper(['form', 'Permission_helper', ".$helper."]);
         \$this->tema = new Tema();
         \$this->".$modelVariable." = new ".$namaModel."();
     }

@@ -5,31 +5,37 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Libraries\Tema;
 use CodeIgniter\Database\RawSql;
+use App\Models\CridDetailModel;
 use App\Models\CridModel;
 
-
-class CridController extends BaseController
+class CridDetailController extends BaseController
 {
     private $tema;
-    private $cridModel;
+    private $cridDetailModel;
 
     function __construct()
     {
-        helper(['form', 'Permission']);
+        helper(['form', 'Permission_helper']);
         $this->tema = new Tema();
-        $this->cridModel = new CridModel();
+        $this->cridDetailModel = new CridDetailModel();
     }
 
     public function index()
     {
-        $this->tema->setJudul('Crid');
-        $this->tema->loadTema('/crid');
+        $cridId = $this->request->getGet('id');
+        $cridModel = new CridModel();
+        $data['crid'] = $cridModel->find($cridId);
+
+        $this->tema->setJudul('Crid Detail');
+        $this->tema->loadTema('/criddetail', $data);
     }
 
     public function ajaxList()
     {
-        $this->cridModel->setRequest($this->request);
-        $lists = $this->cridModel->getDatatables();
+        $cridId = $this->request->getGet('id');
+        $this->cridDetailModel->setWhere(['a.crid_id' =>$cridId]);
+        $this->cridDetailModel->setRequest($this->request);
+        $lists = $this->cridDetailModel->getDatatables();
         $data = [];
         $no = $this->request->getPost("start");
         foreach ($lists as $list) {
@@ -48,19 +54,15 @@ class CridController extends BaseController
             
             $row[] = $action;
             $row[] = $no;
-			$row[] = $list->table;
-			$row[] = $list->namespace;
-			$row[] = $list->title;
-			$row[] = $list->primary_key;
-			$row[] = $list->v_created_at;
-			$row[] = $list->v_updated_at;
-			$row[] = $list->v_deleted_at;
+			$row[] = $list->name_field;
+			$row[] = $list->name_alias;
+			$row[] = $list->name_type;
             $data[] = $row;
         }
         $output = [
                 "draw" => $this->request->getPost('draw'),
-                "recordsTotal" => $this->cridModel->countAll(),
-                "recordsFiltered" => $this->cridModel->countFiltered(),
+                "recordsTotal" => $this->cridDetailModel->countAll(),
+                "recordsFiltered" => $this->cridDetailModel->countFiltered(),
                 "data" => $data
             ];
         echo json_encode($output);
@@ -72,7 +74,7 @@ class CridController extends BaseController
         
 
         $validation = [
-            'val_table' => 'required','val_namespace' => 'required','val_title' => 'required','val_primary_key' => 'required','val_v_created_at' => 'required','val_v_updated_at' => 'required','val_v_deleted_at' => 'required',
+            'val_crid_id' => 'required','val_name_field' => 'required','val_name_alias' => 'required','val_name_type' => 'required',
         ];
 
         
@@ -92,22 +94,23 @@ class CridController extends BaseController
         }
 
         $id = $this->request->getPost('id');
-		$data['table'] = $this->request->getPost('val_table');
-		$data['namespace'] = $this->request->getPost('val_namespace');
-		$data['title'] = $this->request->getPost('val_title');
-		$data['primary_key'] = $this->request->getPost('val_primary_key');
-		$data['v_created_at'] = $this->request->getPost('val_v_created_at');
-		$data['v_updated_at'] = $this->request->getPost('val_v_updated_at');
-		$data['v_deleted_at'] = $this->request->getPost('val_v_deleted_at');
+		$data['crid_id'] = $this->request->getPost('val_crid_id');
+		$data['name_field'] = $this->request->getPost('val_name_field');
+		$data['name_alias'] = $this->request->getPost('val_name_alias');
+		$data['name_type'] = $this->request->getPost('val_name_type');
+		$data['field_form'] = $this->request->getPost('val_field_form');
+		$data['field_database'] = $this->request->getPost('val_field_database');
+		$data['field_required'] = $this->request->getPost('val_field_required');
+		$data['field_settings'] = $this->request->getPost('val_field_settings');
 
         if ($method == 'save') {
-            $this->cridModel->insert($data);
+            $this->cridDetailModel->insert($data);
             $log['errorCode'] = 1;
             $log['errorMessage'] = 'Simpan Data Berhasil';
             $log['errorType'] = 'success';
             return $this->response->setJSON($log);
         } else {
-            $this->cridModel->update($id, $data);
+            $this->cridDetailModel->update($id, $data);
             $log['errorCode'] = 1;
             $log['errorMessage'] = 'Update Data Berhasil';
             $log['errorType'] = 'success';
@@ -117,21 +120,13 @@ class CridController extends BaseController
 
     public function getData($id)
     {
-        $query = $this->cridModel->select("id, table, namespace, title, primary_key, v_created_at, v_updated_at, v_deleted_at")->find($id);
-        $data['id'] = $query['id'];
-		$data['table'] = $query['table'];
-		$data['namespace'] = $query['namespace'];
-		$data['title'] = $query['title'];
-		$data['primary_key'] = $query['primary_key'];
-		$data['v_created_at'] = $query['v_created_at'];
-		$data['v_updated_at'] = $query['v_updated_at'];
-		$data['v_deleted_at'] = $query['v_deleted_at'];
-        return $this->response->setJSON($data);
+        $query = $this->cridDetailModel->select("id, crid_id, name_field, name_alias, name_type, field_form, field_database, field_required, field_settings")->find($id);
+        return $this->response->setJSON($query);
     }
 
     public function deleteData($id)
     {
-        $query = $this->cridModel->delete($id);
+        $query = $this->cridDetailModel->delete($id);
         if ($query) {
             $log['errorCode'] = 1;
             $log['errorMessage'] = 'Delete Data Berhasil';
@@ -145,12 +140,12 @@ class CridController extends BaseController
         }
     }
 
-	public function tableExist()
+	public function namefieldExist()
     {
-        $cridModel = new CridModel();
+        $cridDetailModel = new CridDetailModel();
         $id = $this->request->getPost('id');
-        $table = $this->request->getPost('table');
-        $query = $cridModel->where(['id !=' => $id, 'table' => $table])->first();
+        $name_field = $this->request->getPost('name_field');
+        $query = $cridDetailModel->where(['id !=' => $id, 'name_field' => $name_field])->first();
         if (!empty($query)) {
             return $this->response->setJSON(false);
         }

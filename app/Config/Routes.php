@@ -46,14 +46,24 @@ $routes->group('crud', ['namespace' => 'App\Controllers', 'filter' => 'admin'], 
     $routes->post('result', 'CrudController::result');
 });
 
-$routes->group('/crid', ['namespace' => 'App\Controllers'], static function($routes) {
-    $routes->get('/', 'CridController::index', ['filter' => 'admin']);
+$routes->group('/crid', ['namespace' => 'App\Controllers', ['filter' => 'admin']], static function($routes) {
+    $routes->get('/', 'CridController::index');
     $routes->post('ajax_list', 'CridController::ajaxList');
     $routes->post('save_data', 'CridController::saveData');
     $routes->post('update_data', 'CridController::saveData');
     $routes->get('(:num)/get_data', 'CridController::getData/$1');
     $routes->delete('(:num)/delete_data', 'CridController::deleteData/$1');
 	$routes->post('table_exist', 'CridController::tableExist');
+});
+
+$routes->group('/criddetail', ['namespace' => 'App\Controllers'], static function($routes) {
+    $routes->get('/', 'CridDetailController::index', ['filter' => 'admin']);
+    $routes->post('ajax_list', 'CridDetailController::ajaxList', ['filter' => 'admin']);
+    $routes->post('save_data', 'CridDetailController::saveData', ['filter' => 'admin']);
+    $routes->post('update_data', 'CridDetailController::saveData', ['filter' => 'admin']);
+    $routes->get('(:num)/get_data', 'CridDetailController::getData/$1', ['filter' => 'admin']);
+    $routes->delete('(:num)/delete_data', 'CridDetailController::deleteData/$1', ['filter' => 'admin']);
+	$routes->post('name_field_exist', 'CridDetailController::namefieldExist', ['filter' => 'admin']);
 });
 
 /**
