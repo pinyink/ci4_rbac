@@ -11,13 +11,13 @@
 
 <?=$this->section('content'); ?>
 <div class="page-heading">
-    <h1 class="page-title">Siswa</h1>
+    <h1 class="page-title">Crid</h1>
     <ol class="breadcrumb">
         <li class="breadcrumb-item">
             <a href="<?=base_url('home');?>"><i class="fa fa-home font-20"></i></a>
         </li>
         
-        <li class="breadcrumb-item">Siswa</li>
+        <li class="breadcrumb-item">Crid</li>
     </ol>
 </div>
 
@@ -28,7 +28,7 @@
         <div class="col-xl-12 col-lg-12 col-md-12">
             <div class="ibox">
                 <div class="ibox-head">
-                    <div class="ibox-title">Data siswa</div>
+                    <div class="ibox-title">Data Crid</div>
                     <div class="ibox-tools">
                         <a onclick="reload_table()" class="refresh" data-toggle="tooltip" data-placement="top" title="reload data"><i class="fa fa-refresh"></i></a>
                         <?php if(enforce(1, 2)): ?>
@@ -46,10 +46,13 @@
                                 <tr>
                                     <th width="15%">Action</th>
                                     <th width="10%">No</th>
-									<th style="width: 18.75%">Nama</th>
-									<th style="width: 18.75%">Alamat</th>
-									<th style="width: 18.75%">Tempat Lahir</th>
-									<th style="width: 18.75%">Tanggal Lahir</th>
+									<th style="width: 10.714285714286%">Table</th>
+									<th style="width: 10.714285714286%">Namespace</th>
+									<th style="width: 10.714285714286%">Title</th>
+									<th style="width: 10.714285714286%">Primary Key</th>
+									<th style="width: 10.714285714286%">V Created At</th>
+									<th style="width: 10.714285714286%">V Updated At</th>
+									<th style="width: 10.714285714286%">V Deleted At</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -65,9 +68,9 @@
 </div>
 <!-- /Container -->
 
-<div class="modal fade" id="modalsiswa" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modalcrid" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <?=form_open('', ['id' => 'formsiswa'], ['siswa_id' => '', 'method' => '']);?>
+        <?=form_open('', ['id' => 'formcrid'], ['id' => '', 'method' => '']);?>
             <?=csrf_field();?>
             <div class="modal-content">
                 <div class="modal-header">
@@ -78,20 +81,32 @@
                 </div>
                 <div class="modal-body">
 					<div class="form-group">
-                        <?=form_label('Nama');?>
-                        <?=form_input('val_siswa_nama', '', ['class' => 'form-control'], 'text');?>
+                        <?=form_label('Table');?>
+                        <?=form_input('val_table', '', ['class' => 'form-control'], 'text');?>
                     </div>
 					<div class="form-group">
-                        <?=form_label('Alamat');?>
-                        <?=form_input('val_siswa_alamat', '', ['class' => 'form-control'], 'text');?>
+                        <?=form_label('Namespace');?>
+                        <?=form_input('val_namespace', '', ['class' => 'form-control'], 'text');?>
                     </div>
 					<div class="form-group">
-                        <?=form_label('Tempat Lahir');?>
-                        <?=form_input('val_siswa_tempat_lahir', '', ['class' => 'form-control'], 'text');?>
+                        <?=form_label('Title');?>
+                        <?=form_input('val_title', '', ['class' => 'form-control'], 'text');?>
                     </div>
 					<div class="form-group">
-                        <?=form_label('Tanggal Lahir');?>
-                        <?=form_input('val_siswa_tanggal_lahir', '', ['class' => 'form-control']);?>
+                        <?=form_label('Primary Key');?>
+                        <?=form_input('val_primary_key', '', ['class' => 'form-control'], 'text');?>
+                    </div>
+					<div class="form-group">
+                        <?=form_label('V Created At');?>
+                        <?=form_input('val_v_created_at', '', ['class' => 'form-control'], 'text');?>
+                    </div>
+					<div class="form-group">
+                        <?=form_label('V Updated At');?>
+                        <?=form_input('val_v_updated_at', '', ['class' => 'form-control'], 'text');?>
+                    </div>
+					<div class="form-group">
+                        <?=form_label('V Deleted At');?>
+                        <?=form_input('val_v_deleted_at', '', ['class' => 'form-control'], 'text');?>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -124,7 +139,7 @@
                     },
                     "order": [],
                     "ajax": {
-                        "url": "<?php echo base_url('/siswa/ajax_list') ?>",
+                        "url": "<?php echo base_url('/crid/ajax_list') ?>",
                         "headers": {
                             'X-Requested-With': 'XMLHttpRequest'
                         },
@@ -150,17 +165,8 @@
 	});
     
 
-	$('[name="val_siswa_tanggal_lahir"]').datepicker({
-		todayBtn: "linked",
-		keyboardNavigation: false,
-		forceParse: false,
-		calendarWeeks: true,
-		autoclose: true,
-		format: "dd-mm-yyyy"
-	});
-
     function reset_form() {
-        var MValid = $("#formsiswa");
+        var MValid = $("#formcrid");
         MValid[0].reset();
         MValid.find(".is-invalid").removeClass("is-invalid");
         MValid.find(".is-valid").removeClass("is-valid");
@@ -170,23 +176,26 @@
     function lihat_data(id) {
         reset_form();
         save_method = 'update';
-        $('#formsiswa').valid();
+        $('#formcrid').valid();
         $('[name="method"]').val('update');
-        $('#formsiswa .form-control').addClass('form-view-detail');
-        $('#formsiswa .form-control').prop('disabled', true);
-        $('#formsiswa button[type="submit"]').hide();
+        $('#formcrid .form-control').addClass('form-view-detail');
+        $('#formcrid .form-control').prop('disabled', true);
+        $('#formcrid button[type="submit"]').hide();
         $.ajax({
             type: "GET",
-            url: "<?=base_url('/siswa');?>/"+id+'/get_data',
+            url: "<?=base_url('/crid');?>/"+id+'/get_data',
             dataType: "JSON",
             success: function (response) {
-                $('#modalsiswa').modal('show');
-                $('#modalsiswa .modal-title').text('Detail Data');
-                $('[name="siswa_id"]').val(response.siswa_id);
-                $('[name="val_siswa_nama"]').val(response.siswa_nama);
-				$('[name="val_siswa_alamat"]').val(response.siswa_alamat);
-				$('[name="val_siswa_tempat_lahir"]').val(response.siswa_tempat_lahir);
-				$('[name="val_siswa_tanggal_lahir"]').val(response.siswa_tanggal_lahir);
+                $('#modalcrid').modal('show');
+                $('#modalcrid .modal-title').text('Detail Data');
+                $('[name="id"]').val(response.id);
+                $('[name="val_table"]').val(response.table);
+				$('[name="val_namespace"]').val(response.namespace);
+				$('[name="val_title"]').val(response.title);
+				$('[name="val_primary_key"]').val(response.primary_key);
+				$('[name="val_v_created_at"]').val(response.v_created_at);
+				$('[name="val_v_updated_at"]').val(response.v_updated_at);
+				$('[name="val_v_deleted_at"]').val(response.v_deleted_at);
 				
             }
         });
@@ -196,13 +205,13 @@
     function tambah_data() {
         save_method = 'save';
         reset_form();
-        $('#modalsiswa').modal('show');
-        $('#modalsiswa .modal-title').text('Tambah Data');
+        $('#modalcrid').modal('show');
+        $('#modalcrid .modal-title').text('Tambah Data');
         $('[name="method"]').val('save');
-        $('[name="siswa_id"]').val(null);
-        $('#formsiswa .form-control').removeClass('form-view-detail');
-        $('#formsiswa .form-control').prop('disabled', false);
-        $('#formsiswa button[type="submit"]').show();
+        $('[name="id"]').val(null);
+        $('#formcrid .form-control').removeClass('form-view-detail');
+        $('#formcrid .form-control').prop('disabled', false);
+        $('#formcrid button[type="submit"]').show();
     }
     <?php endif ?>
 
@@ -210,23 +219,26 @@
     function edit_data(id) {
         reset_form();
         save_method = 'update';
-        $('#formsiswa').valid();
+        $('#formcrid').valid();
         $('[name="method"]').val('update');
-        $('#formsiswa .form-control').removeClass('form-view-detail');
-        $('#formsiswa .form-control').prop('disabled', false);
-        $('#formsiswa button[type="submit"]').show();
+        $('#formcrid .form-control').removeClass('form-view-detail');
+        $('#formcrid .form-control').prop('disabled', false);
+        $('#formcrid button[type="submit"]').show();
         $.ajax({
             type: "GET",
-            url: "<?=base_url('/siswa');?>/"+id+'/get_data',
+            url: "<?=base_url('/crid');?>/"+id+'/get_data',
             dataType: "JSON",
             success: function (response) {
-                $('#modalsiswa').modal('show');
-                $('#modalsiswa .modal-title').text('Edit Data');
-                $('[name="siswa_id"]').val(response.siswa_id);
-                $('[name="val_siswa_nama"]').val(response.siswa_nama);
-				$('[name="val_siswa_alamat"]').val(response.siswa_alamat);
-				$('[name="val_siswa_tempat_lahir"]').val(response.siswa_tempat_lahir);
-				$('[name="val_siswa_tanggal_lahir"]').val(response.siswa_tanggal_lahir);
+                $('#modalcrid').modal('show');
+                $('#modalcrid .modal-title').text('Edit Data');
+                $('[name="id"]').val(response.id);
+                $('[name="val_table"]').val(response.table);
+				$('[name="val_namespace"]').val(response.namespace);
+				$('[name="val_title"]').val(response.title);
+				$('[name="val_primary_key"]').val(response.primary_key);
+				$('[name="val_v_created_at"]').val(response.v_created_at);
+				$('[name="val_v_updated_at"]').val(response.v_updated_at);
+				$('[name="val_v_deleted_at"]').val(response.v_deleted_at);
 				
             }
         });
@@ -247,7 +259,7 @@
         if (result.isConfirmed) {
             $.ajax({
                 type: "DELETE",
-                url: "<?=base_url('/siswa')?>/"+id+'/delete_data',
+                url: "<?=base_url('/crid')?>/"+id+'/delete_data',
                 dataType: "json",
                 success: function (response) {
                     if(response.errorCode == 1) {
@@ -273,20 +285,20 @@
     <?php endif ?>
 
     $(function() {
-        $('#formsiswa').validate({
+        $('#formcrid').validate({
             errorClass: "invalid-feedback",
             rules: {
-			val_siswa_nama: {
+			val_table: {
                 required: true,
 				remote: {
-                    url: "<?=base_url('/siswa/siswa_nama_exist'); ?>",
+                    url: "<?=base_url('/crid/table_exist'); ?>",
                     type: "post",
                     data: {
-                        siswa_nama: function() {
-                            return $('[name="val_siswa_nama"]').val();
+                        table: function() {
+                            return $('[name="val_table"]').val();
                         },
-                        siswa_id: function() {
-                            return $('[name="siswa_id"]').val();
+                        id: function() {
+                            return $('[name="id"]').val();
                         },
                         csrf_test_name: function() {
                             return $('meta[name=X-CSRF-TOKEN]').attr("content");
@@ -294,38 +306,67 @@
                     },
                 },
 
-				maxlength: 128
+				maxlength: 64
             },
 
-			val_siswa_alamat: {
-                
+			val_namespace: {
+                required: true,
+				maxlength: 64
             },
 
-			val_siswa_tempat_lahir: {
-                
-				maxlength: 32
+			val_title: {
+                required: true,
+				maxlength: 64
             },
 
-			val_siswa_tanggal_lahir: {
-                
+			val_primary_key: {
+                required: true,
+				maxlength: 64
+            },
+
+			val_v_created_at: {
+                required: true,
+				maxlength: 64
+            },
+
+			val_v_updated_at: {
+                required: true,
+				maxlength: 64
+            },
+
+			val_v_deleted_at: {
+                required: true,
+				maxlength: 64
             },
 
             },
             messages: {
-				val_siswa_nama: {
-                    required:'Nama harus diisi',remote: 'Nama sudah Ada, Tidak bisa di Input',maxlength: 'Nama Tidak Boleh Lebih dari 128 Huruf'
+				val_table: {
+                    required:'Table harus diisi',remote: 'Table sudah Ada, Tidak bisa di Input',maxlength: 'Table Tidak Boleh Lebih dari 64 Huruf'
                 },
 
-				val_siswa_alamat: {
-                    
+				val_namespace: {
+                    required:'Namespace harus diisi',maxlength: 'Namespace Tidak Boleh Lebih dari 64 Huruf'
                 },
 
-				val_siswa_tempat_lahir: {
-                    maxlength: 'Tempat Lahir Tidak Boleh Lebih dari 32 Huruf'
+				val_title: {
+                    required:'Title harus diisi',maxlength: 'Title Tidak Boleh Lebih dari 64 Huruf'
                 },
 
-				val_siswa_tanggal_lahir: {
-                    
+				val_primary_key: {
+                    required:'Primary Key harus diisi',maxlength: 'Primary Key Tidak Boleh Lebih dari 64 Huruf'
+                },
+
+				val_v_created_at: {
+                    required:'V Created At harus diisi',maxlength: 'V Created At Tidak Boleh Lebih dari 64 Huruf'
+                },
+
+				val_v_updated_at: {
+                    required:'V Updated At harus diisi',maxlength: 'V Updated At Tidak Boleh Lebih dari 64 Huruf'
+                },
+
+				val_v_deleted_at: {
+                    required:'V Deleted At harus diisi',maxlength: 'V Deleted At Tidak Boleh Lebih dari 64 Huruf'
                 },
 
 
@@ -339,12 +380,12 @@
             submitHandler: function() {
                 var url = '';
                 if(save_method == 'update') {
-                    url = "<?=base_url('/siswa/update_data');?>";
+                    url = "<?=base_url('/crid/update_data');?>";
                 }
                 if(save_method == 'save') {
-                    url = "<?=base_url('/siswa/save_data');?>";
+                    url = "<?=base_url('/crid/save_data');?>";
                 }
-                var formData = new FormData($($('#formsiswa'))[0]);
+                var formData = new FormData($($('#formcrid'))[0]);
                 $.ajax({
                     type: "POST",
                     url: url,
@@ -360,7 +401,7 @@
                                 console.log('dismissed');
                             });
                             reload_table();
-                            $('#modalsiswa').modal('hide');
+                            $('#modalcrid').modal('hide');
                         } else {
                             toast_error(response.errorMessage);
                         }

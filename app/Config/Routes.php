@@ -46,6 +46,16 @@ $routes->group('crud', ['namespace' => 'App\Controllers', 'filter' => 'admin'], 
     $routes->post('result', 'CrudController::result');
 });
 
+$routes->group('/crid', ['namespace' => 'App\Controllers'], static function($routes) {
+    $routes->get('/', 'CridController::index', ['filter' => 'admin']);
+    $routes->post('ajax_list', 'CridController::ajaxList');
+    $routes->post('save_data', 'CridController::saveData');
+    $routes->post('update_data', 'CridController::saveData');
+    $routes->get('(:num)/get_data', 'CridController::getData/$1');
+    $routes->delete('(:num)/delete_data', 'CridController::deleteData/$1');
+	$routes->post('table_exist', 'CridController::tableExist');
+});
+
 /**
  * Admin
  */
