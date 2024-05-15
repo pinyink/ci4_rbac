@@ -5,7 +5,7 @@
             <div>
                 <img src="<?= session('profil_image'); ?>" class="imgProfil img-circle admin-avatar" />
             </div>
-            <div class="admin-info">
+            <div class="admin-info text-center mt-2">
                 <div class="font-strong"><?= session('fullname') ?></div>
             </div>
         </div>

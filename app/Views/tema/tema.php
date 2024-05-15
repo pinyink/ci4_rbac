@@ -13,8 +13,7 @@
     <link href="<?= base_url('assets/admincast/dist/assets/vendors/themify-icons/css/themify-icons.css'); ?>" rel="stylesheet" />
     <!-- PLUGINS STYLES-->
     <!-- THEME STYLES-->
-    <link href="<?= base_url('assets/admincast/dist/assets/css/main.min.css'); ?>" rel="stylesheet" />
-    <link href="<?= base_url('assets/admincast/dist/assets/css/themes/black-white.css'); ?>" rel="stylesheet" />
+    <link href="<?= base_url('assets/admincast/dist/assets/css/main_.min.css'); ?>" rel="stylesheet" />
     <link href="<?=base_url('assets/admincast/dist/assets/vendors/sweetalert2/sweetalert2.min.css');?>" rel="stylesheet" type="text/css">
     <?= $this->renderSection('css'); ?>
     <!-- PAGE LEVEL STYLES-->
