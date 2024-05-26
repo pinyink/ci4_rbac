@@ -44,6 +44,8 @@ class CridController extends BaseController
             if(enforce(1, 4)) {
                 $aksi .= '<a href="javascript:;" class="text-danger ml-2" data-toggle="tooltip" data-placement="top" title="Delete Data" onclick="delete_data('.$id.')"><i class="fa fa-trash"></i></a>';
             }
+            $aksi .= '<a href='.base_url('criddetail?id='.$id).' class="text-success ml-2" data-toggle="tooltip" data-placement="top" title="Detail Crid"><i class="fa fa-list"></i></a>';
+
             $action = $aksi;
             
             $row[] = $action;
