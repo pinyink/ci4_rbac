@@ -70,7 +70,7 @@
 <!-- /Container -->
 
 <div class="modal fade" id="modalcrid" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <?=form_open('', ['id' => 'formcrid'], ['id' => '', 'method' => '']);?>
             <?=csrf_field();?>
             <div class="modal-content">
@@ -97,21 +97,39 @@
                         <?=form_label('Title');?>
                         <?=form_input('val_title', '', ['class' => 'form-control'], 'text');?>
                     </div>
-					<div class="form-group">
-                        <?=form_label('Primary Key');?>
-                        <?=form_input('val_primary_key', '', ['class' => 'form-control'], 'text');?>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <?=form_label('Primary Key');?>
+                                <?=form_input('val_primary_key', '', ['class' => 'form-control'], 'text');?>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <?=form_label('RBAC');?>
+                                <?=form_input('val_rbac', '', ['class' => 'form-control'], 'number');?>
+                            </div>
+                        </div>
                     </div>
-					<div class="form-group">
-                        <?=form_label('V Created At');?>
-                        <?=form_input('val_v_created_at', '', ['class' => 'form-control'], 'text');?>
-                    </div>
-					<div class="form-group">
-                        <?=form_label('V Updated At');?>
-                        <?=form_input('val_v_updated_at', '', ['class' => 'form-control'], 'text');?>
-                    </div>
-					<div class="form-group">
-                        <?=form_label('V Deleted At');?>
-                        <?=form_input('val_v_deleted_at', '', ['class' => 'form-control'], 'text');?>
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="form-group">
+                                <?=form_label('V Created At');?>
+                                <?=form_input('val_v_created_at', '', ['class' => 'form-control'], 'text');?>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <?=form_label('V Updated At');?>
+                                <?=form_input('val_v_updated_at', '', ['class' => 'form-control'], 'text');?>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <?=form_label('V Deleted At');?>
+                                <?=form_input('val_v_deleted_at', '', ['class' => 'form-control'], 'text');?>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -217,6 +235,7 @@
 				$('[name="val_v_updated_at"]').val(response.v_updated_at);
 				$('[name="val_v_deleted_at"]').val(response.v_deleted_at);
 				$('[name="val_routename"]').val(response.routename);
+				$('[name="val_rbac"]').val(response.rbac);
 				
             }
         });

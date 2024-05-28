@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Libraries\CreateModelLib;
+use App\Libraries\CreateRouteLib;
 use App\Libraries\Tema;
 use App\Models\CridDetailModel;
 use CodeIgniter\Database\RawSql;
@@ -14,6 +16,8 @@ class CridController extends BaseController
     private $tema;
     private $cridModel;
     private $cridDetailModel;
+    private $createRouteLib;
+    private $createModelLib;
 
     function __construct()
     {
@@ -21,6 +25,8 @@ class CridController extends BaseController
         $this->tema = new Tema();
         $this->cridModel = new CridModel();
         $this->cridDetailModel = new CridDetailModel();
+        $this->createRouteLib = new CreateRouteLib();
+        $this->createModelLib = new CreateModelLib();
     }
 
     public function index()
@@ -39,7 +45,7 @@ class CridController extends BaseController
             $no++;
             $row = [];
             $id = $list->id;
-            $aksi = '<a href="javascript:;" class="" data-toggle="tooltip" data-placement="top" title="Lihat Data" onclick="lihat_data('.$id.')"><i class="fa fa-search"></i></a>';
+            $aksi = '';
             if(enforce(1, 3)) {
                 $aksi .= '<a href="javascript:;" class="ml-2" data-toggle="tooltip" data-placement="top" title="Edit Data" onclick="edit_data('.$id.')"><i class="fa fa-edit"></i></a>';
             }
@@ -106,6 +112,7 @@ class CridController extends BaseController
 		$data['v_updated_at'] = $this->request->getPost('val_v_updated_at');
 		$data['v_deleted_at'] = $this->request->getPost('val_v_deleted_at');
 		$data['routename'] = $this->request->getPost('val_routename');
+		$data['rbac'] = $this->request->getPost('val_rbac');
 
         if ($method == 'save') {
             $this->cridModel->insert($data);
@@ -124,7 +131,7 @@ class CridController extends BaseController
 
     public function getData($id)
     {
-        $query = $this->cridModel->select("id, table, namespace, title, primary_key, v_created_at, v_updated_at, v_deleted_at, routename")->find($id);
+        $query = $this->cridModel->select("id, table, namespace, title, primary_key, v_created_at, v_updated_at, v_deleted_at, routename, rbac")->find($id);
         return $this->response->setJSON($query);
     }
 
@@ -160,8 +167,16 @@ class CridController extends BaseController
     {
         $table = $this->cridModel->find($id);
         $fields = $this->cridDetailModel->where(['crid_id' => $id])->findAll();
-        print_r([
-            $table, $fields
-        ]);
+        print_r([$table, $fields]);
+
+        $this->createRouteLib->setTable($table);
+        $this->createRouteLib->setFields($fields);
+        $route = $this->createRouteLib->generate();
+        echo "<pre>$route</pre>";
+
+        $this->createModelLib->setTable($table);
+        $this->createModelLib->setFields($fields);
+        $model = $this->createModelLib->generate();
+        echo "<pre>$model</pre>";
     }
 }

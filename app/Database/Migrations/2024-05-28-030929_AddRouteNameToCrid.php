@@ -13,6 +13,11 @@ class AddRouteNameToCrid extends Migration
                 'type' => 'VARCHAR',
                 'constraint' => '64',
                 'null' => false,
+            ],
+            'rbac' => [
+                'type' => 'VARCHAR',
+                'constraint' => '32',
+                'null' => false
             ]
         ];
         $this->forge->addColumn('crid', $fields);
@@ -20,6 +25,6 @@ class AddRouteNameToCrid extends Migration
 
     public function down()
     {
-        $this->forge->dropColumn('crid', ['routename']);
+        $this->forge->dropColumn('crid', ['routename', 'rbac']);
     }
 }

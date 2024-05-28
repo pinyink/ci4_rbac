@@ -4,17 +4,17 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class CridModel extends Model
+class productModel extends Model
 {
     protected $DBGroup          = 'default';
-    protected $table            = 'crid';
+    protected $table            = 'product';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $insertID         = 0;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = true;
     protected $protectFields    = true;
-    protected $allowedFields    = ['table', 'namespace', 'title', 'primary_key', 'v_created_at', 'v_updated_at', 'v_deleted_at', 'routename', 'rbac'];
+    protected $allowedFields    = ['nama', 'alamat'];
 
     // Dates
     protected $useTimestamps = true;
@@ -39,8 +39,9 @@ class CridModel extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
-    public $column_order  = array(null, null, 'a.table', 'a.namespace', 'a.title', 'a.primary_key', 'a.v_created_at', 'a.v_updated_at', 'a.v_deleted_at');
-    public $column_search = array('a.table', 'a.namespace', 'a.title', 'a.primary_key', 'a.v_created_at', 'a.v_updated_at', 'a.v_deleted_at');
+    
+    public $column_order  = array(null, null, 'a.nama', 'a.alamat');
+    public $column_search = array('a.nama', 'a.alamat');
     public $order         = array('a.id' => 'desc');
 
     private $request = '';
@@ -62,10 +63,10 @@ class CridModel extends Model
         $this->dt = $this->db->table($this->table . ' a');
     }
 
-    private function _getDatatablesQuery()
+	private function _getDatatablesQuery()
     {
-        $this->dt->select('a.id, a.table, a.namespace, a.title, a.primary_key, a.v_created_at, a.v_updated_at, a.v_deleted_at, a.routename');
-        $this->dt->where($this->deletedField, null);
+        $this->dt->select('a.id, a.nama, a.alamat');
+        $this->dt->where('a.'.$this->deletedField, null);
         $this->dt->where($this->where);
         $i = 0;
         foreach ($this->column_search as $item) {
@@ -114,10 +115,10 @@ class CridModel extends Model
         return $tblStorage->countAllResults();
     }
 
-    public function detail($where = [])
+	public function detail($where = [])
     {
         $table = $this->db->table($this->table.' a');
-        $table->select('a.id, a.table, a.namespace, a.title, a.primary_key, a.v_created_at, a.v_updated_at, a.v_deleted_at');
+        $table->select('a.nama, a.alamat');
         $table->where($where);
         return $table->get();
     }
