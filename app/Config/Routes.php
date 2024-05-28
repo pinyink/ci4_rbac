@@ -54,6 +54,8 @@ $routes->group('/crid', ['namespace' => 'App\Controllers', ['filter' => 'admin']
     $routes->get('(:num)/get_data', 'CridController::getData/$1');
     $routes->delete('(:num)/delete_data', 'CridController::deleteData/$1');
 	$routes->post('table_exist', 'CridController::tableExist');
+
+    $routes->get('(:num)/generate_crud', 'CridController::generateCrud/$1');
 });
 
 $routes->group('/criddetail', ['namespace' => 'App\Controllers'], static function($routes) {

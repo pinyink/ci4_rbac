@@ -102,6 +102,8 @@ class CridDetailController extends BaseController
 		$data['field_database'] = $this->request->getPost('val_field_database');
 		$data['field_required'] = $this->request->getPost('val_field_required');
 		$data['field_settings'] = $this->request->getPost('val_field_settings');
+		$data['field_min'] = $this->request->getPost('val_field_min');
+		$data['field_max'] = $this->request->getPost('val_field_max');
 
         if ($method == 'save') {
             $this->cridDetailModel->insert($data);
@@ -120,7 +122,7 @@ class CridDetailController extends BaseController
 
     public function getData($id)
     {
-        $query = $this->cridDetailModel->select("id, crid_id, name_field, name_alias, name_type, field_form, field_database, field_required, field_settings")->find($id);
+        $query = $this->cridDetailModel->find($id);
         return $this->response->setJSON($query);
     }
 

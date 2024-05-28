@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Libraries\Tema;
+use App\Models\CridDetailModel;
 use CodeIgniter\Database\RawSql;
 use App\Models\CridModel;
 
@@ -12,12 +13,14 @@ class CridController extends BaseController
 {
     private $tema;
     private $cridModel;
+    private $cridDetailModel;
 
     function __construct()
     {
         helper(['form', 'Permission']);
         $this->tema = new Tema();
         $this->cridModel = new CridModel();
+        $this->cridDetailModel = new CridDetailModel();
     }
 
     public function index()
@@ -51,6 +54,7 @@ class CridController extends BaseController
             $row[] = $action;
             $row[] = $no;
 			$row[] = $list->table;
+            $row[] = $list->routename;
 			$row[] = $list->namespace;
 			$row[] = $list->title;
 			$row[] = $list->primary_key;
@@ -74,7 +78,7 @@ class CridController extends BaseController
         
 
         $validation = [
-            'val_table' => 'required','val_namespace' => 'required','val_title' => 'required','val_primary_key' => 'required','val_v_created_at' => 'required','val_v_updated_at' => 'required','val_v_deleted_at' => 'required',
+            'val_table' => 'required','val_title' => 'required','val_primary_key' => 'required','val_v_created_at' => 'required','val_v_updated_at' => 'required','val_v_deleted_at' => 'required',
         ];
 
         
@@ -101,6 +105,7 @@ class CridController extends BaseController
 		$data['v_created_at'] = $this->request->getPost('val_v_created_at');
 		$data['v_updated_at'] = $this->request->getPost('val_v_updated_at');
 		$data['v_deleted_at'] = $this->request->getPost('val_v_deleted_at');
+		$data['routename'] = $this->request->getPost('val_routename');
 
         if ($method == 'save') {
             $this->cridModel->insert($data);
@@ -119,16 +124,8 @@ class CridController extends BaseController
 
     public function getData($id)
     {
-        $query = $this->cridModel->select("id, table, namespace, title, primary_key, v_created_at, v_updated_at, v_deleted_at")->find($id);
-        $data['id'] = $query['id'];
-		$data['table'] = $query['table'];
-		$data['namespace'] = $query['namespace'];
-		$data['title'] = $query['title'];
-		$data['primary_key'] = $query['primary_key'];
-		$data['v_created_at'] = $query['v_created_at'];
-		$data['v_updated_at'] = $query['v_updated_at'];
-		$data['v_deleted_at'] = $query['v_deleted_at'];
-        return $this->response->setJSON($data);
+        $query = $this->cridModel->select("id, table, namespace, title, primary_key, v_created_at, v_updated_at, v_deleted_at, routename")->find($id);
+        return $this->response->setJSON($query);
     }
 
     public function deleteData($id)
@@ -157,5 +154,14 @@ class CridController extends BaseController
             return $this->response->setJSON(false);
         }
         return $this->response->setJSON(true);
+    }
+
+    public function generateCrud($id)
+    {
+        $table = $this->cridModel->find($id);
+        $fields = $this->cridDetailModel->where(['crid_id' => $id])->findAll();
+        print_r([
+            $table, $fields
+        ]);
     }
 }

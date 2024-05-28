@@ -25,6 +25,15 @@
 
 <!-- Container -->
 <div class="page-content fade-in-up">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox">
+                <div class="ibox-body">
+                    <a href="<?=base_url('crid/'.$crid['id'].'/generate_crud')?>" class="btn btn-primary" target="_blank"><i class="fa fa-building-o"></i> Generate Crud</a>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Row -->
     <div class="row">
         <div class="col-xl-12 col-lg-12 col-md-12">
@@ -97,6 +106,7 @@
                             <div class="form-group">
                                 <?=form_label('Name Type');?>
                                 <?=form_dropdown('val_name_type', [
+                                        '' => '-',
                                         'text' => 'text',
                                         'number' => 'number',
                                         'textarea' => 'textarea',
@@ -108,11 +118,29 @@
                                     ], '', ['class' => 'form-control']);?>
                             </div>
                         </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <?=form_label('Min')?>
+                                <?=form_input('val_field_min', '', ['class' => 'form-control'], 'number')?>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <?=form_label('Max')?>
+                                <?=form_input('val_field_max', '', ['class' => 'form-control'], 'number')?>
+                            </div>
+                        </div>
                     </div>
-					<div class="form-group">
-                        <label><input type="checkbox" name="val_field_form" id="val_field_form" value="1"> Field Form</label><br>
-                        <label><input type="checkbox" name="val_field_database" id="val_field_database" value="1"> Field Database</label><br>
-                        <label><input type="checkbox" name="val_field_required" id="val_field_required" value="1"> Field Required</label>
+                    <div class="row">
+                        <div class="col-4">
+                            <label><input type="checkbox" name="val_field_form" id="val_field_form" value="1"> Field Form</label>
+                        </div>
+                        <div class="col-4">
+                            <label><input type="checkbox" name="val_field_database" id="val_field_database" value="1"> Field Database</label>
+                        </div>
+                        <div class="col-4">
+                            <label><input type="checkbox" name="val_field_required" id="val_field_required" value="1"> Field Required</label>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -223,6 +251,9 @@
                 if (response.field_required == 1) {
                     $('[name="val_field_required"]').prop('checked', true);
                 }
+                
+				$('[name="val_field_min"]').val(response.field_min);
+				$('[name="val_field_max"]').val(response.field_max);
             }
         });
     }

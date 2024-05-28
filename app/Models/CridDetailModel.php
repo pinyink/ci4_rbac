@@ -13,7 +13,7 @@ class CridDetailModel extends Model
     protected $insertID         = 0;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = true;
-    protected $protectFields    = true;
+    protected $protectFields    = false;
     protected $allowedFields    = ['crid_id', 'name_field', 'name_alias', 'name_type', 'field_form', 'field_database', 'field_required', 'field_settings'];
 
     // Dates

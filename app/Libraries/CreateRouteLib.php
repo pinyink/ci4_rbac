@@ -2,11 +2,10 @@
 
 namespace App\Libraries;
 
-class CreateModelLib 
+class CreateRouteLib 
 {
     private $table;
     private $fields;
-    
 
     /**
      * Get the value of table

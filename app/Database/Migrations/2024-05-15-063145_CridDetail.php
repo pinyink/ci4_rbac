@@ -44,6 +44,16 @@ class CridDetail extends Migration
                 'type' => 'INT',
                 'default' => null,
             ],
+            'field_min' => [
+                'type' => 'INT',
+                'constraint' => '11',
+                'null' => null,
+            ],
+            'field_max' => [
+                'type' => 'INT',
+                'constraint' => '11',
+                'null' => null,
+            ],
             'field_settings' => [
                 'type' => 'TEXT',
                 'default' => null,

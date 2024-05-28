@@ -14,7 +14,7 @@ class CridModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = true;
     protected $protectFields    = true;
-    protected $allowedFields    = ['table', 'namespace', 'title', 'primary_key', 'v_created_at', 'v_updated_at', 'v_deleted_at'];
+    protected $allowedFields    = ['table', 'namespace', 'title', 'primary_key', 'v_created_at', 'v_updated_at', 'v_deleted_at', 'routename'];
 
     // Dates
     protected $useTimestamps = true;
@@ -64,7 +64,7 @@ class CridModel extends Model
 
     private function _getDatatablesQuery()
     {
-        $this->dt->select('a.id, a.table, a.namespace, a.title, a.primary_key, a.v_created_at, a.v_updated_at, a.v_deleted_at');
+        $this->dt->select('a.id, a.table, a.namespace, a.title, a.primary_key, a.v_created_at, a.v_updated_at, a.v_deleted_at, a.routename');
         $this->dt->where($this->deletedField, null);
         $this->dt->where($this->where);
         $i = 0;

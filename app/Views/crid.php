@@ -44,9 +44,10 @@
                         <table id="datatable" class="table table-striped table-bordered table-hover">
                             <thead>
                                 <tr>
-                                    <th width="15%">Action</th>
-                                    <th width="10%">No</th>
+                                    <th width="10%">Action</th>
+                                    <th width="5%">No</th>
 									<th style="width: 10.714285714286%">Table</th>
+                                    <th style="width: 10%;">Route</th>
 									<th style="width: 10.714285714286%">Namespace</th>
 									<th style="width: 10.714285714286%">Title</th>
 									<th style="width: 10.714285714286%">Primary Key</th>
@@ -83,6 +84,10 @@
 					<div class="form-group">
                         <?=form_label('Table');?>
                         <?=form_input('val_table', '', ['class' => 'form-control'], 'text');?>
+                    </div>
+                    <div class="form-group">
+                        <?=form_label('Route Name');?>
+                        <?=form_input('val_routename', '', ['class' => 'form-control'], 'text');?>
                     </div>
 					<div class="form-group">
                         <?=form_label('Namespace');?>
@@ -173,34 +178,6 @@
         
     }
 
-    function lihat_data(id) {
-        reset_form();
-        save_method = 'update';
-        $('#formcrid').valid();
-        $('[name="method"]').val('update');
-        $('#formcrid .form-control').addClass('form-view-detail');
-        $('#formcrid .form-control').prop('disabled', true);
-        $('#formcrid button[type="submit"]').hide();
-        $.ajax({
-            type: "GET",
-            url: "<?=base_url('/crid');?>/"+id+'/get_data',
-            dataType: "JSON",
-            success: function (response) {
-                $('#modalcrid').modal('show');
-                $('#modalcrid .modal-title').text('Detail Data');
-                $('[name="id"]').val(response.id);
-                $('[name="val_table"]').val(response.table);
-				$('[name="val_namespace"]').val(response.namespace);
-				$('[name="val_title"]').val(response.title);
-				$('[name="val_primary_key"]').val(response.primary_key);
-				$('[name="val_v_created_at"]').val(response.v_created_at);
-				$('[name="val_v_updated_at"]').val(response.v_updated_at);
-				$('[name="val_v_deleted_at"]').val(response.v_deleted_at);
-				
-            }
-        });
-    }
-
     <?php if(enforce(1, 2)): ?>
     function tambah_data() {
         save_method = 'save';
@@ -239,6 +216,7 @@
 				$('[name="val_v_created_at"]').val(response.v_created_at);
 				$('[name="val_v_updated_at"]').val(response.v_updated_at);
 				$('[name="val_v_deleted_at"]').val(response.v_deleted_at);
+				$('[name="val_routename"]').val(response.routename);
 				
             }
         });
@@ -306,11 +284,6 @@
                     },
                 },
 
-				maxlength: 64
-            },
-
-			val_namespace: {
-                required: true,
 				maxlength: 64
             },
 
@@ -403,7 +376,10 @@
                             reload_table();
                             $('#modalcrid').modal('hide');
                         } else {
-                            toast_error(response.errorMessage);
+                            alertify.set('notifier', 'position', 'top-right');
+                            alertify.notify('<span><i class="fa fa-bell"></i> ' + response.errorMessage + '</span>', response.errorType, 5, function() {
+                                console.log('dismissed');
+                            });
                         }
                     },
                     error: function(jqXHR){
