@@ -6,7 +6,7 @@ class CreateModelLib
 {
     private $table;
     private $fields;
-    
+    private $namaModel;
 
     /**
      * Get the value of table
@@ -44,6 +44,26 @@ class CreateModelLib
     public function setFields($fields)
     {
         $this->fields = $fields;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of namaModel
+     */ 
+    public function getNamaModel()
+    {
+        return $this->namaModel;
+    }
+
+    /**
+     * Set the value of namaModel
+     *
+     * @return  self
+     */ 
+    public function setNamaModel($namaModel)
+    {
+        $this->namaModel = $namaModel;
 
         return $this;
     }

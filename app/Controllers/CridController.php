@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Libraries\CreateController;
+use App\Libraries\CreateControllerLib;
 use App\Libraries\CreateModelLib;
 use App\Libraries\CreateRouteLib;
 use App\Libraries\Tema;
@@ -18,6 +20,7 @@ class CridController extends BaseController
     private $cridDetailModel;
     private $createRouteLib;
     private $createModelLib;
+    private $createControllerLib;
 
     function __construct()
     {
@@ -27,6 +30,7 @@ class CridController extends BaseController
         $this->cridDetailModel = new CridDetailModel();
         $this->createRouteLib = new CreateRouteLib();
         $this->createModelLib = new CreateModelLib();
+        $this->createControllerLib = new CreateControllerLib();
     }
 
     public function index()
@@ -178,5 +182,10 @@ class CridController extends BaseController
         $this->createModelLib->setFields($fields);
         $model = $this->createModelLib->generate();
         echo "<pre>$model</pre>";
+
+        $this->createControllerLib->setTable($table);
+        $this->createControllerLib->setFields($fields);
+        $controller = $this->createControllerLib->generate();
+        echo "<pre>$controller</pre>";
     }
 }
