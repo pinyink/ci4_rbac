@@ -11,6 +11,8 @@ use App\Models\LoginModels;
 
 class Profil extends BaseController
 {
+    private $session;
+
     public function __construct()
     {
         $this->session = session();
@@ -63,11 +65,11 @@ class Profil extends BaseController
     public function update()
     {
         $log = [];
-        $firstName = $this->req->getPost('firstName');
-        $lastName = $this->req->getPost('lastName');
+        $firstName = $this->req->getPost('firstName', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $lastName = $this->req->getPost('lastName', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $email = $this->req->getPost('email');
-        $bio = $this->req->getPost('bio');
-        $id = $this->req->getPost('idSetting');
+        $bio = $this->req->getPost('bio', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $id = session('user_id');
         $profilModel = new ProfilModel();
         $cek = $profilModel->getData(['a.user_id' => $id])->getRowArray();
         $data = [

@@ -343,7 +343,7 @@ $functionExists .= "\n\n\tpublic function ".strtolower(str_replace("_", "", $val
             if (in_array($fieldType[$key], ['rupiah'])) {
                 $fieldInserts .= "\n\t\t\$data['".$value."'] = \$this->request->getPost('val_".$value."') == null ? null : str_replace('.', '', \$this->request->getPost('val_".$value."'));";
             } else if (in_array($fieldType[$key], ['number'])) {
-                $fieldInserts .= "\n\t\t\$".$value." = \$this->request->getPost('val_".$value."') == null ? null : str_replace('.', '', \$this->request->getPost('val_".$value."'));";
+                $fieldInserts .= "\n\t\t\$".$value." = \$this->request->getPost('val_".$value."', FILTER_SANITIZE_FULL_SPECIAL_CHARS) == null ? null : str_replace('.', '', \$this->request->getPost('val_".$value."'));";
                 $fieldInserts .= "\n\t\t\$data['".$value."'] = str_replace(',', '.', \$".$value.");";
             } else if(in_array($fieldType[$key], ['image'])) {
                 $fieldImg .= "\n\t\t\$img".$value." = \$this->request->getFile('val_".$value."');";
@@ -358,7 +358,7 @@ $functionExists .= "\n\n\tpublic function ".strtolower(str_replace("_", "", $val
             } else if (in_array($fieldType[$key], ['date'])) {
                 $fieldInserts .= "\n\t\t\$data['".$value."'] = \$this->request->getPost('val_".$value."') == null ? null : date('Y-m-d', strtotime(\$this->request->getPost('val_".$value."')));"; 
             } else {
-                $fieldInserts .= "\n\t\t\$data['".$value."'] = \$this->request->getPost('val_".$value."');";
+                $fieldInserts .= "\n\t\t\$data['".$value."'] = \$this->request->getPost('val_".$value."', FILTER_SANITIZE_FULL_SPECIAL_CHARS);";
             }
 
             // jika required
