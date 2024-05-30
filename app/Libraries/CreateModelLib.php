@@ -50,7 +50,7 @@ class CreateModelLib
 
     public function generate()
     {
-        $namaModel = $this->table['table'].'Model';
+        $namaModel = str_replace(' ', '', ucwords(str_replace('_', ' ', $this->table['table']))).'Model';
         $allowedFields = "";
         $no = 1;
         foreach ($this->fields as $key => $value) {
@@ -226,7 +226,7 @@ $model .= "\n}";
         if (!file_exists(ROOTPATH.'App\Models')) {
             mkdir(ROOTPATH.'App\Models', 775);
         }
-        $pathModel = ROOTPATH.'App\Models\\'.ucwords($namaModel).'.php';
+        $pathModel = ROOTPATH.'App\Models\\'.$namaModel.'.php';
         $model = str_replace('@?', '<?', $model);
         $create = fopen($pathModel, "w") or die("Change your permision folder for application and harviacode folder to 777");
         fwrite($create, $model);
