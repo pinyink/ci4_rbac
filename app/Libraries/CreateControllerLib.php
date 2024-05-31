@@ -85,6 +85,47 @@ class ".$namaController." extends BaseController
         \$this->tema->loadTema('".$this->table['routename']."/index');
     }";
 
+        $rowFields = "";
+        foreach ($this->fields as $key => $value) {
+            if ($value['field_database'] == 1) {
+                if ($value['name_type'] == 'text' || $value['name_type'] == 'textarea') {
+                    $rowFields .= "\n\t\t\t\$row[] = \$list->".$value['name_field'].";";
+                }
+            }
+        }
+$controller .= "\n\tpublic function ajaxList()
+    {
+        \$this->".$modelVariable."->setRequest(\$this->request);
+        \$lists = \$this->".$modelVariable."->getDatatables();
+        \$data = [];
+        \$no = \$this->request->getPost(\"start\");
+        foreach (\$lists as \$list) {
+            \$no++;
+            \$row = [];
+            \$id = \$list->".$this->table['primary_key'].";
+            \$aksi = '<a href=\"javascript:;\" class=\"\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Lihat Data\" onclick=\"lihat_data('.\$id.')\"><i class=\"fa fa-search\"></i></a>';
+            if(enforce(".$this->table['rbac'].", 3)) {
+                \$aksi .= '<a href=\"javascript:;\" class=\"ml-2\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Edit Data\" onclick=\"edit_data('.\$id.')\"><i class=\"fa fa-edit\"></i></a>';
+            }
+
+            if(enforce(".$this->table['rbac'].", 4)) {
+                \$aksi .= '<a href=\"javascript:;\" class=\"text-danger ml-2\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Delete Data\" onclick=\"delete_data('.\$id.')\"><i class=\"fa fa-trash\"></i></a>';
+            }
+            \$action = \$aksi;
+            
+            \$row[] = \$action;
+            \$row[] = \$no;".$rowFields."
+            \$data[] = \$row;
+        }
+        \$output = [
+                \"draw\" => \$this->request->getPost('draw'),
+                \"recordsTotal\" => \$this->".$modelVariable."->countAll(),
+                \"recordsFiltered\" => \$this->".$modelVariable."->countFiltered(),
+                \"data\" => \$data
+            ];
+        echo json_encode(\$output);
+    }";
+
 $controller .= "\n}";
 
         if (!file_exists(ROOTPATH.'App\Models')) {

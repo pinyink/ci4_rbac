@@ -7,6 +7,7 @@ use App\Libraries\CreateController;
 use App\Libraries\CreateControllerLib;
 use App\Libraries\CreateModelLib;
 use App\Libraries\CreateRouteLib;
+use App\Libraries\CreateViewLib;
 use App\Libraries\Tema;
 use App\Models\CridDetailModel;
 use CodeIgniter\Database\RawSql;
@@ -21,6 +22,7 @@ class CridController extends BaseController
     private $createRouteLib;
     private $createModelLib;
     private $createControllerLib;
+    private $createViewLib;
 
     function __construct()
     {
@@ -31,6 +33,7 @@ class CridController extends BaseController
         $this->createRouteLib = new CreateRouteLib();
         $this->createModelLib = new CreateModelLib();
         $this->createControllerLib = new CreateControllerLib();
+        $this->createViewLib = new CreateViewLib();
     }
 
     public function index()
@@ -187,5 +190,10 @@ class CridController extends BaseController
         $this->createControllerLib->setFields($fields);
         $controller = $this->createControllerLib->generate();
         echo "<pre>$controller</pre>";
+
+        $this->createViewLib->setTable($table);
+        $this->createViewLib->setFields($fields);
+        $viewIndex = $this->createViewLib->index();
+        echo "<pre>$viewIndex</pre>";
     }
 }
