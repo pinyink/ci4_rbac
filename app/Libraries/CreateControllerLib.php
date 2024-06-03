@@ -6,11 +6,6 @@ class CreateControllerLib
 {
     private $table;
     private $fields;
-    private $modelLib;
-
-    public function __construct() {
-        $this->modelLib = new CreateModelLib();
-    }
 
     /**
      * Get the value of table
@@ -128,8 +123,8 @@ $controller .= "\n\tpublic function ajaxList()
 
 $controller .= "\n}";
 
-        if (!file_exists(ROOTPATH.'App\Models')) {
-            mkdir(ROOTPATH.'App\Models', 775);
+        if (!file_exists(ROOTPATH.'App\Controllers')) {
+            mkdir(ROOTPATH.'App\Controllers', 775);
         }
         $pathController = ROOTPATH.'App\Controllers\\'.$namaController.'.php';
         $controller = str_replace('@?', '<?', $controller);
