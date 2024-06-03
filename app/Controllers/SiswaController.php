@@ -15,7 +15,7 @@ class SiswaController extends BaseController
 
     function __construct()
     {
-        helper(['form', ]);
+        helper(['form', 'Permission_helper', ]);
         $this->tema = new Tema();
         $this->siswaModel = new SiswaModel();
     }
@@ -89,9 +89,9 @@ class SiswaController extends BaseController
         }
 
         $id = $this->request->getPost('siswa_id');
-		$data['siswa_nama'] = $this->request->getPost('val_siswa_nama');
-		$data['siswa_alamat'] = $this->request->getPost('val_siswa_alamat');
-		$data['siswa_tempat_lahir'] = $this->request->getPost('val_siswa_tempat_lahir');
+		$data['siswa_nama'] = $this->request->getPost('val_siswa_nama', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+		$data['siswa_alamat'] = $this->request->getPost('val_siswa_alamat', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+		$data['siswa_tempat_lahir'] = $this->request->getPost('val_siswa_tempat_lahir', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 		$data['siswa_tanggal_lahir'] = $this->request->getPost('val_siswa_tanggal_lahir') == null ? null : date('Y-m-d', strtotime($this->request->getPost('val_siswa_tanggal_lahir')));
 
         if ($method == 'save') {
