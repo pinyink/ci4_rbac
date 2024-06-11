@@ -131,8 +131,6 @@ $view = "
 <script src=\"@?=base_url(); ?@/assets/alertifyjs/alertify.min.js\" type=\"text/javascript\"> </script>
 <script src=\"@?=base_url(); ?@/assets/admincast/dist/assets/vendors/jquery-validation/dist/jquery.validate.min.js\" type=\"text/javascript\"> </script>
 <script src=\"@?=base_url(); ?@/assets/admincast/dist/assets/vendors/DataTables/datatables.min.js\" type=\"text/javascript\"> </script>
-<script src=\"@?=base_url(); ?@/assets/admincast/dist/assets/vendors/moment/min/moment.min.js\" type=\"text/javascript\"> </script>
-<script src=\"@?=base_url(); ?@/assets/admincast/dist/assets/vendors/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js\" type=\"text/javascript\"> </script>
 ".$jsScript."
 <script>
     var table;
@@ -215,15 +213,91 @@ $view = "
 @?=\$this->endSection();?@
 ";
         if (!file_exists(ROOTPATH.'App\Views\\'.$this->table['table'])) {
-            mkdir(ROOTPATH.'App\Views\\'.$this->table['table'], 775);
+            mkdir(ROOTPATH.'App\Views\\'.$this->table['table'].'\index.php', 775);
         }
-        $pathView = ROOTPATH.'App\Views\\'.$this->table['table'].'\index'.'.php';
+        $pathView = ROOTPATH.'App\Views\\'.$this->table['table'].'\index.php';
         $view = str_replace('@?', '<?', $view);
         $view = str_replace('?@', '?>', $view);
         $create = fopen($pathView, "w") or die("Change your permision folder for application and harviacode folder to 777");
         fwrite($create, $view);
         fclose($create);
 
-        return $view;
+        $this->tambahView();
+        return true;
+    }
+
+    public function tambahView()
+    {
+        $view = "
+@?= \$this->extend('tema/tema'); ?@ 
+@?=\$this->section('css');?@
+<!-- Data Table CSS -->
+<link href=\"@?=base_url();?@/assets/alertifyjs/css/alertify.min.css\" rel=\"stylesheet\" type=\"text/css\" />
+<link href=\"@?=base_url();?@/assets/alertifyjs/css/themes/bootstrap.min.css\" rel=\"stylesheet\" type=\"text/css\" />
+<link href=\"@?=base_url();?@/assets/admincast/dist/assets/vendors/DataTables/datatables.min.css\" rel=\"stylesheet\" type=\"text/css\" />
+<link href=\"@?=base_url();?@/assets/admincast/dist/assets/vendors/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css\" rel=\"stylesheet\" type=\"text/css\" />
+@?=\$this->endSection();?@
+
+@?=\$this->section('content'); ?@
+<div class=\"page-heading\">
+    <h1 class=\"page-title\">".ucwords($this->table['title'])."</h1>
+    <ol class=\"breadcrumb\">
+        <li class=\"breadcrumb-item\">
+            <a href=\"@?=base_url('home');?@\"><i class=\"fa fa-home font-20\"></i></a>
+        </li>
+        <li class=\"breadcrumb-item\">
+            <a href=\"@?=base_url('".$this->table['routename']."/index');?@\">".ucwords($this->table['title'])."</a>
+        </li>
+        <li class=\"breadcrumb-item\">Tambah</li>
+    </ol>
+</div>
+
+<!-- Container -->
+<div class=\"page-content fade-in-up\">
+    <!-- Row -->
+    <div class=\"row\">
+        <div class=\"col-xl-12 col-lg-12 col-md-12\">
+            <div class=\"ibox\">
+                <div class=\"ibox-body\">
+                    <a href='@?=base_url('".$this->table['routename']."/index')?@' class='btn btn-info btn-sm'><i class=\"fa fa-backward\"></i> Kembali</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Row -->
+    <!-- Row -->
+    <div class=\"row\">
+        <div class=\"col-xl-12 col-lg-12 col-md-12\">
+            <div class=\"ibox\">
+                <div class=\"ibox-head\">
+                    <div class=\"ibox-title\">Data ".$this->table['title']."</div>
+                    <div class=\"ibox-tools\">
+                    </div>
+                </div>
+                <div class=\"ibox-body\">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Row -->
+</div>
+<!-- /Container -->
+@?=\$this->endSection();?@
+@?=\$this->section('js');?@
+
+@?=\$this->endSection();?@
+";
+        if (!file_exists(ROOTPATH.'App\Views\\'.$this->table['table'])) {
+            mkdir(ROOTPATH.'App\Views\\'.$this->table['table'].'\tambah.php', 775);
+        }
+        $pathView = ROOTPATH.'App\Views\\'.$this->table['table'].'\tambah.php';
+        $view = str_replace('@?', '<?', $view);
+        $view = str_replace('?@', '?>', $view);
+        $create = fopen($pathView, "w") or die("Change your permision folder for application and harviacode folder to 777");
+        fwrite($create, $view);
+        fclose($create);
+
+        return true;
     }
 }

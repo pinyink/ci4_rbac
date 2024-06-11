@@ -69,7 +69,7 @@ class ".$namaController." extends BaseController
 
     function __construct()
     {
-        helper(['form', 'Permission_helper']);
+        helper(['form', 'Permission_helper', 'FormCustom']);
         \$this->tema = new Tema();
         \$this->".$modelVariable." = new ".$namaModel."();
     }
@@ -119,6 +119,11 @@ $controller .= "\n\tpublic function ajaxList()
                 \"data\" => \$data
             ];
         echo json_encode(\$output);
+    }";
+
+$controller .= "\n\tpublic function tambahData(){
+        \$this->tema->setJudul('Tambah ".$this->table['title']."');
+        \$this->tema->loadTema('".$this->table['routename']."/tambah');
     }";
 
 $controller .= "\n}";

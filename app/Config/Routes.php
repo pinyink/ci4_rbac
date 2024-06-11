@@ -132,6 +132,7 @@ $routes->group('/siswa', ['namespace' => 'App\Controllers'], static function($ro
 $routes->group('product', ['namespace' => 'App\Controllers'], static function($routes) {
     $routes->get('index', 'productController::index', ['filter' => 'auth:Y,1,1']);
     $routes->post('ajax_list', 'productController::ajaxList', ['filter' => 'auth:N,1,1']);
+    $routes->get('tambah', 'productController::tambahData', ['filter' => 'auth:N,1,2']);
     $routes->post('save_data', 'productController::saveData', ['filter' => 'auth:N,1,2']);
     $routes->post('(:num)/update_data', 'productController::saveData', ['filter' => 'auth:N,1,3']);
     $routes->get('(:num)/get_data', 'productController::getData/$1', ['filter' => 'auth:N,1,1']);

@@ -14,7 +14,7 @@ class ProductController extends BaseController
 
     function __construct()
     {
-        helper(['form', 'Permission_helper']);
+        helper(['form', 'Permission_helper', 'FormCustom']);
         $this->tema = new Tema();
         $this->productModel = new ProductModel();
     }
@@ -57,5 +57,9 @@ class ProductController extends BaseController
                 "data" => $data
             ];
         echo json_encode($output);
+    }
+	public function tambahData(){
+        $this->tema->setJudul('Tambah Product');
+        $this->tema->loadTema('product/tambah');
     }
 }
