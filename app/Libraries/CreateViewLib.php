@@ -223,6 +223,7 @@ $view = "
         fclose($create);
 
         $this->tambahView();
+        $this->tambahForm();
         return true;
     }
 
@@ -275,7 +276,7 @@ $view = "
                     </div>
                 </div>
                 <div class=\"ibox-body\">
-                    
+                    @?= \$this->include('".$this->table['table']."/_form_".$this->table['table']."'); ?@
                 </div>
             </div>
         </div>
@@ -296,6 +297,30 @@ $view = "
         $view = str_replace('?@', '?>', $view);
         $create = fopen($pathView, "w") or die("Change your permision folder for application and harviacode folder to 777");
         fwrite($create, $view);
+        fclose($create);
+
+        return true;
+    }
+
+    public function tambahForm()
+    {
+        $form = "<?= form_open('', [], ['id' => \$id, 'method' => \$method]); ?>";
+        foreach ($this->fields as $key => $value) {
+            if ($value['name_type'] == 'text') {
+                $form .= "\n\t<div class=\"form-group\">\n\t\t<?= form_label('".$value['name_alias']."'); ?>\n\t\t<?= form_input('".$value['name_field']."', '', ['class' => 'form-control']); ?>\n\t</div>";
+            }
+        }
+        $form .= "\n<button class=\"btn btn-primary\" type=\"submit\"><i class=\"fa fa-save\"></i> <?=\$button;?></button>";
+        $form .= "\n<?= form_close(); ?>";
+
+        if (!file_exists(ROOTPATH.'app/Views/'.$this->table['table'])) {
+            mkdir(ROOTPATH.'app/Views/'.$this->table['table'].'/_form_'.$this->table['table'].'.php', 775);
+        }
+        $path = ROOTPATH.'app/Views/'.$this->table['table'].'/_form_'.$this->table['table'].'.php';
+        $form = str_replace('@?', '<?', $form);
+        $form = str_replace('?@', '?>', $form);
+        $create = fopen($path, "w") or die("Change your permision folder for application and harviacode folder to 777");
+        fwrite($create, $form);
         fclose($create);
 
         return true;

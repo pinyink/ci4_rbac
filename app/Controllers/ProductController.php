@@ -58,7 +58,12 @@ class ProductController extends BaseController
         echo json_encode($output);
     }
 	public function tambahData(){
+        $data = [
+            'button' => 'Simpan',
+            'id' => '',
+            'method' => 'save'
+        ];
         $this->tema->setJudul('Tambah Product');
-        $this->tema->loadTema('product/tambah');
+        $this->tema->loadTema('product/tambah', $data);
     }
 }

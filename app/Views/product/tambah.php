@@ -45,7 +45,7 @@
                     </div>
                 </div>
                 <div class="ibox-body">
-                    
+                    <?= $this->include('product/_form_product'); ?>
                 </div>
             </div>
         </div>

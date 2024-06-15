@@ -122,8 +122,13 @@ $controller .= "\n\tpublic function ajaxList()
     }";
 
 $controller .= "\n\tpublic function tambahData(){
+        \$data = [
+            'button' => 'Simpan',
+            'id' => '',
+            'method' => 'save'
+        ];
         \$this->tema->setJudul('Tambah ".$this->table['title']."');
-        \$this->tema->loadTema('".$this->table['routename']."/tambah');
+        \$this->tema->loadTema('".$this->table['routename']."/tambah', \$data);
     }";
 
 $controller .= "\n}";
