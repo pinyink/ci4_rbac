@@ -43,8 +43,7 @@
                                 <tr>
                                     <th width="15%">Action</th>
                                     <th width="10%">No</th>
-									<th style="width: 37.5%">Nama</th>
-									<th style="width: 37.5%">Alamat</th>
+									<th style="width: 75%">Nama Product</th>
                                 </tr>
                             </thead>
                             <tbody>

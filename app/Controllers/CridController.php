@@ -39,7 +39,7 @@ class CridController extends BaseController
     public function index()
     {
         $this->tema->setJudul('Crid');
-        $this->tema->loadTema('/crid');
+        $this->tema->loadTema('/crid');        
     }
 
     public function ajaxList()

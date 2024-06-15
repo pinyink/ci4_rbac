@@ -52,7 +52,7 @@ class CreateRouteLib
         $routeName = $this->table['routename'];
         $namespace = $this->table['namespace'];
         $rbac = $this->table['rbac'];
-        $namaController = $this->table['table'].'Controller';
+        $namaController = str_replace(' ', '', ucwords(str_replace('_', ' ', $this->table['table']))).'Controller';
         $route = "
 \$routes->group('".$routeName."', ['namespace' => 'App\Controllers".$namespace."'], static function(\$routes) {
     \$routes->get('index', '".$namaController."::index', ['filter' => 'auth:Y,".$rbac.",1']);

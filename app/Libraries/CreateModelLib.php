@@ -243,10 +243,10 @@ $model .= "\n\n\tpublic function detail(\$where = [])
     }";
 
 $model .= "\n}";
-        if (!file_exists(ROOTPATH.'App\Models')) {
-            mkdir(ROOTPATH.'App\Models', 775);
+        if (!file_exists(ROOTPATH.'app/Models')) {
+            mkdir(ROOTPATH.'app/Models', 775);
         }
-        $pathModel = ROOTPATH.'App\Models\\'.$namaModel.'.php';
+        $pathModel = ROOTPATH.'app/Models/'.$namaModel.'.php';
         $model = str_replace('@?', '<?', $model);
         $create = fopen($pathModel, "w") or die("Change your permision folder for application and harviacode folder to 777");
         fwrite($create, $model);

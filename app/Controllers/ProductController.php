@@ -47,7 +47,6 @@ class ProductController extends BaseController
             $row[] = $action;
             $row[] = $no;
 			$row[] = $list->nama;
-			$row[] = $list->alamat;
             $data[] = $row;
         }
         $output = [

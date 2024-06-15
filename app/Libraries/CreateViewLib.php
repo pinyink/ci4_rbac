@@ -212,10 +212,10 @@ $view = "
 </script>
 @?=\$this->endSection();?@
 ";
-        if (!file_exists(ROOTPATH.'App\Views\\'.$this->table['table'])) {
-            mkdir(ROOTPATH.'App\Views\\'.$this->table['table'].'\index.php', 775);
+        if (!file_exists(ROOTPATH.'app/Views/'.$this->table['table'])) {
+            mkdir(ROOTPATH.'app/Views/'.$this->table['table'].'/index.php', 775);
         }
-        $pathView = ROOTPATH.'App\Views\\'.$this->table['table'].'\index.php';
+        $pathView = ROOTPATH.'app/Views/'.$this->table['table'].'/index.php';
         $view = str_replace('@?', '<?', $view);
         $view = str_replace('?@', '?>', $view);
         $create = fopen($pathView, "w") or die("Change your permision folder for application and harviacode folder to 777");
@@ -288,10 +288,10 @@ $view = "
 
 @?=\$this->endSection();?@
 ";
-        if (!file_exists(ROOTPATH.'App\Views\\'.$this->table['table'])) {
-            mkdir(ROOTPATH.'App\Views\\'.$this->table['table'].'\tambah.php', 775);
+        if (!file_exists(ROOTPATH.'app/Views/'.$this->table['table'])) {
+            mkdir(ROOTPATH.'app/Views/'.$this->table['table'].'/tambah.php', 775);
         }
-        $pathView = ROOTPATH.'App\Views\\'.$this->table['table'].'\tambah.php';
+        $pathView = ROOTPATH.'app/Views/'.$this->table['table'].'/tambah.php';
         $view = str_replace('@?', '<?', $view);
         $view = str_replace('?@', '?>', $view);
         $create = fopen($pathView, "w") or die("Change your permision folder for application and harviacode folder to 777");

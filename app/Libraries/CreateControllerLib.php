@@ -128,10 +128,10 @@ $controller .= "\n\tpublic function tambahData(){
 
 $controller .= "\n}";
 
-        if (!file_exists(ROOTPATH.'App\Controllers')) {
-            mkdir(ROOTPATH.'App\Controllers', 775);
+        if (!file_exists(ROOTPATH.'app/Controllers')) {
+            mkdir(ROOTPATH.'app/Controllers', 775);
         }
-        $pathController = ROOTPATH.'App\Controllers\\'.$namaController.'.php';
+        $pathController = ROOTPATH.'app/Controllers/'.$namaController.'.php';
         $controller = str_replace('@?', '<?', $controller);
         $create = fopen($pathController, "w") or die("Change your permision folder for application and harviacode folder to 777");
         fwrite($create, $controller);

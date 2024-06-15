@@ -14,7 +14,7 @@ class ProductModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = true;
     protected $protectFields    = true;
-    protected $allowedFields    = ['nama', 'alamat'];
+    protected $allowedFields    = ['nama'];
 
     // Dates
     protected $useTimestamps = true;
@@ -40,8 +40,8 @@ class ProductModel extends Model
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
     
-    public $column_order  = array(null, null, 'a.nama', 'a.alamat');
-    public $column_search = array('a.nama', 'a.alamat');
+    public $column_order  = array(null, null, 'a.nama');
+    public $column_search = array('a.nama');
     public $order         = array('a.id' => 'desc');
 
     private $request = '';
@@ -65,7 +65,7 @@ class ProductModel extends Model
 
 	private function _getDatatablesQuery()
     {
-        $this->dt->select('a.id, a.nama, a.alamat');
+        $this->dt->select('a.id, a.nama');
         $this->dt->where('a.'.$this->deletedField, null);
         $this->dt->where($this->where);
         $i = 0;
@@ -118,7 +118,7 @@ class ProductModel extends Model
 	public function detail($where = [])
     {
         $table = $this->db->table($this->table.' a');
-        $table->select('a.nama, a.alamat');
+        $table->select('a.nama');
         $table->where($where);
         return $table->get();
     }
