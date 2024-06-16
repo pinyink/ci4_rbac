@@ -40,7 +40,7 @@
         <div class="col-xl-12 col-lg-12 col-md-12">
             <div class="ibox">
                 <div class="ibox-head">
-                    <div class="ibox-title">Data Product</div>
+                    <div class="ibox-title">Data Product <?=session('_ci_validation_errors.nama')?></div>
                     <div class="ibox-tools">
                     </div>
                 </div>

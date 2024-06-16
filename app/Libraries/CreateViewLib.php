@@ -304,7 +304,7 @@ $view = "
 
     public function tambahForm()
     {
-        $form = "<?= form_open('', [], ['id' => \$id, 'method' => \$method]); ?>";
+        $form = "<?= form_open(\$url, [], ['id' => \$id, 'method' => \$method]); ?>";
         foreach ($this->fields as $key => $value) {
             if ($value['name_type'] == 'text') {
                 $form .= "\n\t<div class=\"form-group\">\n\t\t<?= form_label('".$value['name_alias']."'); ?>\n\t\t<?= form_input('".$value['name_field']."', '', ['class' => 'form-control']); ?>\n\t</div>";

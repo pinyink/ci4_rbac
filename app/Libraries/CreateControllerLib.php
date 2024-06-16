@@ -88,7 +88,7 @@ class ".$namaController." extends BaseController
                 }
             }
         }
-$controller .= "\n\n\tpublic function ajaxList()
+    $controller .= "\n\n\tpublic function ajaxList()
     {
         \$this->".$modelVariable."->setRequest(\$this->request);
         \$lists = \$this->".$modelVariable."->getDatatables();
@@ -120,22 +120,69 @@ $controller .= "\n\n\tpublic function ajaxList()
             ];
         echo json_encode(\$output);
     }";
+        // set validation rules
+    $rules = "";
+    foreach ($this->fields as $key => $value) {
+        $rule = [];
+        $errors = [];
 
-$controller .= "\n\n\tpublic function rules()
+        if ($value['field_required'] == 1 ) {
+            array_push($rule, 'required');
+            array_push($errors, trim("'required' => '{field} Harus di isi'"));
+        }
+        if ($value['field_min'] > 0) {
+            array_push($rule, 'min_length['.$value['field_min'].']');
+            array_push($errors, "'min_length' => '{field} Harus Lebih Dari ".$value['field_min']." Huruf'");
+        }
+        if ($value['field_max'] > 0) {
+            array_push($rule, 'max_length['.$value['field_max'].']');
+            array_push($errors, "'max_length' => '{field} Maksimal ".$value['field_max']." Huruf'");
+        }
+        $errors = implode(",\n\t\t\t\t\t", $errors);
+        $rules .= "\n\t\t\t'".$value['name_field']."' => [
+                'label' => '".$value['name_alias']."',
+                'rules' => '".implode('|', $rule)."',
+                'errors' => [
+                    ".$errors."
+                ]
+            ],";
+    }
+    $controller .= "\n\n\tpublic function rules(\$id = null)
     {
-        \$rules = [
-            
+        \$rules = [".$rules."
         ];
+
+        return \$rules;
     }";
-    
-$controller .= "\n\n\tpublic function tambahData(){
+
+    $controller .= "\n\n\tpublic function tambahData(){
         \$data = [
             'button' => 'Simpan',
             'id' => '',
-            'method' => 'save'
+            'method' => 'save',
+            'url' => '".$this->table['table']."/save_data'
         ];
         \$this->tema->setJudul('Tambah ".$this->table['title']."');
         \$this->tema->loadTema('".$this->table['routename']."/tambah', \$data);
+    }";
+
+    $controller .= "\n\n\tpublic function saveData(\$id = null)
+    {
+        \$validation = service('validation');
+        \$request    = service('request');
+        \$validation->setRules(\$this->rules());
+
+        if (\$validation->withRequest(\$request)->run()) {
+            \$validData = \$validation->getValidated();
+        } else {
+            \$error = \$validation->getErrors();
+        }
+        \$method = \$request->getPost('method');
+        if(\$method == 'save') {
+            return redirect()->to('".$this->table['table']."/tambah')->withInput();
+        } else {
+            return redirect()->to('".$this->table['table']."/edit')->withInput();
+        }
     }";
 
 $controller .= "\n}";

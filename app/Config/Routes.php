@@ -134,7 +134,7 @@ $routes->group('product', ['namespace' => 'App\Controllers'], static function($r
     $routes->post('ajax_list', 'ProductController::ajaxList', ['filter' => 'auth:N,1,1']);
     $routes->get('tambah', 'ProductController::tambahData', ['filter' => 'auth:N,1,2']);
     $routes->post('save_data', 'ProductController::saveData', ['filter' => 'auth:N,1,2']);
-    $routes->post('(:num)/update_data', 'ProductController::saveData', ['filter' => 'auth:N,1,3']);
-    $routes->get('(:num)/get_data', 'ProductController::getData/$1', ['filter' => 'auth:N,1,1']);
+    $routes->get('(:num)/edit', 'ProductController::editData/$1', ['filter' => 'auth:N,1,3']);
+    $routes->post('update_data', 'ProductController::saveData', ['filter' => 'auth:N,1,3']);
     $routes->delete('(:num)/delete_data', 'ProductController::deleteData/$1', ['filter' => 'auth:N,1,4']);
 });

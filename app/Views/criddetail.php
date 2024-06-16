@@ -254,6 +254,9 @@
                 if (response.field_required == 1) {
                     $('[name="val_field_required"]').prop('checked', true);
                 }
+                if (response.field_unique == 1) {
+                    $('[name="val_field_unique"]').prop('checked', true);
+                }
                 
 				$('[name="val_field_min"]').val(response.field_min);
 				$('[name="val_field_max"]').val(response.field_max);

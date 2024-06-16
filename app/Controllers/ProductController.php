@@ -24,6 +24,7 @@ class ProductController extends BaseController
         $this->tema->setJudul('Product');
         $this->tema->loadTema('product/index');
     }
+
 	public function ajaxList()
     {
         $this->productModel->setRequest($this->request);
@@ -47,6 +48,7 @@ class ProductController extends BaseController
             $row[] = $action;
             $row[] = $no;
 			$row[] = $list->nama;
+			$row[] = $list->harga;
             $data[] = $row;
         }
         $output = [
@@ -57,13 +59,58 @@ class ProductController extends BaseController
             ];
         echo json_encode($output);
     }
+
+	public function rules($id = null)
+    {
+        $rules = [
+			'nama' => [
+                'label' => 'Nama Product',
+                'rules' => 'required|max_length[64]',
+                'errors' => [
+                    'required' => '{field} Harus di isi',
+					'max_length' => '{field} Maksimal 64 Huruf'
+                ]
+            ],
+			'harga' => [
+                'label' => 'Harga',
+                'rules' => 'required|max_length[16]',
+                'errors' => [
+                    'required' => '{field} Harus di isi',
+					'max_length' => '{field} Maksimal 16 Huruf'
+                ]
+            ],
+        ];
+
+        return $rules;
+    }
+
 	public function tambahData(){
         $data = [
             'button' => 'Simpan',
             'id' => '',
-            'method' => 'save'
+            'method' => 'save',
+            'url' => 'product/save_data'
         ];
         $this->tema->setJudul('Tambah Product');
         $this->tema->loadTema('product/tambah', $data);
+    }
+
+	public function saveData($id = null)
+    {
+        $validation = service('validation');
+        $request    = service('request');
+        $validation->setRules($this->rules());
+
+        if ($validation->withRequest($request)->run()) {
+            $validData = $validation->getValidated();
+        } else {
+            $error = $validation->getErrors();
+        }
+        $method = $request->getPost('method');
+        if($method == 'save') {
+            return redirect()->to('product/tambah')->withInput();
+        } else {
+            return redirect()->to('product/edit')->withInput();
+        }
     }
 }
