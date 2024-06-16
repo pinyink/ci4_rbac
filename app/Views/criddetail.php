@@ -132,14 +132,17 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-4">
+                        <div class="col-3">
                             <label><input type="checkbox" name="val_field_form" id="val_field_form" value="1"> Field Form</label>
                         </div>
-                        <div class="col-4">
+                        <div class="col-3">
                             <label><input type="checkbox" name="val_field_database" id="val_field_database" value="1"> Field Database</label>
                         </div>
-                        <div class="col-4">
+                        <div class="col-3">
                             <label><input type="checkbox" name="val_field_required" id="val_field_required" value="1"> Field Required</label>
+                        </div>
+                        <div class="col-3">
+                            <label><input type="checkbox" name="val_field_unique" id="val_field_unique" value="1"> Field Unique</label>
                         </div>
                     </div>
                 </div>

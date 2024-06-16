@@ -88,7 +88,7 @@ class ".$namaController." extends BaseController
                 }
             }
         }
-$controller .= "\n\tpublic function ajaxList()
+$controller .= "\n\n\tpublic function ajaxList()
     {
         \$this->".$modelVariable."->setRequest(\$this->request);
         \$lists = \$this->".$modelVariable."->getDatatables();
@@ -121,7 +121,14 @@ $controller .= "\n\tpublic function ajaxList()
         echo json_encode(\$output);
     }";
 
-$controller .= "\n\tpublic function tambahData(){
+$controller .= "\n\n\tpublic function rules()
+    {
+        \$rules = [
+            
+        ];
+    }";
+    
+$controller .= "\n\n\tpublic function tambahData(){
         \$data = [
             'button' => 'Simpan',
             'id' => '',

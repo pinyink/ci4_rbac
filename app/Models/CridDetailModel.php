@@ -14,7 +14,7 @@ class CridDetailModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = true;
     protected $protectFields    = false;
-    protected $allowedFields    = ['crid_id', 'name_field', 'name_alias', 'name_type', 'field_form', 'field_database', 'field_required', 'field_settings'];
+    protected $allowedFields    = ['crid_id', 'name_field', 'name_alias', 'name_type', 'field_form', 'field_database', 'field_required', 'field_settings', 'field_unique'];
 
     // Dates
     protected $useTimestamps = true;
@@ -117,7 +117,7 @@ class CridDetailModel extends Model
     public function detail($where = [])
     {
         $table = $this->db->table($this->table.' a');
-        $table->select('a.id, a.crid_id, a.name_field, a.name_alias, a.name_type, a.field_form, a.field_database, a.field_required, a.field_settings');
+        $table->select('a.id, a.crid_id, a.name_field, a.name_alias, a.name_type, a.field_form, a.field_database, a.field_required, a.field_settings, a.field_unique');
         $table->where($where);
         return $table->get();
     }

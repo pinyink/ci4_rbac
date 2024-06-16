@@ -104,6 +104,7 @@ class CridDetailController extends BaseController
 		$data['field_settings'] = $this->request->getPost('val_field_settings');
 		$data['field_min'] = $this->request->getPost('val_field_min');
 		$data['field_max'] = $this->request->getPost('val_field_max');
+        $data['field_unique'] = $this->request->getPost('val_field_unique');
 
         if ($method == 'save') {
             $this->cridDetailModel->insert($data);
