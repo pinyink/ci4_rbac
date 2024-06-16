@@ -26,14 +26,25 @@
     <!-- Row -->
     <div class="row">
         <div class="col-xl-12 col-lg-12 col-md-12">
+            <?=session()->getFlashData('message');?>
+            <div class="ibox">
+                <div class="ibox-body">
+                    <?php if(enforce(1, 2)): ?>
+                        <a href='<?=base_url('product/tambah')?>' class='btn btn-info btn-sm'><i class="fa fa-plush"></i> Tambah Data</a>
+                    <?php endif ?>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Row -->
+    <!-- Row -->
+    <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12">
             <div class="ibox">
                 <div class="ibox-head">
                     <div class="ibox-title">Data Product</div>
                     <div class="ibox-tools">
                         <a onclick="reload_table()" class="refresh" data-toggle="tooltip" data-placement="top" title="reload data"><i class="fa fa-refresh"></i></a>
-                        <?php if(enforce(1, 2)): ?>
-                            <a class="" onclick="tambah_data()" data-toggle="tooltip" data-placement="top" title="tambah data"><i class="fa fa-plus-square"></i></a>
-                        <?php endif ?>
                     </div>
                 </div>
                 <div class="ibox-body">
@@ -118,7 +129,8 @@
         if (result.isConfirmed) {
             $.ajax({
                 type: "DELETE",
-                url: "<?=base_url('product')?>/"+id+'/delete_data',
+                url: "<?=base_url('product')?>/"+id+'/delete',
+                data: {'<?=csrf_token()?>' : '<?=csrf_hash()?>'},
                 dataType: "json",
                 success: function (response) {
                     if(response.errorCode == 1) {

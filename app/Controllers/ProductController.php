@@ -90,7 +90,7 @@ class ProductController extends BaseController
             'button' => 'Simpan',
             'id' => '',
             'method' => 'save',
-            'url' => 'product/save_data'
+            'url' => 'product/save'
         ];
         $this->tema->setJudul('Tambah Product');
         $this->tema->loadTema('product/tambah', $data);
@@ -105,7 +105,7 @@ class ProductController extends BaseController
             'button' => 'Simpan',
             'id' => $id,
             'method' => 'update',
-            'url' => 'product/update_data',
+            'url' => 'product/update',
             'product' => $query
         ];
         $this->tema->setJudul('Edit Product');
@@ -152,5 +152,22 @@ class ProductController extends BaseController
         ];
         $this->tema->setJudul('Detail Product');
         $this->tema->loadTema('product/detail', $data);
+    }
+
+	public function deleteData($id){
+        $query = $this->productModel->detail(['a.id' => $id])->getRowArray();
+        if(empty($query)) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+        $data = [
+            'product' => $query
+        ];
+        $delete = $this->productModel->delete($id);
+        if($delete) {
+            $log['errorCode'] = 1;
+        } else {
+            $log['errorCode'] = 2;
+        }
+        return $this->response->setJSON($log);
     }
 }

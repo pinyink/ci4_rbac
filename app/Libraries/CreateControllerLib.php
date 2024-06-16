@@ -164,7 +164,7 @@ class ".$namaController." extends BaseController
             'button' => 'Simpan',
             'id' => '',
             'method' => 'save',
-            'url' => '".$this->table['table']."/save_data'
+            'url' => '".$this->table['table']."/save'
         ];
         \$this->tema->setJudul('Tambah ".$this->table['title']."');
         \$this->tema->loadTema('".$this->table['routename']."/tambah', \$data);
@@ -179,7 +179,7 @@ class ".$namaController." extends BaseController
             'button' => 'Simpan',
             'id' => \$id,
             'method' => 'update',
-            'url' => '".$this->table['table']."/update_data',
+            'url' => '".$this->table['table']."/update',
             '".$this->table['table']."' => \$query
         ];
         \$this->tema->setJudul('Edit ".$this->table['title']."');
@@ -226,6 +226,23 @@ class ".$namaController." extends BaseController
         ];
         \$this->tema->setJudul('Detail ".$this->table['title']."');
         \$this->tema->loadTema('".$this->table['routename']."/detail', \$data);
+    }";
+
+    $controller .= "\n\n\tpublic function deleteData(\$id){
+        \$query = \$this->".$modelVariable."->detail(['a.".$this->table['primary_key']."' => \$id])->getRowArray();
+        if(empty(\$query)) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+        \$data = [
+            '".$this->table['table']."' => \$query
+        ];
+        \$delete = \$this->".$modelVariable."->delete(\$id);
+        if(\$delete) {
+            \$log['errorCode'] = 1;
+        } else {
+            \$log['errorCode'] = 2;
+        }
+        return \$this->response->setJSON(\$log);
     }";
 
 $controller .= "\n}";
