@@ -222,21 +222,24 @@ $view = "
         fwrite($create, $view);
         fclose($create);
 
-        $this->tambahView();
+        $this->tambahView('Tambah');
+        $this->tambahView('Edit');
+        $this->tambahView('Detail');
         $this->tambahForm();
+        $this->viewDetail();
         return true;
     }
 
-    public function tambahView()
+    public function tambahView($aksi)
     {
+        $include = "@?= \$this->include('".$this->table['table']."/_form_".$this->table['table']."'); ?@";
+        if ($aksi == 'Detail') {
+            $include = "@?= \$this->include('".$this->table['table']."/_detail'); ?@";
+        }
         $view = "
 @?= \$this->extend('tema/tema'); ?@ 
 @?=\$this->section('css');?@
-<!-- Data Table CSS -->
-<link href=\"@?=base_url();?@/assets/alertifyjs/css/alertify.min.css\" rel=\"stylesheet\" type=\"text/css\" />
 <link href=\"@?=base_url();?@/assets/alertifyjs/css/themes/bootstrap.min.css\" rel=\"stylesheet\" type=\"text/css\" />
-<link href=\"@?=base_url();?@/assets/admincast/dist/assets/vendors/DataTables/datatables.min.css\" rel=\"stylesheet\" type=\"text/css\" />
-<link href=\"@?=base_url();?@/assets/admincast/dist/assets/vendors/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css\" rel=\"stylesheet\" type=\"text/css\" />
 @?=\$this->endSection();?@
 
 @?=\$this->section('content'); ?@
@@ -249,7 +252,7 @@ $view = "
         <li class=\"breadcrumb-item\">
             <a href=\"@?=base_url('".$this->table['routename']."/index');?@\">".ucwords($this->table['title'])."</a>
         </li>
-        <li class=\"breadcrumb-item\">Tambah</li>
+        <li class=\"breadcrumb-item\">".$aksi."</li>
     </ol>
 </div>
 
@@ -271,12 +274,12 @@ $view = "
         <div class=\"col-xl-12 col-lg-12 col-md-12\">
             <div class=\"ibox\">
                 <div class=\"ibox-head\">
-                    <div class=\"ibox-title\">Data ".$this->table['title']."</div>
+                    <div class=\"ibox-title\">".$aksi." ".$this->table['title']."</div>
                     <div class=\"ibox-tools\">
                     </div>
                 </div>
                 <div class=\"ibox-body\">
-                    @?= \$this->include('".$this->table['table']."/_form_".$this->table['table']."'); ?@
+                    ".$include."
                 </div>
             </div>
         </div>
@@ -290,9 +293,9 @@ $view = "
 @?=\$this->endSection();?@
 ";
         if (!file_exists(ROOTPATH.'app/Views/'.$this->table['table'])) {
-            mkdir(ROOTPATH.'app/Views/'.$this->table['table'].'/tambah.php', 775);
+            mkdir(ROOTPATH.'app/Views/'.$this->table['table'].'/'.strtolower($aksi).'.php', 775);
         }
-        $pathView = ROOTPATH.'app/Views/'.$this->table['table'].'/tambah.php';
+        $pathView = ROOTPATH.'app/Views/'.$this->table['table'].'/'.strtolower($aksi).'.php';
         $view = str_replace('@?', '<?', $view);
         $view = str_replace('?@', '?>', $view);
         $create = fopen($pathView, "w") or die("Change your permision folder for application and harviacode folder to 777");
@@ -304,14 +307,21 @@ $view = "
 
     public function tambahForm()
     {
-        $form = "<?= form_open(\$url, [], ['id' => \$id, 'method' => \$method]); ?>";
+        $form = "@?= form_open(\$url, [], ['id' => \$id, 'method' => \$method]); ?@";
         foreach ($this->fields as $key => $value) {
             if ($value['name_type'] == 'text') {
-                $form .= "\n\t<div class=\"form-group\">\n\t\t<?= form_label('".$value['name_alias']."'); ?>\n\t\t<?= form_input('".$value['name_field']."', '', ['class' => 'form-control']); ?>\n\t</div>";
+                $form .= "\n\t<div class=\"form-group\">
+                    \n\t\t@?= form_label('".$value['name_alias']."'); ?@
+                    \n\t\t@?php \$invalid = session('_ci_validation_errors.".$value['name_field']."') ? 'is-invalid' : ''; ?@
+                    \n\t\t@?= form_input('".$value['name_field']."', '', ['class' => 'form-control '.\$invalid]); ?@
+                    \n\t\t@?php if(session('_ci_validation_errors.".$value['name_field']."')):?@
+                        \n\t\t\t<div class=\"invalid-feedback\">@?=session('_ci_validation_errors.".$value['name_field']."')?@</div>
+                    \n\t\t@?php endif ?@
+                \n\t</div>";
             }
         }
-        $form .= "\n<button class=\"btn btn-primary\" type=\"submit\"><i class=\"fa fa-save\"></i> <?=\$button;?></button>";
-        $form .= "\n<?= form_close(); ?>";
+        $form .= "\n<button class=\"btn btn-primary\" type=\"submit\"><i class=\"fa fa-save\"></i> @?=\$button;?@</button>";
+        $form .= "\n@?= form_close(); ?@";
 
         if (!file_exists(ROOTPATH.'app/Views/'.$this->table['table'])) {
             mkdir(ROOTPATH.'app/Views/'.$this->table['table'].'/_form_'.$this->table['table'].'.php', 775);
@@ -321,6 +331,33 @@ $view = "
         $form = str_replace('?@', '?>', $form);
         $create = fopen($path, "w") or die("Change your permision folder for application and harviacode folder to 777");
         fwrite($create, $form);
+        fclose($create);
+
+        return true;
+    }
+
+    public function viewDetail()
+    {
+        $no = 1;
+        $tr = "";
+        foreach ($this->fields as $key => $value) {
+            if ($no == 1) {
+                $tr .= "\n\t<tr>\n\t\t<td style=\"width: 25%;\">".$value['name_alias']."</td>\n\t\t<td style=\"width: 5%;\">:</td>\n\t\t<th style=\"width: 75%;\">@?=\$".$this->table['table']."['".$value['name_field']."']; ?@</th>\n\t</tr>";
+            } else {
+                $tr .= "\n\t<tr>\n\t\t<td>".$value['name_alias']."</td>\n\t\t<td>:</td>\n\t\t<th>@?=\$".$this->table['table']."['".$value['name_field']."']; ?@</th>\n\t</tr>";
+            }
+            
+            $no++;
+        }
+        $table = "<table class=\"table\">".$tr."\n</table>";
+        if (!file_exists(ROOTPATH.'app/Views/'.$this->table['table'])) {
+            mkdir(ROOTPATH.'app/Views/'.$this->table['table'].'/_detail.php', 775);
+        }
+        $path = ROOTPATH.'app/Views/'.$this->table['table'].'/_detail.php';
+        $table = str_replace('@?', '<?', $table);
+        $table = str_replace('?@', '?>', $table);
+        $create = fopen($path, "w") or die("Change your permision folder for application and harviacode folder to 777");
+        fwrite($create, $table);
         fclose($create);
 
         return true;

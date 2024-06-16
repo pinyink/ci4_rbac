@@ -65,9 +65,10 @@ class ProductController extends BaseController
         $rules = [
 			'nama' => [
                 'label' => 'Nama Product',
-                'rules' => 'required|max_length[64]',
+                'rules' => 'required|is_unique[product.nama, id, '.$id.']|max_length[64]',
                 'errors' => [
                     'required' => '{field} Harus di isi',
+					'is_unique' => '{field} Sudah Ada, harap ketik yang lainnya',
 					'max_length' => '{field} Maksimal 64 Huruf'
                 ]
             ],
@@ -99,6 +100,10 @@ class ProductController extends BaseController
     {
         $validation = service('validation');
         $request    = service('request');
+        //get method form
+        $id = $request->getPost('id');
+        $method = $request->getPost('method');
+        //set rules validation
         $validation->setRules($this->rules());
 
         if ($validation->withRequest($request)->run()) {
@@ -106,11 +111,23 @@ class ProductController extends BaseController
         } else {
             $error = $validation->getErrors();
         }
-        $method = $request->getPost('method');
+        
         if($method == 'save') {
             return redirect()->to('product/tambah')->withInput();
         } else {
             return redirect()->to('product/edit')->withInput();
         }
+    }
+
+	public function detailData($id){
+        $query = $this->productModel->detail(['a.id' => $id])->getRowArray();
+        if(empty($query)) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+        $data = [
+            'product' => $query
+        ];
+        $this->tema->setJudul('Detail Product');
+        $this->tema->loadTema('product/detail', $data);
     }
 }

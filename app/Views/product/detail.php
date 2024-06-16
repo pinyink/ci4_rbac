@@ -14,7 +14,7 @@
         <li class="breadcrumb-item">
             <a href="<?=base_url('product/index');?>">Product</a>
         </li>
-        <li class="breadcrumb-item">Tambah</li>
+        <li class="breadcrumb-item">Detail</li>
     </ol>
 </div>
 
@@ -36,12 +36,12 @@
         <div class="col-xl-12 col-lg-12 col-md-12">
             <div class="ibox">
                 <div class="ibox-head">
-                    <div class="ibox-title">Tambah Product</div>
+                    <div class="ibox-title">Detail Product</div>
                     <div class="ibox-tools">
                     </div>
                 </div>
                 <div class="ibox-body">
-                    <?= $this->include('product/_form_product'); ?>
+                    <?= $this->include('product/_detail'); ?>
                 </div>
             </div>
         </div>

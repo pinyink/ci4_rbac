@@ -128,7 +128,11 @@ class ".$namaController." extends BaseController
 
         if ($value['field_required'] == 1 ) {
             array_push($rule, 'required');
-            array_push($errors, trim("'required' => '{field} Harus di isi'"));
+            array_push($errors, "'required' => '{field} Harus di isi'");
+        }
+        if($value['field_unique'] == 1) {
+            array_push($rule, 'is_unique['.$this->table['table'].'.'.$value['name_field'].', '.$this->table['primary_key'].', \'.$id.\']');
+            array_push($errors, "'is_unique' => '{field} Sudah Ada, harap ketik yang lainnya'");
         }
         if ($value['field_min'] > 0) {
             array_push($rule, 'min_length['.$value['field_min'].']');
@@ -170,6 +174,10 @@ class ".$namaController." extends BaseController
     {
         \$validation = service('validation');
         \$request    = service('request');
+        //get method form
+        \$id = \$request->getPost('id');
+        \$method = \$request->getPost('method');
+        //set rules validation
         \$validation->setRules(\$this->rules());
 
         if (\$validation->withRequest(\$request)->run()) {
@@ -177,12 +185,24 @@ class ".$namaController." extends BaseController
         } else {
             \$error = \$validation->getErrors();
         }
-        \$method = \$request->getPost('method');
+        
         if(\$method == 'save') {
             return redirect()->to('".$this->table['table']."/tambah')->withInput();
         } else {
             return redirect()->to('".$this->table['table']."/edit')->withInput();
         }
+    }";
+
+    $controller .= "\n\n\tpublic function detailData(\$id){
+        \$query = \$this->".$modelVariable."->detail(['a.".$this->table['primary_key']."' => \$id])->getRowArray();
+        if(empty(\$query)) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+        \$data = [
+            '".$this->table['table']."' => \$query
+        ];
+        \$this->tema->setJudul('Detail ".$this->table['title']."');
+        \$this->tema->loadTema('".$this->table['routename']."/detail', \$data);
     }";
 
 $controller .= "\n}";
