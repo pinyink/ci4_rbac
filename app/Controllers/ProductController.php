@@ -35,9 +35,9 @@ class ProductController extends BaseController
             $no++;
             $row = [];
             $id = $list->id;
-            $aksi = '<a href="javascript:;" class="" data-toggle="tooltip" data-placement="top" title="Lihat Data" onclick="lihat_data('.$id.')"><i class="fa fa-search"></i></a>';
+            $aksi = '<a href="'.base_url('product/'.$id.'/detail').'" class="" data-toggle="tooltip" data-placement="top" title="Lihat Data"><i class="fa fa-search"></i></a>';
             if(enforce(1, 3)) {
-                $aksi .= '<a href="javascript:;" class="ml-2" data-toggle="tooltip" data-placement="top" title="Edit Data" onclick="edit_data('.$id.')"><i class="fa fa-edit"></i></a>';
+                $aksi .= '<a href="'.base_url('product/'.$id.'/edit').'" class="ml-2" data-toggle="tooltip" data-placement="top" title="Edit Data" onclick="edit_data('.$id.')"><i class="fa fa-edit"></i></a>';
             }
 
             if(enforce(1, 4)) {
@@ -96,6 +96,22 @@ class ProductController extends BaseController
         $this->tema->loadTema('product/tambah', $data);
     }
 
+	public function editData($id){
+        $query = $this->productModel->detail(['a.id' => $id])->getRowArray();
+        if(empty($query)) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+        $data = [
+            'button' => 'Simpan',
+            'id' => $id,
+            'method' => 'update',
+            'url' => 'product/update_data',
+            'product' => $query
+        ];
+        $this->tema->setJudul('Edit Product');
+        $this->tema->loadTema('product/edit', $data);
+    }
+
 	public function saveData($id = null)
     {
         $validation = service('validation');
@@ -104,10 +120,17 @@ class ProductController extends BaseController
         $id = $request->getPost('id');
         $method = $request->getPost('method');
         //set rules validation
-        $validation->setRules($this->rules());
+        $validation->setRules($this->rules($id));
 
         if ($validation->withRequest($request)->run()) {
             $validData = $validation->getValidated();
+            if($method == 'save') {
+                $id = $this->productModel->insert($validData);
+                return redirect()->to('product/'.$id.'/detail')->with('message', '<div class="alert alert-success">Simpan Data Berhasil</div>');
+            } else {
+                $this->productModel->update($id, $validData);
+                return redirect()->to('product/'.$id.'/edit')->with('message', '<div class="alert alert-success">Update Data Berhasil</div>');
+            }
         } else {
             $error = $validation->getErrors();
         }
@@ -115,7 +138,7 @@ class ProductController extends BaseController
         if($method == 'save') {
             return redirect()->to('product/tambah')->withInput();
         } else {
-            return redirect()->to('product/edit')->withInput();
+            return redirect()->to('product/'.$id.'/edit')->withInput();
         }
     }
 

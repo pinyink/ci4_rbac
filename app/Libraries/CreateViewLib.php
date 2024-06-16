@@ -261,6 +261,7 @@ $view = "
     <!-- Row -->
     <div class=\"row\">
         <div class=\"col-xl-12 col-lg-12 col-md-12\">
+            @?=session()->getFlashData('message');?@
             <div class=\"ibox\">
                 <div class=\"ibox-body\">
                     <a href='@?=base_url('".$this->table['routename']."/index')?@' class='btn btn-info btn-sm'><i class=\"fa fa-backward\"></i> Kembali</a>
@@ -313,7 +314,8 @@ $view = "
                 $form .= "\n\t<div class=\"form-group\">
                     \n\t\t@?= form_label('".$value['name_alias']."'); ?@
                     \n\t\t@?php \$invalid = session('_ci_validation_errors.".$value['name_field']."') ? 'is-invalid' : ''; ?@
-                    \n\t\t@?= form_input('".$value['name_field']."', '', ['class' => 'form-control '.\$invalid]); ?@
+                    \n\t\t@?php \$value = isset(\$".$this->table['table']."['".$value['name_field']."']) ? \$".$this->table['table']."['".$value['name_field']."'] : old('".$value['name_field']."'); ?@
+                    \n\t\t@?= form_input('".$value['name_field']."', trim(\$value), ['class' => 'form-control '.\$invalid]); ?@
                     \n\t\t@?php if(session('_ci_validation_errors.".$value['name_field']."')):?@
                         \n\t\t\t<div class=\"invalid-feedback\">@?=session('_ci_validation_errors.".$value['name_field']."')?@</div>
                     \n\t\t@?php endif ?@

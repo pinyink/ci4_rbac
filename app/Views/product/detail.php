@@ -23,6 +23,7 @@
     <!-- Row -->
     <div class="row">
         <div class="col-xl-12 col-lg-12 col-md-12">
+            <?=session()->getFlashData('message');?>
             <div class="ibox">
                 <div class="ibox-body">
                     <a href='<?=base_url('product/index')?>' class='btn btn-info btn-sm'><i class="fa fa-backward"></i> Kembali</a>

@@ -98,9 +98,9 @@ class ".$namaController." extends BaseController
             \$no++;
             \$row = [];
             \$id = \$list->".$this->table['primary_key'].";
-            \$aksi = '<a href=\"javascript:;\" class=\"\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Lihat Data\" onclick=\"lihat_data('.\$id.')\"><i class=\"fa fa-search\"></i></a>';
+            \$aksi = '<a href=\"'.base_url('".$this->table['table']."/'.\$id.'/detail').'\" class=\"\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Lihat Data\"><i class=\"fa fa-search\"></i></a>';
             if(enforce(".$this->table['rbac'].", 3)) {
-                \$aksi .= '<a href=\"javascript:;\" class=\"ml-2\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Edit Data\" onclick=\"edit_data('.\$id.')\"><i class=\"fa fa-edit\"></i></a>';
+                \$aksi .= '<a href=\"'.base_url('".$this->table['table']."/'.\$id.'/edit').'\" class=\"ml-2\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Edit Data\" onclick=\"edit_data('.\$id.')\"><i class=\"fa fa-edit\"></i></a>';
             }
 
             if(enforce(".$this->table['rbac'].", 4)) {
@@ -170,6 +170,22 @@ class ".$namaController." extends BaseController
         \$this->tema->loadTema('".$this->table['routename']."/tambah', \$data);
     }";
 
+    $controller .= "\n\n\tpublic function editData(\$id){
+        \$query = \$this->".$modelVariable."->detail(['a.".$this->table['primary_key']."' => \$id])->getRowArray();
+        if(empty(\$query)) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+        \$data = [
+            'button' => 'Simpan',
+            'id' => \$id,
+            'method' => 'update',
+            'url' => '".$this->table['table']."/update_data',
+            '".$this->table['table']."' => \$query
+        ];
+        \$this->tema->setJudul('Edit ".$this->table['title']."');
+        \$this->tema->loadTema('".$this->table['routename']."/edit', \$data);
+    }";
+
     $controller .= "\n\n\tpublic function saveData(\$id = null)
     {
         \$validation = service('validation');
@@ -178,10 +194,17 @@ class ".$namaController." extends BaseController
         \$id = \$request->getPost('id');
         \$method = \$request->getPost('method');
         //set rules validation
-        \$validation->setRules(\$this->rules());
+        \$validation->setRules(\$this->rules(\$id));
 
         if (\$validation->withRequest(\$request)->run()) {
             \$validData = \$validation->getValidated();
+            if(\$method == 'save') {
+                \$id = \$this->".$modelVariable."->insert(\$validData);
+                return redirect()->to('".$this->table['table']."/'.\$id.'/detail')->with('message', '<div class=\"alert alert-success\">Simpan Data Berhasil</div>');
+            } else {
+                \$this->".$modelVariable."->update(\$id, \$validData);
+                return redirect()->to('".$this->table['table']."/'.\$id.'/edit')->with('message', '<div class=\"alert alert-success\">Update Data Berhasil</div>');
+            }
         } else {
             \$error = \$validation->getErrors();
         }
@@ -189,7 +212,7 @@ class ".$namaController." extends BaseController
         if(\$method == 'save') {
             return redirect()->to('".$this->table['table']."/tambah')->withInput();
         } else {
-            return redirect()->to('".$this->table['table']."/edit')->withInput();
+            return redirect()->to('".$this->table['table']."/'.\$id.'/edit')->withInput();
         }
     }";
 

@@ -5,7 +5,9 @@
                     
 		<?php $invalid = session('_ci_validation_errors.nama') ? 'is-invalid' : ''; ?>
                     
-		<?= form_input('nama', '', ['class' => 'form-control '.$invalid]); ?>
+		<?php $value = isset($product['nama']) ? $product['nama'] : old('nama'); ?>
+                    
+		<?= form_input('nama', trim($value), ['class' => 'form-control '.$invalid]); ?>
                     
 		<?php if(session('_ci_validation_errors.nama')):?>
                         
@@ -20,7 +22,9 @@
                     
 		<?php $invalid = session('_ci_validation_errors.harga') ? 'is-invalid' : ''; ?>
                     
-		<?= form_input('harga', '', ['class' => 'form-control '.$invalid]); ?>
+		<?php $value = isset($product['harga']) ? $product['harga'] : old('harga'); ?>
+                    
+		<?= form_input('harga', trim($value), ['class' => 'form-control '.$invalid]); ?>
                     
 		<?php if(session('_ci_validation_errors.harga')):?>
                         
