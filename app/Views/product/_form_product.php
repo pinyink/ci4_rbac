@@ -24,6 +24,8 @@
                     
 		<?php $value = isset($product['harga']) ? $product['harga'] : old('harga'); ?>
                     
+		<?php $value = number_format($value, 0, ',', '.'); ?>
+                    
 		<?= form_input('harga', trim($value), ['class' => 'form-control '.$invalid]); ?>
                     
 		<?php if(session('_ci_validation_errors.harga')):?>
@@ -35,3 +37,11 @@
 	</div>
 <button class="btn btn-primary" type="submit"><i class="fa fa-save"></i> <?=$button;?></button>
 <?= form_close(); ?>
+
+<?php $this->section('js'); ?>
+<script>
+	$('[name="harga"]').keyup(function (e) { 
+		this.value = formatRupiah(this.value);
+	});
+</script>
+<?php $this->endSection(); ?>

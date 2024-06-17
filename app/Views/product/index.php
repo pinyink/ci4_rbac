@@ -16,8 +16,7 @@
         <li class="breadcrumb-item">
             <a href="<?=base_url('home');?>"><i class="fa fa-home font-20"></i></a>
         </li>
-        <li class="breadcrumb-item">Product</li>
-        <li class="breadcrumb-item">Lihat</li>
+        <li class="breadcrumb-item active">Product</li>
     </ol>
 </div>
 

@@ -85,8 +85,7 @@ $view = "
         <li class=\"breadcrumb-item\">
             <a href=\"@?=base_url('home');?@\"><i class=\"fa fa-home font-20\"></i></a>
         </li>
-        <li class=\"breadcrumb-item\">".ucwords($this->table['title'])."</li>
-        <li class=\"breadcrumb-item\">Lihat</li>
+        <li class=\"breadcrumb-item active\">".ucwords($this->table['title'])."</li>
     </ol>
 </div>
 
@@ -333,9 +332,33 @@ $view = "
                     \n\t\t@?php endif ?@
                 \n\t</div>";
             }
+
+            if ($value['name_type'] == 'number') {
+                $form .= "\n\t<div class=\"form-group\">
+                    \n\t\t@?= form_label('".$value['name_alias']."'); ?@
+                    \n\t\t@?php \$invalid = session('_ci_validation_errors.".$value['name_field']."') ? 'is-invalid' : ''; ?@
+                    \n\t\t@?php \$value = isset(\$".$this->table['table']."['".$value['name_field']."']) ? \$".$this->table['table']."['".$value['name_field']."'] : old('".$value['name_field']."'); ?@
+                    \n\t\t@?php \$value = number_format(\$value, 0, ',', '.'); ?@
+                    \n\t\t@?= form_input('".$value['name_field']."', trim(\$value), ['class' => 'form-control '.\$invalid]); ?@
+                    \n\t\t@?php if(session('_ci_validation_errors.".$value['name_field']."')):?@
+                        \n\t\t\t<div class=\"invalid-feedback\">@?=session('_ci_validation_errors.".$value['name_field']."')?@</div>
+                    \n\t\t@?php endif ?@
+                \n\t</div>";
+            }
         }
         $form .= "\n<button class=\"btn btn-primary\" type=\"submit\"><i class=\"fa fa-save\"></i> @?=\$button;?@</button>";
         $form .= "\n@?= form_close(); ?@";
+
+        // def js
+        $js = "";
+        foreach ($this->fields as $key => $value) {
+            if($value['name_type'] == "number") {
+                $js .= "\n\t$('[name=\"".$value['name_field']."\"]').keyup(function (e) { \n\t\tthis.value = formatRupiah(this.value);\n\t});";
+            }
+        }
+
+        // store js to form
+        $form .= "\n\n@?php \$this->section('js'); ?@\n<script>".$js."\n</script>\n@?php \$this->endSection(); ?@";
 
         if (!file_exists(ROOTPATH.'app/Views/'.$this->table['table'])) {
             mkdir(ROOTPATH.'app/Views/'.$this->table['table'].'/_form_'.$this->table['table'].'.php', 775);

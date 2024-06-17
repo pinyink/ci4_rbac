@@ -48,7 +48,7 @@ class ProductController extends BaseController
             $row[] = $action;
             $row[] = $no;
 			$row[] = $list->nama;
-			$row[] = $list->harga;
+			$row[] = number_format($list->harga, 0, ',', '.');
             $data[] = $row;
         }
         $output = [
@@ -75,11 +75,11 @@ class ProductController extends BaseController
             ],
 			'harga' => [
                 'label' => 'Harga',
-                'rules' => 'required|max_length[16]|alpha_numeric_space',
+                'rules' => 'required|max_length[16]|numeric',
                 'errors' => [
                     'required' => '{field} Harus di isi',
 					'max_length' => '{field} Maksimal 16 Huruf',
-					'alpha_numeric_space' => '{field} Hanya berupa huruf, angka dan karakter tertentu'
+					'numeric' => '{field} Hanya berupa angka'
                 ]
             ],
         ];
@@ -126,6 +126,7 @@ class ProductController extends BaseController
 
         if ($validation->withRequest($request)->run()) {
             $validData = $validation->getValidated();
+            $validData['harga'] = str_replace('.', '', $validData['harga']);
             if($method == 'save') {
                 $id = $this->productModel->insert($validData);
                 return redirect()->to('product/'.$id.'/detail')->with('message', '<div class="alert alert-success">Simpan Data Berhasil</div>');
@@ -157,7 +158,7 @@ class ProductController extends BaseController
     }
 
 	public function deleteData($id){
-        $query = $this->productModel->detail(['a.id' => $id])->getRowArray();
+        $query = $this->productModel->find($id);
         if(empty($query)) {
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         }

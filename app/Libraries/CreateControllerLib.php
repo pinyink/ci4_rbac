@@ -86,6 +86,9 @@ class ".$namaController." extends BaseController
                 if ($value['name_type'] == 'text' || $value['name_type'] == 'textarea') {
                     $rowFields .= "\n\t\t\t\$row[] = \$list->".$value['name_field'].";";
                 }
+                if ($value['name_type'] == 'number') {
+                    $rowFields .= "\n\t\t\t\$row[] = number_format(\$list->".$value['name_field'].", 0, ',', '.');";
+                }
             }
         }
     $controller .= "\n\n\tpublic function ajaxList()
@@ -142,9 +145,15 @@ class ".$namaController." extends BaseController
             array_push($rule, 'max_length['.$value['field_max'].']');
             array_push($errors, "'max_length' => '{field} Maksimal ".$value['field_max']." Huruf'");
         }
+        // jika text
         if ($value['name_type'] == 'text') {
             array_push($rule, 'alpha_numeric_space');
             array_push($errors, "'alpha_numeric_space' => '{field} Hanya berupa huruf, angka dan karakter tertentu'");
+        }
+        // jika number
+        if ($value['name_type'] == 'number') {
+            array_push($rule, 'numeric');
+            array_push($errors, "'numeric' => '{field} Hanya berupa angka'");
         }
         $errors = implode(",\n\t\t\t\t\t", $errors);
         $rules .= "\n\t\t\t'".$value['name_field']."' => [
@@ -190,6 +199,12 @@ class ".$namaController." extends BaseController
         \$this->tema->loadTema('".$this->table['routename']."/edit', \$data);
     }";
 
+    $requestData = [];
+    foreach ($this->fields as $key => $value) {
+        if ($value['name_type'] == 'number') {
+            array_push($requestData, "\$validData['".$value['name_field']."'] = str_replace('.', '', \$validData['".$value['name_field']."']);");
+        }
+    }
     $controller .= "\n\n\tpublic function saveData(\$id = null)
     {
         \$validation = service('validation');
@@ -202,6 +217,7 @@ class ".$namaController." extends BaseController
 
         if (\$validation->withRequest(\$request)->run()) {
             \$validData = \$validation->getValidated();
+            ".implode('\n\t\t\t', $requestData)."
             if(\$method == 'save') {
                 \$id = \$this->".$modelVariable."->insert(\$validData);
                 return redirect()->to('".$this->table['table']."/'.\$id.'/detail')->with('message', '<div class=\"alert alert-success\">Simpan Data Berhasil</div>');
@@ -233,7 +249,7 @@ class ".$namaController." extends BaseController
     }";
 
     $controller .= "\n\n\tpublic function deleteData(\$id){
-        \$query = \$this->".$modelVariable."->detail(['a.".$this->table['primary_key']."' => \$id])->getRowArray();
+        \$query = \$this->".$modelVariable."->find(\$id);
         if(empty(\$query)) {
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         }
