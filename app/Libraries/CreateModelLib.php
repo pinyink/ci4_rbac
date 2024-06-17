@@ -53,6 +53,7 @@ class CreateModelLib
      */ 
     public function getNamaModel()
     {
+        $this->namaModel = str_replace(' ', '', ucwords(str_replace('_', ' ', $this->table['table']))).'Model';
         return $this->namaModel;
     }
 
@@ -70,7 +71,7 @@ class CreateModelLib
 
     public function generate()
     {
-        $namaModel = str_replace(' ', '', ucwords(str_replace('_', ' ', $this->table['table']))).'Model';
+        $namaModel = $this->getNamaModel();
         $allowedFields = "";
         $no = 1;
         foreach ($this->fields as $key => $value) {

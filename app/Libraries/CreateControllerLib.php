@@ -142,6 +142,10 @@ class ".$namaController." extends BaseController
             array_push($rule, 'max_length['.$value['field_max'].']');
             array_push($errors, "'max_length' => '{field} Maksimal ".$value['field_max']." Huruf'");
         }
+        if ($value['name_type'] == 'text') {
+            array_push($rule, 'alpha_numeric_space');
+            array_push($errors, "'alpha_numeric_space' => '{field} Hanya berupa huruf, angka dan karakter tertentu'");
+        }
         $errors = implode(",\n\t\t\t\t\t", $errors);
         $rules .= "\n\t\t\t'".$value['name_field']."' => [
                 'label' => '".$value['name_alias']."',

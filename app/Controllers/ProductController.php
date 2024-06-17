@@ -65,19 +65,21 @@ class ProductController extends BaseController
         $rules = [
 			'nama' => [
                 'label' => 'Nama Product',
-                'rules' => 'required|is_unique[product.nama, id, '.$id.']|max_length[64]',
+                'rules' => 'required|is_unique[product.nama, id, '.$id.']|max_length[64]|alpha_numeric_space',
                 'errors' => [
                     'required' => '{field} Harus di isi',
 					'is_unique' => '{field} Sudah Ada, harap ketik yang lainnya',
-					'max_length' => '{field} Maksimal 64 Huruf'
+					'max_length' => '{field} Maksimal 64 Huruf',
+					'alpha_numeric_space' => '{field} Hanya berupa huruf, angka dan karakter tertentu'
                 ]
             ],
 			'harga' => [
                 'label' => 'Harga',
-                'rules' => 'required|max_length[16]',
+                'rules' => 'required|max_length[16]|alpha_numeric_space',
                 'errors' => [
                     'required' => '{field} Harus di isi',
-					'max_length' => '{field} Maksimal 16 Huruf'
+					'max_length' => '{field} Maksimal 16 Huruf',
+					'alpha_numeric_space' => '{field} Hanya berupa huruf, angka dan karakter tertentu'
                 ]
             ],
         ];
