@@ -48,7 +48,7 @@ class ProductController extends BaseController
             $row[] = $action;
             $row[] = $no;
 			$row[] = $list->nama;
-			$row[] = number_format($list->harga, 0, ',', '.');
+			$row[] = 'Rp. '.number_format($list->harga, 0, ',', '.');
             $data[] = $row;
         }
         $output = [
@@ -135,14 +135,13 @@ class ProductController extends BaseController
                 return redirect()->to('product/'.$id.'/edit')->with('message', '<div class="alert alert-success">Update Data Berhasil</div>');
             }
         } else {
-            $error = $validation->getErrors();
+            if($method == 'save') {
+                return redirect()->to('product/tambah')->withInput();
+            } else {
+                return redirect()->to('product/'.$id.'/edit')->withInput();
+            }
         }
         
-        if($method == 'save') {
-            return redirect()->to('product/tambah')->withInput();
-        } else {
-            return redirect()->to('product/'.$id.'/edit')->withInput();
-        }
     }
 
 	public function detailData($id){

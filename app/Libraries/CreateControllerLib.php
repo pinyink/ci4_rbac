@@ -89,6 +89,9 @@ class ".$namaController." extends BaseController
                 if ($value['name_type'] == 'number') {
                     $rowFields .= "\n\t\t\t\$row[] = number_format(\$list->".$value['name_field'].", 0, ',', '.');";
                 }
+                if ($value['name_type'] == 'rupiah') {
+                    $rowFields .= "\n\t\t\t\$row[] = 'Rp. '.number_format(\$list->".$value['name_field'].", 0, ',', '.');";
+                }
             }
         }
     $controller .= "\n\n\tpublic function ajaxList()
@@ -151,7 +154,7 @@ class ".$namaController." extends BaseController
             array_push($errors, "'alpha_numeric_space' => '{field} Hanya berupa huruf, angka dan karakter tertentu'");
         }
         // jika number
-        if ($value['name_type'] == 'number') {
+        if ($value['name_type'] == 'number' || $value['name_type'] == 'rupiah') {
             array_push($rule, 'numeric');
             array_push($errors, "'numeric' => '{field} Hanya berupa angka'");
         }
@@ -201,7 +204,7 @@ class ".$namaController." extends BaseController
 
     $requestData = [];
     foreach ($this->fields as $key => $value) {
-        if ($value['name_type'] == 'number') {
+        if ($value['name_type'] == 'number' || $value['name_type'] == 'rupiah') {
             array_push($requestData, "\$validData['".$value['name_field']."'] = str_replace('.', '', \$validData['".$value['name_field']."']);");
         }
     }
@@ -226,14 +229,13 @@ class ".$namaController." extends BaseController
                 return redirect()->to('".$this->table['table']."/'.\$id.'/edit')->with('message', '<div class=\"alert alert-success\">Update Data Berhasil</div>');
             }
         } else {
-            \$error = \$validation->getErrors();
+            if(\$method == 'save') {
+                return redirect()->to('".$this->table['table']."/tambah')->withInput();
+            } else {
+                return redirect()->to('".$this->table['table']."/'.\$id.'/edit')->withInput();
+            }
         }
         
-        if(\$method == 'save') {
-            return redirect()->to('".$this->table['table']."/tambah')->withInput();
-        } else {
-            return redirect()->to('".$this->table['table']."/'.\$id.'/edit')->withInput();
-        }
     }";
 
     $controller .= "\n\n\tpublic function detailData(\$id){

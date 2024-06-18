@@ -26,7 +26,13 @@
                     
 		<?php $value = number_format($value, 0, ',', '.'); ?>
                     
-		<?= form_input('harga', trim($value), ['class' => 'form-control '.$invalid]); ?>
+		<div class="input-group">
+			            
+			<div class="input-group-addon bg-white">Rp</div>
+                        
+			<?= form_input('harga', trim($value), ['class' => 'form-control '.$invalid]); ?>
+                    
+		</div>
                     
 		<?php if(session('_ci_validation_errors.harga')):?>
                         
