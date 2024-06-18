@@ -48,7 +48,7 @@ class ProductController extends BaseController
             $row[] = $action;
             $row[] = $no;
             $row[] = $list->nama;
-			$row[] = 'Rp. '.number_format($list->harga, 0, ',', '.');
+			$row[] = number_format($list->harga, 0, ',', '.');
 			$row[] = date('d-m-Y', strtotime($list->tanggal));
             $data[] = $row;
         }

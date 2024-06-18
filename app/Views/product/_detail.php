@@ -7,7 +7,7 @@
 	<tr>
 		<td style="width: 25%;">Harga</td>
 		<td style="width: 1%;">:</td>
-		<th style="width: 75%;"><?='Rp '.number_format($product['harga'], 0, ',', '.'); ?></th>
+		<th style="width: 75%;"><?=number_format($product['harga'], 0, ',', '.'); ?></th>
 	</tr>
 	<tr>
 		<td style="width: 25%;">Tanggal Product</td>

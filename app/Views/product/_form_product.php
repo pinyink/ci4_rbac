@@ -7,11 +7,17 @@
                     
 		<?php $value = isset($product['nama']) ? $product['nama'] : old('nama'); ?>
                     
-		<?= form_input('nama', trim($value), ['class' => 'form-control '.$invalid]); ?>
+		<div class="input-group">
+			            
+			<div class="input-group-addon bg-white"><i class="fa fa-edit"></i></div>
+                        
+			<?= form_input('nama', trim($value), ['class' => 'form-control '.$invalid]); ?>
+                    
+		</div>
                     
 		<?php if(session('_ci_validation_errors.nama')):?>
                         
-			<div class="invalid-feedback"><?=session('_ci_validation_errors.nama')?></div>
+			<div class="text-danger"><?=session('_ci_validation_errors.nama')?></div>
                     
 		<?php endif ?>
                 
@@ -24,11 +30,11 @@
                     
 		<?php $value = isset($product['harga']) ? $product['harga'] : old('harga'); ?>
                     
-		<?php $value = number_format($value, 0, ',', '.'); ?>
+		<?php $value = $value != null ? number_format($value, 0, ',', '.') : 0; ?>
                     
 		<div class="input-group">
 			            
-			<div class="input-group-addon bg-white">Rp</div>
+			<div class="input-group-addon bg-white">#</div>
                         
 			<?= form_input('harga', trim($value), ['class' => 'form-control '.$invalid]); ?>
                     
@@ -36,7 +42,7 @@
                     
 		<?php if(session('_ci_validation_errors.harga')):?>
                         
-			<div class="invalid-feedback"><?=session('_ci_validation_errors.harga')?></div>
+			<div class="text-danger"><?=session('_ci_validation_errors.harga')?></div>
                     
 		<?php endif ?>
                 
@@ -49,11 +55,17 @@
                     
 		<?php $value = isset($product['tanggal']) ? date('d-m-Y', strtotime($product['tanggal'])) : old('tanggal'); ?>
                     
-		<?= form_input('tanggal', trim($value), ['class' => 'form-control '.$invalid]); ?>
+		<div class="input-group">
+			            
+			<div class="input-group-addon bg-white"><i class="fa fa-calendar"></i></div>
+                        
+			<?= form_input('tanggal', trim($value), ['class' => 'form-control '.$invalid]); ?>
+                    
+		</div>
                     
 		<?php if(session('_ci_validation_errors.tanggal')):?>
                         
-			<div class="invalid-feedback"><?=session('_ci_validation_errors.tanggal')?></div>
+			<div class="text-danger"><?=session('_ci_validation_errors.tanggal')?></div>
                     
 		<?php endif ?>
                 

@@ -329,9 +329,12 @@ $view = "
                     \n\t\t@?= form_label('".$value['name_alias']."'); ?@
                     \n\t\t@?php \$invalid = session('_ci_validation_errors.".$value['name_field']."') ? 'is-invalid' : ''; ?@
                     \n\t\t@?php \$value = isset(\$".$this->table['table']."['".$value['name_field']."']) ? \$".$this->table['table']."['".$value['name_field']."'] : old('".$value['name_field']."'); ?@
-                    \n\t\t@?= form_input('".$value['name_field']."', trim(\$value), ['class' => 'form-control '.\$invalid]); ?@
+                    \n\t\t<div class=\"input-group\">
+			            \n\t\t\t<div class=\"input-group-addon bg-white\"><i class=\"fa fa-edit\"></i></div>
+                        \n\t\t\t@?= form_input('".$value['name_field']."', trim(\$value), ['class' => 'form-control '.\$invalid]); ?@
+                    \n\t\t</div>
                     \n\t\t@?php if(session('_ci_validation_errors.".$value['name_field']."')):?@
-                        \n\t\t\t<div class=\"invalid-feedback\">@?=session('_ci_validation_errors.".$value['name_field']."')?@</div>
+                        \n\t\t\t<div class=\"text-danger\">@?=session('_ci_validation_errors.".$value['name_field']."')?@</div>
                     \n\t\t@?php endif ?@
                 \n\t</div>";
             }
@@ -341,10 +344,13 @@ $view = "
                     \n\t\t@?= form_label('".$value['name_alias']."'); ?@
                     \n\t\t@?php \$invalid = session('_ci_validation_errors.".$value['name_field']."') ? 'is-invalid' : ''; ?@
                     \n\t\t@?php \$value = isset(\$".$this->table['table']."['".$value['name_field']."']) ? \$".$this->table['table']."['".$value['name_field']."'] : old('".$value['name_field']."'); ?@
-                    \n\t\t@?php \$value = number_format(\$value, 0, ',', '.'); ?@
-                    \n\t\t@?= form_input('".$value['name_field']."', trim(\$value), ['class' => 'form-control '.\$invalid]); ?@
+                    \n\t\t@?php \$value = \$value != null ? number_format(\$value, 0, ',', '.') : 0; ?@
+                    \n\t\t<div class=\"input-group\">
+			            \n\t\t\t<div class=\"input-group-addon bg-white\">#</div>
+                        \n\t\t\t@?= form_input('".$value['name_field']."', trim(\$value), ['class' => 'form-control '.\$invalid]); ?@
+                    \n\t\t</div>
                     \n\t\t@?php if(session('_ci_validation_errors.".$value['name_field']."')):?@
-                        \n\t\t\t<div class=\"invalid-feedback\">@?=session('_ci_validation_errors.".$value['name_field']."')?@</div>
+                        \n\t\t\t<div class=\"text-danger\">@?=session('_ci_validation_errors.".$value['name_field']."')?@</div>
                     \n\t\t@?php endif ?@
                 \n\t</div>";
             }
@@ -354,13 +360,13 @@ $view = "
                     \n\t\t@?= form_label('".$value['name_alias']."'); ?@
                     \n\t\t@?php \$invalid = session('_ci_validation_errors.".$value['name_field']."') ? 'is-invalid' : ''; ?@
                     \n\t\t@?php \$value = isset(\$".$this->table['table']."['".$value['name_field']."']) ? \$".$this->table['table']."['".$value['name_field']."'] : old('".$value['name_field']."'); ?@
-                    \n\t\t@?php \$value = number_format(\$value, 0, ',', '.'); ?@
+                    \n\t\t@?php \$value = \$value != null ? number_format(\$value, 0, ',', '.') : 0; ?@
                     \n\t\t<div class=\"input-group\">
 			            \n\t\t\t<div class=\"input-group-addon bg-white\">Rp</div>
                         \n\t\t\t@?= form_input('".$value['name_field']."', trim(\$value), ['class' => 'form-control '.\$invalid]); ?@
                     \n\t\t</div>
                     \n\t\t@?php if(session('_ci_validation_errors.".$value['name_field']."')):?@
-                        \n\t\t\t<div class=\"invalid-feedback\">@?=session('_ci_validation_errors.".$value['name_field']."')?@</div>
+                        \n\t\t\t<div class=\"text-danger\">@?=session('_ci_validation_errors.".$value['name_field']."')?@</div>
                     \n\t\t@?php endif ?@
                 \n\t</div>";
             }
@@ -370,9 +376,12 @@ $view = "
                     \n\t\t@?= form_label('".$value['name_alias']."'); ?@
                     \n\t\t@?php \$invalid = session('_ci_validation_errors.".$value['name_field']."') ? 'is-invalid' : ''; ?@
                     \n\t\t@?php \$value = isset(\$".$this->table['table']."['".$value['name_field']."']) ? date('d-m-Y', strtotime(\$".$this->table['table']."['".$value['name_field']."'])) : old('".$value['name_field']."'); ?@
-                    \n\t\t@?= form_input('".$value['name_field']."', trim(\$value), ['class' => 'form-control '.\$invalid]); ?@
+                    \n\t\t<div class=\"input-group\">
+			            \n\t\t\t<div class=\"input-group-addon bg-white\"><i class=\"fa fa-calendar\"></i></div>
+                        \n\t\t\t@?= form_input('".$value['name_field']."', trim(\$value), ['class' => 'form-control '.\$invalid]); ?@
+                    \n\t\t</div>
                     \n\t\t@?php if(session('_ci_validation_errors.".$value['name_field']."')):?@
-                        \n\t\t\t<div class=\"invalid-feedback\">@?=session('_ci_validation_errors.".$value['name_field']."')?@</div>
+                        \n\t\t\t<div class=\"text-danger\">@?=session('_ci_validation_errors.".$value['name_field']."')?@</div>
                     \n\t\t@?php endif ?@
                 \n\t</div>";
             }
