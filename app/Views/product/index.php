@@ -53,8 +53,9 @@
                                 <tr>
                                     <th width="15%">Action</th>
                                     <th width="10%">No</th>
-									<th style="width: 37.5%">Nama Product</th>
-									<th style="width: 37.5%">Harga</th>
+									<th style="width: 25%">Nama Product</th>
+									<th style="width: 25%">Harga</th>
+									<th style="width: 25%">Tanggal Product</th>
                                 </tr>
                             </thead>
                             <tbody>

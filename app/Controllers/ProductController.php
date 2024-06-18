@@ -47,8 +47,9 @@ class ProductController extends BaseController
             
             $row[] = $action;
             $row[] = $no;
-			$row[] = $list->nama;
+            $row[] = $list->nama;
 			$row[] = 'Rp. '.number_format($list->harga, 0, ',', '.');
+			$row[] = date('d-m-Y', strtotime($list->tanggal));
             $data[] = $row;
         }
         $output = [
@@ -65,10 +66,9 @@ class ProductController extends BaseController
         $rules = [
 			'nama' => [
                 'label' => 'Nama Product',
-                'rules' => 'required|is_unique[product.nama, id, '.$id.']|max_length[64]|alpha_numeric_space',
+                'rules' => 'required|max_length[64]|alpha_numeric_space',
                 'errors' => [
                     'required' => '{field} Harus di isi',
-					'is_unique' => '{field} Sudah Ada, harap ketik yang lainnya',
 					'max_length' => '{field} Maksimal 64 Huruf',
 					'alpha_numeric_space' => '{field} Hanya berupa huruf, angka dan karakter tertentu'
                 ]
@@ -80,6 +80,15 @@ class ProductController extends BaseController
                     'required' => '{field} Harus di isi',
 					'max_length' => '{field} Maksimal 16 Huruf',
 					'numeric' => '{field} Hanya berupa angka'
+                ]
+            ],
+			'tanggal' => [
+                'label' => 'Tanggal Product',
+                'rules' => 'required|max_length[11]|valid_date[d-m-Y]',
+                'errors' => [
+                    'required' => '{field} Harus di isi',
+					'max_length' => '{field} Maksimal 11 Huruf',
+					'valid_date' => '{field} Harus berupa tanggal dd-mm-yyyy'
                 ]
             ],
         ];
@@ -127,6 +136,7 @@ class ProductController extends BaseController
         if ($validation->withRequest($request)->run()) {
             $validData = $validation->getValidated();
             $validData['harga'] = str_replace('.', '', $validData['harga']);
+			$validData['tanggal'] = date('Y-m-d', strtotime($validData['tanggal']));
             if($method == 'save') {
                 $id = $this->productModel->insert($validData);
                 return redirect()->to('product/'.$id.'/detail')->with('message', '<div class="alert alert-success">Simpan Data Berhasil</div>');

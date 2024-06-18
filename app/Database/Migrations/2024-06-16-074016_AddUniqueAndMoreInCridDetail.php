@@ -13,7 +13,7 @@ class AddUniqueAndMoreInCridDetail extends Migration
                 'type' => 'INT',
                 'default' => null,
                 'null' => true
-            ]
+            ],
         ];
         $this->forge->addColumn('crid_detail', $fields);
     }

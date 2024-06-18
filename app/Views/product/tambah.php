@@ -1,7 +1,6 @@
 
 <?= $this->extend('tema/tema'); ?> 
 <?=$this->section('css');?>
-<link href="<?=base_url();?>/assets/alertifyjs/css/themes/bootstrap.min.css" rel="stylesheet" type="text/css" />
 <?=$this->endSection();?>
 
 <?=$this->section('content'); ?>
@@ -42,7 +41,11 @@
                     </div>
                 </div>
                 <div class="ibox-body">
-                    <?= $this->include('product/_form_product'); ?>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <?= $this->include('product/_form_product'); ?>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

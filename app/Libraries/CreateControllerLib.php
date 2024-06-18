@@ -80,17 +80,20 @@ class ".$namaController." extends BaseController
         \$this->tema->loadTema('".$this->table['routename']."/index');
     }";
 
-        $rowFields = "";
+        $rowFields = [];
         foreach ($this->fields as $key => $value) {
             if ($value['field_database'] == 1) {
                 if ($value['name_type'] == 'text' || $value['name_type'] == 'textarea') {
-                    $rowFields .= "\n\t\t\t\$row[] = \$list->".$value['name_field'].";";
+                    array_push($rowFields, "\$row[] = \$list->".$value['name_field'].";");
                 }
                 if ($value['name_type'] == 'number') {
-                    $rowFields .= "\n\t\t\t\$row[] = number_format(\$list->".$value['name_field'].", 0, ',', '.');";
+                    array_push($rowFields, "\$row[] = number_format(\$list->".$value['name_field'].", 0, ',', '.');");
                 }
                 if ($value['name_type'] == 'rupiah') {
-                    $rowFields .= "\n\t\t\t\$row[] = 'Rp. '.number_format(\$list->".$value['name_field'].", 0, ',', '.');";
+                    array_push($rowFields, "\$row[] = 'Rp. '.number_format(\$list->".$value['name_field'].", 0, ',', '.');");
+                }
+                if ($value['name_type'] == 'date') {
+                    array_push($rowFields, "\$row[] = date('d-m-Y', strtotime(\$list->".$value['name_field']."));");
                 }
             }
         }
@@ -115,7 +118,8 @@ class ".$namaController." extends BaseController
             \$action = \$aksi;
             
             \$row[] = \$action;
-            \$row[] = \$no;".$rowFields."
+            \$row[] = \$no;
+            ".implode("\n\t\t\t", $rowFields)."
             \$data[] = \$row;
         }
         \$output = [
@@ -158,6 +162,12 @@ class ".$namaController." extends BaseController
             array_push($rule, 'numeric');
             array_push($errors, "'numeric' => '{field} Hanya berupa angka'");
         }
+        // jika tanggal / date
+        if ($value['name_type'] == 'date') {
+            array_push($rule, 'valid_date[d-m-Y]');
+            array_push($errors, "'valid_date' => '{field} Harus berupa tanggal dd-mm-yyyy'");
+        }
+
         $errors = implode(",\n\t\t\t\t\t", $errors);
         $rules .= "\n\t\t\t'".$value['name_field']."' => [
                 'label' => '".$value['name_alias']."',
@@ -204,8 +214,13 @@ class ".$namaController." extends BaseController
 
     $requestData = [];
     foreach ($this->fields as $key => $value) {
+        // jika number / rupiah
         if ($value['name_type'] == 'number' || $value['name_type'] == 'rupiah') {
             array_push($requestData, "\$validData['".$value['name_field']."'] = str_replace('.', '', \$validData['".$value['name_field']."']);");
+        }
+        // jika date
+        if ($value['name_type'] == 'date') {
+            array_push($requestData, "\$validData['".$value['name_field']."'] = date('Y-m-d', strtotime(\$validData['".$value['name_field']."']));");
         }
     }
     $controller .= "\n\n\tpublic function saveData(\$id = null)
@@ -220,7 +235,7 @@ class ".$namaController." extends BaseController
 
         if (\$validation->withRequest(\$request)->run()) {
             \$validData = \$validation->getValidated();
-            ".implode('\n\t\t\t', $requestData)."
+            ".implode("\n\t\t\t", $requestData)."
             if(\$method == 'save') {
                 \$id = \$this->".$modelVariable."->insert(\$validData);
                 return redirect()->to('".$this->table['table']."/'.\$id.'/detail')->with('message', '<div class=\"alert alert-success\">Simpan Data Berhasil</div>');

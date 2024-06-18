@@ -161,21 +161,15 @@ class ".$namaModel." extends Model
         \$this->dt = \$this->db->table(\$this->table . ' a');
     }";
 
-        $selectFields = "";
-        $no = 1;
+        $selectFields = [];
         foreach ($this->fields as $key => $value) {
             if ($value['field_database'] == 1) {
-                if ($no == 1) {
-                    $selectFields .= "a.".$value['name_field'];
-                } else {
-                    $selectFields .= ", a.".$value['name_field'];
-                }
-                $no++;
+                array_push($selectFields, "a.".$value['name_field']);
             }
         }
 $model .= "\n\n\tprivate function _getDatatablesQuery()
     {
-        \$this->dt->select('a.".$this->table['primary_key'].", ".$selectFields."');
+        \$this->dt->select('a.".$this->table['primary_key'].", ".implode(', ', $selectFields)."');
         \$this->dt->where('a.'.\$this->deletedField, null);
         \$this->dt->where(\$this->where);
         \$i = 0;

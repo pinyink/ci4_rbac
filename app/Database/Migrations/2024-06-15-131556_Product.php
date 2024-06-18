@@ -19,6 +19,17 @@ class Product extends Migration
                 'default' => null,
                 'null' => true
             ],
+            'harga' => [
+                'type' => 'BIGINT',
+                'constraint' => '64',
+                'default' => null,
+                'null' => true
+            ],
+            'tanggal' => [
+                'type' => 'DATE',
+                'default' => null,
+                'null' => true
+            ],
             'created_at' => [
                 'type' => 'DATETIME',
                 'default' => null,

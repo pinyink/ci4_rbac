@@ -250,7 +250,6 @@ $view = "
         $view = "
 @?= \$this->extend('tema/tema'); ?@ 
 @?=\$this->section('css');?@
-<link href=\"@?=base_url();?@/assets/alertifyjs/css/themes/bootstrap.min.css\" rel=\"stylesheet\" type=\"text/css\" />
 @?=\$this->endSection();?@
 
 @?=\$this->section('content'); ?@
@@ -291,7 +290,11 @@ $view = "
                     </div>
                 </div>
                 <div class=\"ibox-body\">
-                    ".$include."
+                    <div class=\"row\">
+                        <div class=\"col-md-12\">
+                            ".$include."
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -361,20 +364,47 @@ $view = "
                     \n\t\t@?php endif ?@
                 \n\t</div>";
             }
+
+            if ($value['name_type'] == 'date') {
+                $form .= "\n\t<div class=\"form-group\">
+                    \n\t\t@?= form_label('".$value['name_alias']."'); ?@
+                    \n\t\t@?php \$invalid = session('_ci_validation_errors.".$value['name_field']."') ? 'is-invalid' : ''; ?@
+                    \n\t\t@?php \$value = isset(\$".$this->table['table']."['".$value['name_field']."']) ? date('d-m-Y', strtotime(\$".$this->table['table']."['".$value['name_field']."'])) : old('".$value['name_field']."'); ?@
+                    \n\t\t@?= form_input('".$value['name_field']."', trim(\$value), ['class' => 'form-control '.\$invalid]); ?@
+                    \n\t\t@?php if(session('_ci_validation_errors.".$value['name_field']."')):?@
+                        \n\t\t\t<div class=\"invalid-feedback\">@?=session('_ci_validation_errors.".$value['name_field']."')?@</div>
+                    \n\t\t@?php endif ?@
+                \n\t</div>";
+            }
         }
         $form .= "\n<button class=\"btn btn-primary\" type=\"submit\"><i class=\"fa fa-save\"></i> @?=\$button;?@</button>";
         $form .= "\n@?= form_close(); ?@";
 
         // def js
         $js = "";
+        $css = [];
+        $script = [];
         foreach ($this->fields as $key => $value) {
             if($value['name_type'] == "number" || $value['name_type'] == "rupiah") {
                 $js .= "\n\t$('[name=\"".$value['name_field']."\"]').keyup(function (e) { \n\t\tthis.value = formatRupiah(this.value);\n\t});";
             }
+            if($value['name_type'] == 'date') {
+                $js .= "\n\t$('[name=\"".$value['name_field']."\"]').datepicker({\n\t\ttodayBtn: \"linked\",\n\t\tkeyboardNavigation: false,\n\t\tforceParse: false,\n\t\tcalendarWeeks: true,\n\t\tautoclose: true,\n\t\tformat: \"dd-mm-yyyy\"\n\t});";
+
+                // push css
+                array_push($css, "<link href=\"@?=base_url();?@/assets/admincast/dist/assets/vendors/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css\" rel=\"stylesheet\" type=\"text/css\" />");
+
+                // push script
+                array_push($script, "<script src=\"@?=base_url(); ?@/assets/admincast/dist/assets/vendors/moment/min/moment.min.js\" type=\"text/javascript\"> </script>");
+                array_push($script, "<script src=\"@?=base_url(); ?@/assets/admincast/dist/assets/vendors/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js\" type=\"text/javascript\"> </script>");
+            }
         }
 
+        // store css to form
+        $form .= "\n\n@?php \$this->section('css'); ?@\n".implode("\n", $css)."\n@?php \$this->endSection(); ?@";
+
         // store js to form
-        $form .= "\n\n@?php \$this->section('js'); ?@\n<script>".$js."\n</script>\n@?php \$this->endSection(); ?@";
+        $form .= "\n\n@?php \$this->section('js'); ?@\n".implode("\n", $script)."\n<script>".$js."\n</script>\n@?php \$this->endSection(); ?@";
 
         if (!file_exists(ROOTPATH.'app/Views/'.$this->table['table'])) {
             mkdir(ROOTPATH.'app/Views/'.$this->table['table'].'/_form_'.$this->table['table'].'.php', 775);
@@ -391,16 +421,17 @@ $view = "
 
     public function viewDetail()
     {
-        $no = 1;
         $tr = "";
         foreach ($this->fields as $key => $value) {
-            if ($no == 1) {
-                $tr .= "\n\t<tr>\n\t\t<td style=\"width: 25%;\">".$value['name_alias']."</td>\n\t\t<td style=\"width: 5%;\">:</td>\n\t\t<th style=\"width: 75%;\">@?=\$".$this->table['table']."['".$value['name_field']."']; ?@</th>\n\t</tr>";
+            if ($value['name_type'] == 'rupiah') {
+                $tr .= "\n\t<tr>\n\t\t<td style=\"width: 25%;\">".$value['name_alias']."</td>\n\t\t<td style=\"width: 1%;\">:</td>\n\t\t<th style=\"width: 75%;\">@?='Rp '.number_format(\$".$this->table['table']."['".$value['name_field']."'], 0, ',', '.'); ?@</th>\n\t</tr>";
+            } else if($value['name_type'] == 'number') {
+                $tr .= "\n\t<tr>\n\t\t<td style=\"width: 25%;\">".$value['name_alias']."</td>\n\t\t<td style=\"width: 1%;\">:</td>\n\t\t<th style=\"width: 75%;\">@?=number_format(\$".$this->table['table']."['".$value['name_field']."'], 0, ',', '.'); ?@</th>\n\t</tr>";
+            } else if($value['name_type'] == 'date') {
+                $tr .= "\n\t<tr>\n\t\t<td style=\"width: 25%;\">".$value['name_alias']."</td>\n\t\t<td style=\"width: 1%;\">:</td>\n\t\t<th style=\"width: 75%;\">@?=date('d-m-Y', strtotime(\$".$this->table['table']."['".$value['name_field']."'])); ?@</th>\n\t</tr>";
             } else {
-                $tr .= "\n\t<tr>\n\t\t<td>".$value['name_alias']."</td>\n\t\t<td>:</td>\n\t\t<th>@?=\$".$this->table['table']."['".$value['name_field']."']; ?@</th>\n\t</tr>";
+                $tr .= "\n\t<tr>\n\t\t<td style=\"width: 25%;\">".$value['name_alias']."</td>\n\t\t<td style=\"width: 1%;\">:</td>\n\t\t<th style=\"width: 75%;\">@?=\$".$this->table['table']."['".$value['name_field']."']; ?@</th>\n\t</tr>";
             }
-            
-            $no++;
         }
         $table = "<table class=\"table\">".$tr."\n</table>";
         if (!file_exists(ROOTPATH.'app/Views/'.$this->table['table'])) {
