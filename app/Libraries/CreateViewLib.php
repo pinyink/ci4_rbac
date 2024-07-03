@@ -322,7 +322,7 @@ $view = "
 
     public function tambahForm()
     {
-        $form = "@?= form_open(\$url, [], ['id' => \$id, 'method' => \$method]); ?@";
+        $form = "@?= form_open_multipart(\$url, [], ['id' => \$id, 'method' => \$method]); ?@";
         foreach ($this->fields as $key => $value) {
             if ($value['name_type'] == 'text') {
                 $form .= "\n\t<div class=\"form-group\">
@@ -392,6 +392,20 @@ $view = "
 			            \n\t\t\t<div class=\"input-group-addon bg-white\"><i class=\"fa fa-calendar\"></i></div>
                         \n\t\t\t@?= form_input('".$value['name_field']."', trim(\$value), ['class' => 'form-control '.\$invalid]); ?@
                     \n\t\t</div>
+                    \n\t\t@?php if(session('_ci_validation_errors.".$value['name_field']."')):?@
+                        \n\t\t\t<div class=\"text-danger\">@?=session('_ci_validation_errors.".$value['name_field']."')?@</div>
+                    \n\t\t@?php endif ?@
+                \n\t</div>";
+            }
+
+            if ($value['name_type'] == 'image') {
+                $form .= "\n\t<div class=\"form-group\">
+                    \n\t\t@?php \$invalid = session('_ci_validation_errors.".$value['name_field']."') ? 'is-invalid' : ''; ?@
+                    \n\t\t@?php \$value = isset(\$".$this->table['table']."['".$value['name_field']."']) ? \$".$this->table['table']."['".$value['name_field']."'] : 'assets/admincast/dist/assets/img/image.jpg'; ?@
+                    \n\t\t<img src=\"@?=base_url(\$value);?@\" style=\"width: 230px; height: 230px\" class=\"img img-thumbnail\" id='img-gambar-".$value['name_field']."'><br>
+
+                    \n\t\t@?= form_label('".$value['name_alias']."', '', ['class' => 'mt-2']); ?@
+                    \n\t\t\t@?= form_upload('".$value['name_field']."', trim(\$value), ['class' => 'form-control '.\$invalid, 'accept' => \".png,.jpg,.jpeg\", 'onchange' => \"readURL(this, 'img-gambar-".$value['name_field']."');\"]); ?@
                     \n\t\t@?php if(session('_ci_validation_errors.".$value['name_field']."')):?@
                         \n\t\t\t<div class=\"text-danger\">@?=session('_ci_validation_errors.".$value['name_field']."')?@</div>
                     \n\t\t@?php endif ?@

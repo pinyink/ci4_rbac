@@ -19,4 +19,9 @@
 		<td style="width: 1%;">:</td>
 		<th style="width: 75%;"><?=$product['deskripsi']; ?></th>
 	</tr>
+	<tr>
+		<td style="width: 25%;">Foto Product</td>
+		<td style="width: 1%;">:</td>
+		<th style="width: 75%;"><?=$product['foto']; ?></th>
+	</tr>
 </table>

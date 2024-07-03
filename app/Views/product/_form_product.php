@@ -1,4 +1,4 @@
-<?= form_open($url, [], ['id' => $id, 'method' => $method]); ?>
+<?= form_open_multipart($url, [], ['id' => $id, 'method' => $method]); ?>
 	<div class="form-group">
                     
 		<?= form_label('Nama Product'); ?>
@@ -85,6 +85,26 @@
 		<?php if(session('_ci_validation_errors.deskripsi')):?>
                         
 			<div class="text-danger"><?=session('_ci_validation_errors.deskripsi')?></div>
+                    
+		<?php endif ?>
+                
+	</div>
+	<div class="form-group">
+                    
+		<?php $invalid = session('_ci_validation_errors.foto') ? 'is-invalid' : ''; ?>
+                    
+		<?php $value = isset($product['foto']) ? $product['foto'] : 'assets/admincast/dist/assets/img/image.jpg'; ?>
+                    
+		<img src="<?=base_url($value);?>" style="width: 230px; height: 230px" class="img img-thumbnail" id='img-gambar-foto'><br>
+
+                    
+		<?= form_label('Foto Product', '', ['class' => 'mt-2']); ?>
+                    
+			<?= form_upload('foto', trim($value), ['class' => 'form-control '.$invalid, 'accept' => ".png,.jpg,.jpeg", 'onchange' => "readURL(this, 'img-gambar-foto');"]); ?>
+                    
+		<?php if(session('_ci_validation_errors.foto')):?>
+                        
+			<div class="text-danger"><?=session('_ci_validation_errors.foto')?></div>
                     
 		<?php endif ?>
                 

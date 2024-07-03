@@ -174,14 +174,16 @@ class ".$namaController." extends BaseController
             array_push($errors, "'valid_date' => '{field} Harus berupa tanggal dd-mm-yyyy'");
         }
 
-        $errors = implode(",\n\t\t\t\t\t", $errors);
-        $rules .= "\n\t\t\t'".$value['name_field']."' => [
+        if (!in_array($value['name_type'], ['image'])) {
+            $errors = implode(",\n\t\t\t\t\t", $errors);
+            $rules .= "\n\t\t\t'".$value['name_field']."' => [
                 'label' => '".$value['name_alias']."',
                 'rules' => '".implode('|', $rule)."',
                 'errors' => [
                     ".$errors."
                 ]
             ],";
+        }
     }
     $controller .= "\n\n\tpublic function rules(\$id = null)
     {
@@ -218,6 +220,25 @@ class ".$namaController." extends BaseController
         \$this->tema->loadTema('".$this->table['routename']."/edit', \$data);
     }";
 
+    $optValidation = [];
+    foreach ($this->fields as $key => $value) {
+        if ($value['name_type'] == 'image') {
+            $v = "if (!empty(\$_FILES['".$value['name_field']."']['name'])) {
+            \$rules['".$value['name_field']."'] = [
+                'label' => '".$value['name_alias']."',
+                'rules' => 'uploaded[".$value['name_field']."]|is_image[".$value['name_field']."]|mime_in[".$value['name_field'].",image/jpg,image/jpeg,image/gif,image/png,image/webp]|max_size[".$value['name_field'].",2048]',
+                'errors' => [
+                    'max_size' => '{field} maksimal 2mb',
+                    'mime_in' => '{field} hanya upload file png, jpeg, jpg',
+                    'uploaded' => '{field} Tidak Sesuai',
+                    'is_image' => '{field} hanya upload file png, jpeg, jpg'
+                ]
+            ];
+        }";
+            array_push($optValidation, $v);
+        }
+    }
+
     $requestData = [];
     foreach ($this->fields as $key => $value) {
         // jika number / rupiah
@@ -228,6 +249,25 @@ class ".$namaController." extends BaseController
         if ($value['name_type'] == 'date') {
             array_push($requestData, "\$validData['".$value['name_field']."'] = date('Y-m-d', strtotime(\$validData['".$value['name_field']."']));");
         }
+
+        // jika image
+        if ($value['name_type'] == 'image') {
+            $v = "\$".$value['name_field']." = \$request->getFile('".$value['name_field']."');
+            if (!empty(\$_FILES['".$value['name_field']."']['name'])) {
+                \$th = date('Y/m/d');
+                \$path = 'uploads/".$this->table['table']."/';
+                \$_dir = \$path . \$th;
+                \$dir = UPLOADPATH . \$path . \$th;
+                if (!file_exists(\$dir)) {
+                    mkdir(\$dir, 0777, true);
+                }
+                \$newName = \$".$value['name_field']."->getRandomName();;
+                \$".$value['name_field']."->move(\$dir, \$newName);
+                \$validData['".$value['name_field']."'] = \$_dir.'/'.\$newName;
+            }";
+
+            array_push($requestData, $v);
+        }
     }
     $controller .= "\n\n\tpublic function saveData(\$id = null)
     {
@@ -237,7 +277,9 @@ class ".$namaController." extends BaseController
         \$id = \$request->getPost('id');
         \$method = \$request->getPost('method');
         //set rules validation
-        \$validation->setRules(\$this->rules(\$id));
+        \$rules = \$this->rules(\$id);
+        ".implode("\n\t\t", $optValidation)."
+        \$validation->setRules(\$rules);
 
         if (\$validation->withRequest(\$request)->run()) {
             \$validData = \$validation->getValidated();

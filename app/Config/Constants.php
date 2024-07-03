@@ -83,3 +83,7 @@ $baseUrl .=  str_replace(basename($_SERVER['SCRIPT_NAME']), "", $_SERVER['SCRIPT
 
 defined('BASE_URL') || define('BASE_URL', $baseUrl);
 define('PUBLICPATH', realpath(APPPATH . 'public') . DIRECTORY_SEPARATOR);
+
+// jika public sejajar dengan index
+// defined('UPLOADPATH')      || define('UPLOADPATH', realpath(APPPATH . '../..') . DIRECTORY_SEPARATOR);
+defined('UPLOADPATH')      || define('UPLOADPATH', realpath(APPPATH . '../public/') . DIRECTORY_SEPARATOR);

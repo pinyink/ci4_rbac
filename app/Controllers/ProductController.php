@@ -139,12 +139,38 @@ class ProductController extends BaseController
         $id = $request->getPost('id');
         $method = $request->getPost('method');
         //set rules validation
-        $validation->setRules($this->rules($id));
+        $rules = $this->rules($id);
+        if (!empty($_FILES['foto']['name'])) {
+            $rules['foto'] = [
+                'label' => 'Foto Product',
+                'rules' => 'uploaded[foto]|is_image[foto]|mime_in[foto,image/jpg,image/jpeg,image/gif,image/png,image/webp]|max_size[foto,2048]',
+                'errors' => [
+                    'max_size' => '{field} maksimal 2mb',
+                    'mime_in' => '{field} hanya upload file png, jpeg, jpg',
+                    'uploaded' => '{field} Tidak Sesuai',
+                    'is_image' => '{field} hanya upload file png, jpeg, jpg'
+                ]
+            ];
+        }
+        $validation->setRules($rules);
 
         if ($validation->withRequest($request)->run()) {
             $validData = $validation->getValidated();
             $validData['harga'] = str_replace('.', '', $validData['harga']);
 			$validData['tanggal'] = date('Y-m-d', strtotime($validData['tanggal']));
+			$foto = $request->getFile('foto');
+            if (!empty($_FILES['foto']['name'])) {
+                $th = date('Y/m/d');
+                $path = 'uploads/product/';
+                $_dir = $path . $th;
+                $dir = UPLOADPATH . $path . $th;
+                if (!file_exists($dir)) {
+                    mkdir($dir, 0777, true);
+                }
+                $newName = $foto->getRandomName();;
+                $foto->move($dir, $newName);
+                $validData['foto'] = $_dir.'/'.$newName;
+            }
             if($method == 'save') {
                 $id = $this->productModel->insert($validData);
                 return redirect()->to('product/'.$id.'/detail')->with('message', '<div class="alert alert-success">Simpan Data Berhasil</div>');
