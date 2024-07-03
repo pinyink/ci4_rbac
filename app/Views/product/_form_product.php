@@ -8,8 +8,6 @@
 		<?php $value = isset($product['nama']) ? $product['nama'] : old('nama'); ?>
                     
 		<div class="input-group">
-			            
-			<div class="input-group-addon bg-white"><i class="fa fa-edit"></i></div>
                         
 			<?= form_input('nama', trim($value), ['class' => 'form-control '.$invalid]); ?>
                     
@@ -34,7 +32,7 @@
                     
 		<div class="input-group">
 			            
-			<div class="input-group-addon bg-white">#</div>
+			<div class="input-group-addon bg-white">Rp</div>
                         
 			<?= form_input('harga', trim($value), ['class' => 'form-control '.$invalid]); ?>
                     
@@ -49,7 +47,7 @@
 	</div>
 	<div class="form-group">
                     
-		<?= form_label('Tanggal Product'); ?>
+		<?= form_label('Tanggal'); ?>
                     
 		<?php $invalid = session('_ci_validation_errors.tanggal') ? 'is-invalid' : ''; ?>
                     
@@ -66,6 +64,27 @@
 		<?php if(session('_ci_validation_errors.tanggal')):?>
                         
 			<div class="text-danger"><?=session('_ci_validation_errors.tanggal')?></div>
+                    
+		<?php endif ?>
+                
+	</div>
+	<div class="form-group">
+                    
+		<?= form_label('Deskripsi Product'); ?>
+                    
+		<?php $invalid = session('_ci_validation_errors.deskripsi') ? 'is-invalid' : ''; ?>
+                    
+		<?php $value = isset($product['deskripsi']) ? $product['deskripsi'] : old('deskripsi'); ?>
+                    
+		<div class="input-group">
+                        
+			<?= form_textarea('deskripsi', trim($value), ['class' => 'form-control '.$invalid, 'rows' => '3']); ?>
+                    
+		</div>
+                    
+		<?php if(session('_ci_validation_errors.deskripsi')):?>
+                        
+			<div class="text-danger"><?=session('_ci_validation_errors.deskripsi')?></div>
                     
 		<?php endif ?>
                 

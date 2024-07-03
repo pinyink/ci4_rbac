@@ -36,11 +36,11 @@ class ProductController extends BaseController
             $row = [];
             $id = $list->id;
             $aksi = '<a href="'.base_url('product/'.$id.'/detail').'" class="" data-toggle="tooltip" data-placement="top" title="Lihat Data"><i class="fa fa-search"></i></a>';
-            if(enforce(1, 3)) {
+            if(enforce(4, 3)) {
                 $aksi .= '<a href="'.base_url('product/'.$id.'/edit').'" class="ml-2" data-toggle="tooltip" data-placement="top" title="Edit Data" onclick="edit_data('.$id.')"><i class="fa fa-edit"></i></a>';
             }
 
-            if(enforce(1, 4)) {
+            if(enforce(4, 4)) {
                 $aksi .= '<a href="javascript:;" class="text-danger ml-2" data-toggle="tooltip" data-placement="top" title="Delete Data" onclick="delete_data('.$id.')"><i class="fa fa-trash"></i></a>';
             }
             $action = $aksi;
@@ -48,8 +48,9 @@ class ProductController extends BaseController
             $row[] = $action;
             $row[] = $no;
             $row[] = $list->nama;
-			$row[] = number_format($list->harga, 0, ',', '.');
+			$row[] = 'Rp. '.number_format($list->harga, 0, ',', '.');
 			$row[] = date('d-m-Y', strtotime($list->tanggal));
+			$row[] = $list->deskripsi;
             $data[] = $row;
         }
         $output = [
@@ -66,29 +67,36 @@ class ProductController extends BaseController
         $rules = [
 			'nama' => [
                 'label' => 'Nama Product',
-                'rules' => 'required|max_length[64]|alpha_numeric_space',
+                'rules' => 'required|max_length[128]|alpha_numeric_space',
                 'errors' => [
                     'required' => '{field} Harus di isi',
-					'max_length' => '{field} Maksimal 64 Huruf',
-					'alpha_numeric_space' => '{field} Hanya berupa huruf, angka dan karakter tertentu'
+					'max_length' => '{field} Maksimal 128 Huruf',
+					'alpha_numeric_space' => '{field} Hanya berupa huruf, angka dan spasi'
                 ]
             ],
 			'harga' => [
                 'label' => 'Harga',
-                'rules' => 'required|max_length[16]|numeric',
+                'rules' => 'required|max_length[11]|numeric',
                 'errors' => [
                     'required' => '{field} Harus di isi',
-					'max_length' => '{field} Maksimal 16 Huruf',
+					'max_length' => '{field} Maksimal 11 Huruf',
 					'numeric' => '{field} Hanya berupa angka'
                 ]
             ],
 			'tanggal' => [
-                'label' => 'Tanggal Product',
-                'rules' => 'required|max_length[11]|valid_date[d-m-Y]',
+                'label' => 'Tanggal',
+                'rules' => 'required|valid_date[d-m-Y]',
                 'errors' => [
                     'required' => '{field} Harus di isi',
-					'max_length' => '{field} Maksimal 11 Huruf',
 					'valid_date' => '{field} Harus berupa tanggal dd-mm-yyyy'
+                ]
+            ],
+			'deskripsi' => [
+                'label' => 'Deskripsi Product',
+                'rules' => 'required|alpha_numeric_punct',
+                'errors' => [
+                    'required' => '{field} Harus di isi',
+					'alpha_numeric_punct' => '{field} Hanya berupa huruf, angka dan karakter tertentu'
                 ]
             ],
         ];

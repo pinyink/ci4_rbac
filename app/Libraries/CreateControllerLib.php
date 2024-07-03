@@ -155,7 +155,13 @@ class ".$namaController." extends BaseController
         // jika text
         if ($value['name_type'] == 'text') {
             array_push($rule, 'alpha_numeric_space');
-            array_push($errors, "'alpha_numeric_space' => '{field} Hanya berupa huruf, angka dan karakter tertentu'");
+            array_push($errors, "'alpha_numeric_space' => '{field} Hanya berupa huruf, angka dan spasi'");
+        }
+
+        // jika textarea
+        if ($value['name_type'] == 'textarea') {
+            array_push($rule, 'alpha_numeric_punct');
+            array_push($errors, "'alpha_numeric_punct' => '{field} Hanya berupa huruf, angka dan karakter tertentu'");
         }
         // jika number
         if ($value['name_type'] == 'number' || $value['name_type'] == 'rupiah') {

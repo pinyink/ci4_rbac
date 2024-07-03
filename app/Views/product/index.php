@@ -28,7 +28,7 @@
             <?=session()->getFlashData('message');?>
             <div class="ibox">
                 <div class="ibox-body">
-                    <?php if(enforce(1, 2)): ?>
+                    <?php if(enforce(4, 2)): ?>
                         <a href='<?=base_url('product/tambah')?>' class='btn btn-info btn-sm'><i class="fa fa-plush"></i> Tambah Data</a>
                     <?php endif ?>
                 </div>
@@ -53,9 +53,10 @@
                                 <tr>
                                     <th width="15%">Action</th>
                                     <th width="10%">No</th>
-									<th style="width: 25%">Nama Product</th>
-									<th style="width: 25%">Harga</th>
-									<th style="width: 25%">Tanggal Product</th>
+									<th style="width: 18.75%">Nama Product</th>
+									<th style="width: 18.75%">Harga</th>
+									<th style="width: 18.75%">Tanggal</th>
+									<th style="width: 18.75%">Deskripsi Product</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -115,7 +116,7 @@
     
     
 
-    <?php if(enforce(1, 4)): ?>
+    <?php if(enforce(4, 4)): ?>
     function delete_data(id) {
         Swal.fire({
         title: 'Apa Anda Yakin?',

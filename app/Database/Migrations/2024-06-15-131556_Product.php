@@ -30,6 +30,10 @@ class Product extends Migration
                 'default' => null,
                 'null' => true
             ],
+            'deskripsi' => [
+                'type' => 'TEXT',
+                'default' => null,
+            ],
             'created_at' => [
                 'type' => 'DATETIME',
                 'default' => null,

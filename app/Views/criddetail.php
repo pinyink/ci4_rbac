@@ -280,6 +280,7 @@
             $.ajax({
                 type: "DELETE",
                 url: "<?=base_url('/criddetail')?>/"+id+'/delete_data',
+                data: {'<?=csrf_token()?>' : '<?=csrf_hash()?>'},
                 dataType: "json",
                 success: function (response) {
                     if(response.errorCode == 1) {
