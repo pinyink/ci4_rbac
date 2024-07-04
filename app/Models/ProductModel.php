@@ -14,7 +14,7 @@ class ProductModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = true;
     protected $protectFields    = true;
-    protected $allowedFields    = ['nama', 'harga', 'tanggal', 'deskripsi', 'foto'];
+    protected $allowedFields    = ['nama', 'harga', 'tanggal', 'deskripsi', 'foto', 'dokumen'];
 
     // Dates
     protected $useTimestamps = true;
@@ -118,7 +118,7 @@ class ProductModel extends Model
 	public function detail($where = [])
     {
         $table = $this->db->table($this->table.' a');
-        $table->select('a.nama, a.harga, a.tanggal, a.deskripsi, a.foto');
+        $table->select('a.nama, a.harga, a.tanggal, a.deskripsi, a.foto, a.dokumen');
         $table->where($where);
         return $table->get();
     }

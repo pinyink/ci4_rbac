@@ -13,6 +13,11 @@ class AddFieldInProduct extends Migration
                 'type' => 'VARCHAR',
                 'constraint' => '128',
                 'default' => null
+            ],
+            'dokumen' => [
+                'type' => 'VARCHAR',
+                'constraint' => '128',
+                'default' => null
             ]
         ];
 
@@ -21,6 +26,6 @@ class AddFieldInProduct extends Migration
 
     public function down()
     {
-        $this->forge->dropColumn('product', ['foto']);
+        $this->forge->dropColumn('product', ['foto', 'dokumen']);
     }
 }

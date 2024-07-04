@@ -22,6 +22,11 @@
 	<tr>
 		<td style="width: 25%;">Foto Product</td>
 		<td style="width: 1%;">:</td>
-		<th style="width: 75%;"><?=$product['foto']; ?></th>
+		<th style="width: 75%;"><img src="<?=base_url($product['foto']); ?>" class="img img-thumbnail" style="width: 240px; height: 240px;"></th>
+	</tr>
+	<tr>
+		<td style="width: 25%;">Dokumen Pdf</td>
+		<td style="width: 1%;">:</td>
+		<th style="width: 75%;"><?=$product['dokumen']; ?></th>
 	</tr>
 </table>

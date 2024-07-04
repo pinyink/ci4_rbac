@@ -14,7 +14,7 @@ class ProductController extends BaseController
 
     function __construct()
     {
-        helper(['form', 'Permission_helper', 'FormCustom']);
+        helper(['form']);
         $this->tema = new Tema();
         $this->productModel = new ProductModel();
     }
@@ -97,6 +97,13 @@ class ProductController extends BaseController
                 'errors' => [
                     'required' => '{field} Harus di isi',
 					'alpha_numeric_punct' => '{field} Hanya berupa huruf, angka dan karakter tertentu'
+                ]
+            ],
+			'dokumen' => [
+                'label' => 'Dokumen Pdf',
+                'rules' => '',
+                'errors' => [
+                    
                 ]
             ],
         ];

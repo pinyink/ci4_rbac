@@ -113,7 +113,7 @@
                                         'koordinate' => 'koordinate',
                                         'rupiah' => 'rupiah',
                                         'image' => 'image',
-                                        'geometry' => 'geometry',
+                                        'pdf' => 'pdf',
                                         'date' => 'date'
                                     ], '', ['class' => 'form-control']);?>
                             </div>
