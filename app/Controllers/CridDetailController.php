@@ -26,6 +26,9 @@ class CridDetailController extends BaseController
         $cridModel = new CridModel();
         $data['crid'] = $cridModel->find($cridId);
 
+        $cridModel = new CridModel();
+        $data['table'] = $cridModel->findAll();
+
         $this->tema->setJudul('Crid Detail');
         $this->tema->loadTema('/criddetail', $data);
     }
@@ -106,6 +109,12 @@ class CridDetailController extends BaseController
 		$data['field_max'] = $this->request->getPost('val_field_max');
         $data['field_unique'] = $this->request->getPost('val_field_unique');
 
+        $array = [
+            'join_table' => $this->request->getPost('val_join_table'),
+            'join_field' => $this->request->getPost('val_join_field'),
+        ];
+        $data['field_settings'] = json_encode($array);
+
         if ($method == 'save') {
             $this->cridDetailModel->insert($data);
             $log['errorCode'] = 1;
@@ -124,6 +133,10 @@ class CridDetailController extends BaseController
     public function getData($id)
     {
         $query = $this->cridDetailModel->find($id);
+        $setting = json_decode($query['field_settings']);
+        foreach ($setting as $key => $value) {
+            $query[$key] = $value;
+        }
         return $this->response->setJSON($query);
     }
 
@@ -153,5 +166,11 @@ class CridDetailController extends BaseController
             return $this->response->setJSON(false);
         }
         return $this->response->setJSON(true);
+    }
+
+    public function byCridId($cridId)
+    {
+        $query = $this->cridDetailModel->where('crid_id', $cridId)->findAll();
+        return $this->response->setJSON($query);
     }
 }

@@ -66,6 +66,7 @@ $routes->group('/criddetail', ['namespace' => 'App\Controllers'], static functio
     $routes->get('(:num)/get_data', 'CridDetailController::getData/$1', ['filter' => 'admin']);
     $routes->delete('(:num)/delete_data', 'CridDetailController::deleteData/$1', ['filter' => 'admin']);
 	$routes->post('name_field_exist', 'CridDetailController::namefieldExist', ['filter' => 'admin']);
+    $routes->get('(:num)/by_crid_id', 'CridDetailController::byCridId/$1', ['filter' => 'admin']);
 });
 
 /**

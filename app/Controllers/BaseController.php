@@ -35,7 +35,7 @@ abstract class BaseController extends Controller
      *
      * @var array
      */
-    protected $helpers = [];
+    protected $helpers = ['FormCustom'];
 
     /**
      * Be sure to declare properties for any property fetch you initialized.
@@ -54,6 +54,5 @@ abstract class BaseController extends Controller
 
         // E.g.: $this->session = \Config\Services::session();
 
-        $this->helpers = ['FormCustom', 'Permission_helper'];
     }
 }

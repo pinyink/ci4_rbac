@@ -110,11 +110,12 @@
                                         'text' => 'text',
                                         'number' => 'number',
                                         'textarea' => 'textarea',
-                                        'koordinate' => 'koordinate',
+                                        // 'koordinate' => 'koordinate',
                                         'rupiah' => 'rupiah',
                                         'image' => 'image',
                                         'pdf' => 'pdf',
-                                        'date' => 'date'
+                                        'date' => 'date',
+                                        'join' => 'join'
                                     ], '', ['class' => 'form-control']);?>
                             </div>
                         </div>
@@ -143,6 +144,20 @@
                         </div>
                         <div class="col-3">
                             <label><input type="checkbox" name="val_field_unique" id="val_field_unique" value="1"> Field Unique</label>
+                        </div>
+                    </div>
+                    <div class="row mt-3" id="divjoin">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <?=form_label('Join')?>
+                                <?=form_dropdown('val_join_table', dropdown($table, 'id', 'table'), '', ['class' => 'form-control'])?>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <?=form_label('Dropdown')?>
+                                <?=form_dropdown('val_join_field', [], '', ['class' => 'form-control'])?>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -199,7 +214,32 @@
     }
 
     $(document).ready(function () {
-	});
+        $('#divjoin').hide();
+    });
+
+    $('[name="val_name_type"]').change(function (e) { 
+        var v = this.value;
+        if (v == 'join') {
+            $('#divjoin').show();
+        } else {
+            $('#divjoin').hide();
+        }
+    });
+
+    $('[name="val_join_table"]').change(function (e) { 
+        $.ajax({
+            type: "GET",
+            url: "<?=base_url('criddetail')?>/"+$('[name="val_join_table"]').val()+'/by_crid_id',
+            dataType: "json",
+            success: function (response) {
+                $('[name="val_join_field"]').empty();
+                $('[name="val_join_field"]').append('<option value="">-</option>');
+                $.each(response, function (indexInArray, valueOfElement) { 
+                    $('[name="val_join_field"]').append('<option value="'+valueOfElement.id+'">'+valueOfElement.name_field+'</option>');
+                });
+            }
+        });
+    });
     
 
     function reset_form() {
@@ -260,6 +300,27 @@
                 
 				$('[name="val_field_min"]').val(response.field_min);
 				$('[name="val_field_max"]').val(response.field_max);
+
+                var v = response.name_type;
+                if (v == 'join') {
+                    $('#divjoin').show();
+                    $('[name="val_join_table"]').val(response.join_table);
+                    $.ajax({
+                        type: "GET",
+                        url: "<?=base_url('criddetail')?>/"+$('[name="val_join_table"]').val()+'/by_crid_id',
+                        dataType: "json",
+                        success: function (r) {
+                            $('[name="val_join_field"]').empty();
+                            $('[name="val_join_field"]').append('<option value="">-</option>');
+                            $.each(r, function (indexInArray, valueOfElement) { 
+                                $('[name="val_join_field"]').append('<option value="'+valueOfElement.id+'">'+valueOfElement.name_field+'</option>');
+                            });
+                            $('[name="val_join_field"]').val(response.join_field);
+                        }
+                    });
+                } else {
+                    $('#divjoin').hide();
+                }
             }
         });
     }
