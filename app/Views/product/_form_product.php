@@ -9,7 +9,7 @@
                     
 		<div class="input-group">
                         
-			<?= form_input('nama', trim($value), ['class' => 'form-control '.$invalid]); ?>
+			<?= form_input('nama', trim($value), ['class' => 'form-control '.$invalid, 'placeholder' => 'Nama Product']); ?>
                     
 		</div>
                     
@@ -34,7 +34,7 @@
 			            
 			<div class="input-group-addon bg-white">Rp</div>
                         
-			<?= form_input('harga', trim($value), ['class' => 'form-control '.$invalid]); ?>
+			<?= form_input('harga', trim($value), ['class' => 'form-control '.$invalid, 'placeholder' => 'Harga']); ?>
                     
 		</div>
                     
@@ -57,7 +57,7 @@
 			            
 			<div class="input-group-addon bg-white"><i class="fa fa-calendar"></i></div>
                         
-			<?= form_input('tanggal', trim($value), ['class' => 'form-control '.$invalid]); ?>
+			<?= form_input('tanggal', trim($value), ['class' => 'form-control '.$invalid, 'placeholder' => 'Tanggal', 'autocomplete' => 'off']); ?>
                     
 		</div>
                     
@@ -78,7 +78,7 @@
                     
 		<div class="input-group">
                         
-			<?= form_textarea('deskripsi', trim($value), ['class' => 'form-control '.$invalid, 'rows' => '3']); ?>
+			<?= form_textarea('deskripsi', trim($value), ['class' => 'form-control '.$invalid, 'rows' => '3', 'placeholder' => 'Deskripsi Product']); ?>
                     
 		</div>
                     
