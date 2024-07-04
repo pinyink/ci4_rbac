@@ -65,10 +65,10 @@ class Profil extends BaseController
     public function update()
     {
         $log = [];
-        $firstName = $this->req->getPost('firstName', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $lastName = $this->req->getPost('lastName', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $email = $this->req->getPost('email');
-        $bio = $this->req->getPost('bio', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $firstName = $this->request->getPost('firstName', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $lastName = $this->request->getPost('lastName', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $email = $this->request->getPost('email');
+        $bio = $this->request->getPost('bio', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $id = session('user_id');
         $profilModel = new ProfilModel();
         $cek = $profilModel->getData(['a.user_id' => $id])->getRowArray();
@@ -94,39 +94,60 @@ class Profil extends BaseController
     public function updatePassword()
     {
         $log = [];
-        $oldPassword = $this->req->getPost('oldPassword');
-        $newPassword = $this->req->getPost('newPassword');
-        $retypePassword = $this->req->getPost('retypePassword');
-        $loginModel = new LoginModel($this->request);
-        $id = session('user_id');
-        $query = $loginModel->getData(['a.user_id' => $id, 'user_deleted_at' => null])->getRow();
-        if (password_verify($oldPassword, $query->user_password)) {
-            if ($newPassword == $retypePassword) {
-                $dataUpdate = [
-                    'user_password' => password_hash($newPassword, PASSWORD_BCRYPT)
-                ];
-                $userModel = new UserModel($this->req);
-                $queryUpdatePassword = $userModel->update($id, $dataUpdate);
-                $log['errorCode'] = 1;
-                $log['errorMessage'] = 'Password Baru Berhasil Disimpan';
-                $log['errorType'] = 'success';
+        $oldPassword = $this->request->getPost('oldPassword');
+        $newPassword = $this->request->getPost('newPassword');
+        $retypePassword = $this->request->getPost('retypePassword');
+
+        $validation = \Config\Services::validation();
+        $validation->setRules([
+            'newPassword' => [
+                'label'  => 'Password',
+                'rules'  => 'required|regex_match[/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,30}$/]|min_length[8]',
+                'errors' => [
+                    'min_length' => '{field} Minilam 8 Digit',
+                    'regex_match' => '{field} Terdiri dari huruf kapital, huruf kecil, angka dan karakter serta Minimal 8 Digit'
+                ],
+            ],
+        ]);
+
+        $request    = \Config\Services::request();
+        if ($validation->withRequest($request)->run()) {
+            $loginModel = new LoginModel($this->request);
+            $id = session('user_id');
+            $query = $loginModel->getData(['a.user_id' => $id, 'user_deleted_at' => null])->getRow();
+            if (password_verify($oldPassword, $query->user_password)) {
+                if ($newPassword == $retypePassword) {
+                    $dataUpdate = [
+                        'user_password' => password_hash($newPassword, PASSWORD_BCRYPT)
+                    ];
+                    $userModel = new UserModel();
+                    $queryUpdatePassword = $userModel->update($id, $dataUpdate);
+                    $log['errorCode'] = 1;
+                    $log['errorMessage'] = 'Password Baru Berhasil Disimpan';
+                    $log['errorType'] = 'success';
+                } else {
+                    $log['errorCode'] = 2;
+                    $log['errorMessage'] = 'Password Baru Salah';
+                    $log['errorType'] = 'error';
+                }
             } else {
                 $log['errorCode'] = 2;
-                $log['errorMessage'] = 'Password Baru Salah';
+                $log['errorMessage'] = 'Password Lama Salah';
                 $log['errorType'] = 'error';
             }
+            return $this->response->setJSON($log);
         } else {
             $log['errorCode'] = 2;
-            $log['errorMessage'] = 'Password Lama Salah';
+            $log['errorMessage'] = 'Password Terdiri dari huruf kapital, huruf kecil, angka dan karakter serta Minimal 8 Digit';
             $log['errorType'] = 'error';
+            return $this->response->setJSON($log);
         }
-        return $this->response->setJSON($log);
     }
 
     public function updateFoto()
     {
         $log = [];
-        $img = $this->req->getFile('inputFile');
+        $img = $this->request->getFile('inputFile');
         $validated = $this->validate([
             'inputFile' => 'uploaded[inputFile]|mime_in[inputFile,image/jpg,image/jpeg,image/gif,image/png]|max_size[inputFile,4096]'
         ]);

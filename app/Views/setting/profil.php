@@ -107,18 +107,35 @@
                             <form action="javascript:void(0)" id="form-password">
                                 <div class="form-group">
                                     <label>Password Lama</label>
-                                    <input class="form-control" type="password" placeholder="Old Password" name="oldPassword" required>
+                                    <div class="input-group">
+                                        <input class="form-control" type="password" placeholder="Password Lama" 
+                                        name="oldPassword" id="oldpassword" required>
+                                        <div class="input-group-addon">
+                                            <span class="input-group-text" id="toggleoldpassword"><i class="fa fa-eye"></i></span>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-6 form-group">
                                         <label>Password Baru</label>
-                                        <input class="form-control" type="password" placeholder="New Password" name="newPassword" required>
+                                        <div class="input-group">
+                                            <input class="form-control" type="password" placeholder="Password Baru" name="newPassword" id="newpassword" required>
+                                            <div class="input-group-addon">
+                                                <span class="input-group-text" id="togglenewpassword"><i class="fa fa-eye"></i></span>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="col-sm-6 form-group">
                                         <label>Ulangi Password</label>
-                                        <input class="form-control" type="password" placeholder="Retype Password" name="retypePassword" required>
+                                        <div class="input-group">
+                                            <input class="form-control" type="password" placeholder="Ulangi Password" name="retypePassword" id="retypepassword" required>
+                                            <div class="input-group-addon">
+                                                <span class="input-group-text" id="toggleretypepassword"><i class="fa fa-eye"></i></span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
+                                <hr>
                                 <div class="form-group">
                                     <button class="btn btn-default" type="submit"><i class="fa fa-save"></i> Save</button>
                                 </div>
@@ -292,5 +309,32 @@
             alert('silahkan pilih gambar');
         }
     }
+
+    const toggleoldpassword = document.querySelector('#toggleoldpassword');
+    const oldpassword = document.querySelector('#oldpassword');
+    toggleoldpassword.addEventListener('click', () => {
+        const type = oldpassword
+            .getAttribute('type') === 'password' ?
+            'text' : 'password';
+            oldpassword.setAttribute('type', type);
+    });
+
+    const togglenewpassword = document.querySelector('#togglenewpassword');
+    const newpassword = document.querySelector('#newpassword');
+    togglenewpassword.addEventListener('click', () => {
+        const type = newpassword
+            .getAttribute('type') === 'password' ?
+            'text' : 'password';
+        newpassword.setAttribute('type', type);
+    });
+
+    const toggleretypepassword = document.querySelector('#toggleretypepassword');
+    const retypepassword = document.querySelector('#retypepassword');
+    toggleretypepassword.addEventListener('click', () => {
+        const type = retypepassword
+            .getAttribute('type') === 'password' ?
+            'text' : 'password';
+        retypepassword.setAttribute('type', type);
+    });
 </script>
 <?= $this->endSection(); ?>
