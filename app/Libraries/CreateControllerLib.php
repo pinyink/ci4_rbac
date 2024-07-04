@@ -53,25 +53,38 @@ class CreateControllerLib
         $modelVariable = str_replace('_', ' ', $this->table['table']).'Model';
         $namaModel = str_replace(' ', '', ucwords(str_replace('_', ' ', $this->table['table']))).'Model';
 
+        $use = [];
+        $globalVariable = [];
+        $construct = [];
+        foreach ($this->fields as $key => $value) {
+            if (in_array($value['name_type'], ['image', 'pdf'])) {
+                array_push($use, 'use App\Libraries\UploadLib;');
+                array_push($globalVariable, "private \$uploadLib;");
+                array_push($construct, "\$this->uploadLib = new UploadLib();");
+            }
+        }
+
 $controller = "@?php
 
 namespace App\Controllers".$this->table['namespace'].";
 
 use App\Controllers\BaseController;
 use App\Libraries\Tema;
-use CodeIgniter\Database\RawSql;
 use App\Models\\".$namaModel.";
+".implode("\n", array_unique($use))."
 
 class ".$namaController." extends BaseController
 {
     private \$tema;
     private \$".$modelVariable.";
+    ".implode("\n\t", array_unique($globalVariable))."
 
     function __construct()
     {
         helper(['form']);
         \$this->tema = new Tema();
         \$this->".$modelVariable." = new ".$namaModel."();
+        ".implode("\n\t\t", array_unique($construct))."
     }
 
     public function index()
@@ -174,7 +187,7 @@ class ".$namaController." extends BaseController
             array_push($errors, "'valid_date' => '{field} Harus berupa tanggal dd-mm-yyyy'");
         }
 
-        if (!in_array($value['name_type'], ['image'])) {
+        if (!in_array($value['name_type'], ['image', 'pdf'])) {
             $errors = implode(",\n\t\t\t\t\t", $errors);
             $rules .= "\n\t\t\t'".$value['name_field']."' => [
                 'label' => '".$value['name_alias']."',
@@ -222,18 +235,19 @@ class ".$namaController." extends BaseController
 
     $optValidation = [];
     foreach ($this->fields as $key => $value) {
+
+        // jika image
         if ($value['name_type'] == 'image') {
             $v = "if (!empty(\$_FILES['".$value['name_field']."']['name'])) {
-            \$rules['".$value['name_field']."'] = [
-                'label' => '".$value['name_alias']."',
-                'rules' => 'uploaded[".$value['name_field']."]|is_image[".$value['name_field']."]|mime_in[".$value['name_field'].",image/jpg,image/jpeg,image/gif,image/png,image/webp]|max_size[".$value['name_field'].",2048]',
-                'errors' => [
-                    'max_size' => '{field} maksimal 2mb',
-                    'mime_in' => '{field} hanya upload file png, jpeg, jpg',
-                    'uploaded' => '{field} Tidak Sesuai',
-                    'is_image' => '{field} hanya upload file png, jpeg, jpg'
-                ]
-            ];
+            \$rules['".$value['name_field']."'] = \$this->uploadLib->rulesImage('".$value['name_field']."', '".$value['name_alias']."');
+        }";
+            array_push($optValidation, $v);
+        }
+
+        // jika pdf
+        if ($value['name_type'] == 'pdf') {
+            $v = "if (!empty(\$_FILES['".$value['name_field']."']['name'])) {
+            \$rules['".$value['name_field']."'] = \$this->uploadLib->rulesImage('".$value['name_field']."', '".$value['name_alias']."');
         }";
             array_push($optValidation, $v);
         }
@@ -250,20 +264,14 @@ class ".$namaController." extends BaseController
             array_push($requestData, "\$validData['".$value['name_field']."'] = date('Y-m-d', strtotime(\$validData['".$value['name_field']."']));");
         }
 
-        // jika image
-        if ($value['name_type'] == 'image') {
+        // Fungsi Upload jika image dan dokumen
+        if (in_array($value['name_type'], ['image', 'pdf'])) {
             $v = "\$".$value['name_field']." = \$request->getFile('".$value['name_field']."');
             if (!empty(\$_FILES['".$value['name_field']."']['name'])) {
-                \$th = date('Y/m/d');
-                \$path = 'uploads/".$this->table['table']."/';
-                \$_dir = \$path . \$th;
-                \$dir = UPLOADPATH . \$path . \$th;
-                if (!file_exists(\$dir)) {
-                    mkdir(\$dir, 0777, true);
-                }
-                \$newName = \$".$value['name_field']."->getRandomName();;
-                \$".$value['name_field']."->move(\$dir, \$newName);
-                \$validData['".$value['name_field']."'] = \$_dir.'/'.\$newName;
+                \$path = 'uploads/".$this->table['table']."/".$value['name_type']."/';
+                \$this->uploadLib->setFile(\$".$value['name_field'].");
+                \$this->uploadLib->setPath(\$path);
+                \$validData['".$value['name_field']."'] = \$this->uploadLib->upload();
             }";
 
             array_push($requestData, $v);

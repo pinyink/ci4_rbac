@@ -4,19 +4,21 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Libraries\Tema;
-use CodeIgniter\Database\RawSql;
 use App\Models\ProductModel;
+use App\Libraries\UploadLib;
 
 class ProductController extends BaseController
 {
     private $tema;
     private $productModel;
+    private $uploadLib;
 
     function __construct()
     {
         helper(['form']);
         $this->tema = new Tema();
         $this->productModel = new ProductModel();
+        $this->uploadLib = new UploadLib();
     }
 
     public function index()
@@ -99,13 +101,6 @@ class ProductController extends BaseController
 					'alpha_numeric_punct' => '{field} Hanya berupa huruf, angka dan karakter tertentu'
                 ]
             ],
-			'dokumen' => [
-                'label' => 'Dokumen Pdf',
-                'rules' => '',
-                'errors' => [
-                    
-                ]
-            ],
         ];
 
         return $rules;
@@ -148,16 +143,10 @@ class ProductController extends BaseController
         //set rules validation
         $rules = $this->rules($id);
         if (!empty($_FILES['foto']['name'])) {
-            $rules['foto'] = [
-                'label' => 'Foto Product',
-                'rules' => 'uploaded[foto]|is_image[foto]|mime_in[foto,image/jpg,image/jpeg,image/gif,image/png,image/webp]|max_size[foto,2048]',
-                'errors' => [
-                    'max_size' => '{field} maksimal 2mb',
-                    'mime_in' => '{field} hanya upload file png, jpeg, jpg',
-                    'uploaded' => '{field} Tidak Sesuai',
-                    'is_image' => '{field} hanya upload file png, jpeg, jpg'
-                ]
-            ];
+            $rules['foto'] = $this->uploadLib->rulesImage('foto', 'Foto Product');
+        }
+		if (!empty($_FILES['dokumen']['name'])) {
+            $rules['dokumen'] = $this->uploadLib->rulesImage('dokumen', 'Dokumen Pdf');
         }
         $validation->setRules($rules);
 
@@ -167,16 +156,17 @@ class ProductController extends BaseController
 			$validData['tanggal'] = date('Y-m-d', strtotime($validData['tanggal']));
 			$foto = $request->getFile('foto');
             if (!empty($_FILES['foto']['name'])) {
-                $th = date('Y/m/d');
-                $path = 'uploads/product/';
-                $_dir = $path . $th;
-                $dir = UPLOADPATH . $path . $th;
-                if (!file_exists($dir)) {
-                    mkdir($dir, 0777, true);
-                }
-                $newName = $foto->getRandomName();;
-                $foto->move($dir, $newName);
-                $validData['foto'] = $_dir.'/'.$newName;
+                $path = 'uploads/product/image/';
+                $this->uploadLib->setFile($foto);
+                $this->uploadLib->setPath($path);
+                $validData['foto'] = $this->uploadLib->upload();
+            }
+			$dokumen = $request->getFile('dokumen');
+            if (!empty($_FILES['dokumen']['name'])) {
+                $path = 'uploads/product/pdf/';
+                $this->uploadLib->setFile($dokumen);
+                $this->uploadLib->setPath($path);
+                $validData['dokumen'] = $this->uploadLib->upload();
             }
             if($method == 'save') {
                 $id = $this->productModel->insert($validData);

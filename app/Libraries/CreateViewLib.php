@@ -411,6 +411,19 @@ $view = "
                     \n\t\t@?php endif ?@
                 \n\t</div>";
             }
+
+            if ($value['name_type'] == 'pdf') {
+                $form .= "\n\t<div class=\"form-group\">
+                    \n\t\t@?php \$invalid = session('_ci_validation_errors.".$value['name_field']."') ? 'is-invalid' : ''; ?@
+                    \n\t\t@?php \$value = isset(\$".$this->table['table']."['".$value['name_field']."']) ? '<a href=\"'.base_url(\$".$this->table['table']."['".$value['name_field']."']).'\" target=\"_blank\" class=\"text-primary\">( Download )</a>' : ''; ?@
+
+                    \n\t\t@?= form_label('".$value['name_alias']."'.' '.\$value, '', ['class' => 'mt-2']); ?@
+                    \n\t\t\t@?= form_upload('".$value['name_field']."', '', ['class' => 'form-control '.\$invalid, 'accept' => \".pdf\"]); ?@
+                    \n\t\t@?php if(session('_ci_validation_errors.".$value['name_field']."')):?@
+                        \n\t\t\t<div class=\"text-danger\">@?=session('_ci_validation_errors.".$value['name_field']."')?@</div>
+                    \n\t\t@?php endif ?@
+                \n\t</div>";
+            }
         }
         $form .= "\n<button class=\"btn btn-primary\" type=\"submit\"><i class=\"fa fa-save\"></i> @?=\$button;?@</button>";
         $form .= "\n@?= form_close(); ?@";

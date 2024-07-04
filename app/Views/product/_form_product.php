@@ -109,6 +109,24 @@
 		<?php endif ?>
                 
 	</div>
+	<div class="form-group">
+                    
+		<?php $invalid = session('_ci_validation_errors.dokumen') ? 'is-invalid' : ''; ?>
+                    
+		<?php $value = isset($product['dokumen']) ? '<a href="'.base_url($product['dokumen']).'" target="_blank" class="text-primary">( Download )</a>' : ''; ?>
+
+                    
+		<?= form_label('Dokumen Pdf'.' '.$value, '', ['class' => 'mt-2']); ?>
+                    
+			<?= form_upload('dokumen', '', ['class' => 'form-control '.$invalid, 'accept' => ".pdf"]); ?>
+                    
+		<?php if(session('_ci_validation_errors.dokumen')):?>
+                        
+			<div class="text-danger"><?=session('_ci_validation_errors.dokumen')?></div>
+                    
+		<?php endif ?>
+                
+	</div>
 <button class="btn btn-primary" type="submit"><i class="fa fa-save"></i> <?=$button;?></button>
 <?= form_close(); ?>
 
