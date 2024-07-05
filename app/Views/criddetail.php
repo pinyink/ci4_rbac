@@ -387,8 +387,9 @@
                         id: function() {
                             return $('[name="id"]').val();
                         },
-                        csrf_test_name: function() {
-                            return $('meta[name=X-CSRF-TOKEN]').attr("content");
+                        <?=csrf_token()?>: '<?=csrf_hash();?>',
+                        crid_id: function() {
+                            return $('[name="val_crid_id"]').val();
                         },
                     },
                 },

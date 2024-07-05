@@ -50,7 +50,7 @@ class CreateControllerLib
     public function generate()
     {
         $namaController = str_replace(' ', '', ucwords(str_replace('_', ' ', $this->table['table']))).'Controller';
-        $modelVariable = str_replace('_', ' ', $this->table['table']).'Model';
+        $modelVariable = lcfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $this->table['table']))).'Model');
         $namaModel = str_replace(' ', '', ucwords(str_replace('_', ' ', $this->table['table']))).'Model';
 
         $use = [];
@@ -70,15 +70,11 @@ namespace App\Controllers".$this->table['namespace'].";
 
 use App\Controllers\BaseController;
 use App\Libraries\Tema;
-use App\Models\\".$namaModel.";
-".implode("\n", array_unique($use))."
-
+use App\Models\\".$namaModel.";\n".implode("\n", array_unique($use))."
 class ".$namaController." extends BaseController
 {
     private \$tema;
-    private \$".$modelVariable.";
-    ".implode("\n\t", array_unique($globalVariable))."
-
+    private \$".$modelVariable.";\n".implode("\n\t", array_unique($globalVariable))."
     function __construct()
     {
         helper(['form']);

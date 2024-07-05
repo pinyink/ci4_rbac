@@ -160,8 +160,9 @@ class CridDetailController extends BaseController
     {
         $cridDetailModel = new CridDetailModel();
         $id = $this->request->getPost('id');
+        $crid_id = $this->request->getPost('crid_id');
         $name_field = $this->request->getPost('name_field');
-        $query = $cridDetailModel->where(['id !=' => $id, 'name_field' => $name_field])->first();
+        $query = $cridDetailModel->where(['id !=' => $id, 'name_field' => $name_field, 'crid_id' => $crid_id])->first();
         if (!empty($query)) {
             return $this->response->setJSON(false);
         }

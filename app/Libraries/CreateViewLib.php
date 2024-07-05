@@ -224,7 +224,7 @@ $view = "
 @?=\$this->endSection();?@
 ";
         if (!file_exists(ROOTPATH.'app/Views/'.$this->table['table'])) {
-            mkdir(ROOTPATH.'app/Views/'.$this->table['table'].'/index.php', 775);
+            mkdir(ROOTPATH.'app/Views/'.$this->table['table'], 775);
         }
         $pathView = ROOTPATH.'app/Views/'.$this->table['table'].'/index.php';
         $view = str_replace('@?', '<?', $view);
