@@ -116,7 +116,8 @@ $routes->group('statistic', ['namespace' => 'App\Controllers'], static function(
 /**
  * Menu Content
  */
-$routes->get('/menu_dua', 'Menu_dua::index', ['filter' => 'auth:N, 2, 1', 'namespace' => 'App\Controllers']);
+$routes->get('/menu_dua', 'Menu_dua::index', ['namespace' => 'App\Controllers']);
+$routes->get('/menu_dua_db', 'Menu_dua::createDb', ['namespace' => 'App\Controllers']);
 $routes->get('/menu_satu', 'Menu_satu::index', ['filter' => 'auth:N, 1, 1', 'namespace' => 'App\Controllers']);
 
 $routes->group('/siswa', ['namespace' => 'App\Controllers'], static function($routes) {
