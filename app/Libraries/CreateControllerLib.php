@@ -243,7 +243,7 @@ class ".$namaController." extends BaseController
         // jika pdf
         if ($value['name_type'] == 'pdf') {
             $v = "if (!empty(\$_FILES['".$value['name_field']."']['name'])) {
-            \$rules['".$value['name_field']."'] = \$this->uploadLib->rulesImage('".$value['name_field']."', '".$value['name_alias']."');
+            \$rules['".$value['name_field']."'] = \$this->uploadLib->rulesPdf('".$value['name_field']."', '".$value['name_alias']."');
         }";
             array_push($optValidation, $v);
         }

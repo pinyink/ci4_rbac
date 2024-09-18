@@ -146,7 +146,7 @@ class ProductController extends BaseController
             $rules['foto'] = $this->uploadLib->rulesImage('foto', 'Foto Product');
         }
 		if (!empty($_FILES['dokumen']['name'])) {
-            $rules['dokumen'] = $this->uploadLib->rulesImage('dokumen', 'Dokumen Pdf');
+            $rules['dokumen'] = $this->uploadLib->rulesPdf('dokumen', 'Dokumen Pdf');
         }
         $validation->setRules($rules);
 
