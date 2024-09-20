@@ -483,7 +483,7 @@ $view = "
             } else if($value['name_type'] == 'image') {
                 $tr .= "\n\t<tr>\n\t\t<td style=\"width: 25%;\">".$value['name_alias']."</td>\n\t\t<td style=\"width: 1%;\">:</td>\n\t\t<th style=\"width: 75%;\"><img src=\"@?=base_url(\$".$this->table['table']."['".$value['name_field']."']); ?@\" class=\"img img-thumbnail\" style=\"width: 240px; height: 240px;\"></th>\n\t</tr>";
             } else {
-                $tr .= "\n\t<tr>\n\t\t<td style=\"width: 25%;\">".$value['name_alias']."</td>\n\t\t<td style=\"width: 1%;\">:</td>\n\t\t<th style=\"width: 75%;\">@?=\$".$this->table['table']."['".$value['name_field']."']; ?@</th>\n\t</tr>";
+                $tr .= "\n\t<tr>\n\t\t<td style=\"width: 25%;\">".$value['name_alias']."</td>\n\t\t<td style=\"width: 1%;\">:</td>\n\t\t<th style=\"width: 75%;\">@?=esc(\$".$this->table['table']."['".$value['name_field']."']); ?@</th>\n\t</tr>";
             }
         }
         $table = "<table class=\"table\">".$tr."\n</table>";
