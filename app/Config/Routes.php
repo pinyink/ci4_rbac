@@ -150,5 +150,5 @@ $routes->group('product_categories', ['namespace' => 'App\Controllers'], static 
     $routes->get('(:num)/detail', 'ProductCategoriesController::detailData/$1', ['filter' => 'auth:Y,1,1']);
     $routes->get('(:num)/edit', 'ProductCategoriesController::editData/$1', ['filter' => 'auth:N,1,3']);
     $routes->post('update', 'ProductCategoriesController::saveData', ['filter' => 'auth:N,1,3']);
-    $routes->delete('(:num)/delete_data', 'ProductCategoriesController::deleteData/$1', ['filter' => 'auth:N,1,4']);
+    $routes->delete('(:num)/delete', 'ProductCategoriesController::deleteData/$1', ['filter' => 'auth:N,1,4']);
 });

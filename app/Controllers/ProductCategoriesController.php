@@ -4,6 +4,8 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Libraries\Tema;
+use Hermawan\DataTables\DataTable;
+
 use App\Models\ProductCategoriesModel;
 
 class ProductCategoriesController extends BaseController
@@ -27,36 +29,22 @@ class ProductCategoriesController extends BaseController
 
 	public function ajaxList()
     {
-        $this->productCategoriesModel->setRequest($this->request);
-        $lists = $this->productCategoriesModel->getDatatables();
-        $data = [];
-        $no = $this->request->getPost("start");
-        foreach ($lists as $list) {
-            $no++;
-            $row = [];
-            $id = $list->id;
-            $aksi = '<a href="'.base_url('product_categories/'.$id.'/detail').'" class="" data-toggle="tooltip" data-placement="top" title="Lihat Data"><i class="fa fa-search"></i></a>';
-            if(enforce(1, 3)) {
-                $aksi .= '<a href="'.base_url('product_categories/'.$id.'/edit').'" class="ml-2" data-toggle="tooltip" data-placement="top" title="Edit Data" onclick="edit_data('.$id.')"><i class="fa fa-edit"></i></a>';
-            }
+        $this->productCategoriesModel->select('id, nama')->where('deleted_at', null);
 
-            if(enforce(1, 4)) {
-                $aksi .= '<a href="javascript:;" class="text-danger ml-2" data-toggle="tooltip" data-placement="top" title="Delete Data" onclick="delete_data('.$id.')"><i class="fa fa-trash"></i></a>';
-            }
-            $action = $aksi;
-            
-            $row[] = $action;
-            $row[] = $no;
-            $row[] = $list->nama;
-            $data[] = $row;
-        }
-        $output = [
-                "draw" => $this->request->getPost('draw'),
-                "recordsTotal" => $this->productCategoriesModel->countAll(),
-                "recordsFiltered" => $this->productCategoriesModel->countFiltered(),
-                "data" => $data
-            ];
-        echo json_encode($output);
+        return DataTable::of($this->productCategoriesModel)
+            ->add('action', function($row){
+                $btn = '<a href="'.base_url('product_categories/'.$row->id.'/detail').'" class="" data-toggle="tooltip" data-placement="top" title="Lihat Data"><i class="fa fa-search"></i></a>';
+                if(enforce(1, 3)) {
+                    $btn .= '<a href="'.base_url('product_categories/'.$row->id.'/edit').'" class="ml-2" data-toggle="tooltip" data-placement="top" title="Edit Data"><i class="fa fa-edit"></i></a>';
+                }
+
+                if(enforce(1, 4)) {
+                    $btn .= '<a href="javascript:;" class="text-danger ml-2" data-toggle="tooltip" data-placement="top" title="Delete Data" onclick="delete_data('.$row->id.')"><i class="fa fa-trash"></i></a>';
+                }
+                return $btn;
+            }, 'first')
+            ->setSearchableColumns(['nama'])
+            ->toJson();
     }
 
 	public function rules($id = null)

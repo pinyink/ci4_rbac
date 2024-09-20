@@ -51,7 +51,7 @@
                         <table id="datatable" class="table table-striped table-bordered table-hover">
                             <thead>
                                 <tr>
-                                    <th width="15%">Action</th>
+                                    <th width="15%">Aksi</th>
                                     <th width="10%">No</th>
 									<th style="width: 75%">Nama Kategories</th>
                                 </tr>
@@ -79,13 +79,9 @@
     var save_method;
     $(document).ready(function () {
         table = $('#datatable').DataTable({
-                    scrollCollapse: true,
                     responsive: true,
-                    autoWidth: false,
-                    language: { search: "",
-                        searchPlaceholder: "Search",
-                        sLengthMenu: "_MENU_items"
-                    },
+                    processing: true,
+                    serverSide: true,
                     "order": [],
                     "ajax": {
                         "url": "<?php echo base_url('product_categories/ajax_list') ?>",
@@ -94,6 +90,11 @@
                         },
                         "type": "POST",
                         "data": {<?=csrf_token();?>: '<?=csrf_hash()?>'},
+                        columns: [
+                            {data: 'action'},
+                            {data: 'no'},
+                            {data: 'nama'}
+                        ],
                         error: function(jqXHR, textStatus, errorThrown) {
                             console.log(jqXHR.responseText);
                         }

@@ -6,13 +6,11 @@ use App\Controllers\BaseController;
 use App\Libraries\Tema;
 use App\Models\ProductModel;
 use App\Libraries\UploadLib;
-
 class ProductController extends BaseController
 {
     private $tema;
     private $productModel;
-    private $uploadLib;
-
+private $uploadLib;
     function __construct()
     {
         helper(['form']);
@@ -99,6 +97,14 @@ class ProductController extends BaseController
                 'errors' => [
                     'required' => '{field} Harus di isi',
 					'alpha_numeric_punct' => '{field} Hanya berupa huruf, angka dan karakter tertentu'
+                ]
+            ],
+			'categories_id' => [
+                'label' => 'Kategori',
+                'rules' => 'required|max_length[2]',
+                'errors' => [
+                    'required' => '{field} Harus di isi',
+					'max_length' => '{field} Maksimal 2 Huruf'
                 ]
             ],
         ];

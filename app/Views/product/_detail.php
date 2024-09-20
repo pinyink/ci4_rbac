@@ -29,4 +29,9 @@
 		<td style="width: 1%;">:</td>
 		<th style="width: 75%;"><?=$product['dokumen']; ?></th>
 	</tr>
+	<tr>
+		<td style="width: 25%;">Kategori</td>
+		<td style="width: 1%;">:</td>
+		<th style="width: 75%;"><?=$product['categories_id']; ?></th>
+	</tr>
 </table>

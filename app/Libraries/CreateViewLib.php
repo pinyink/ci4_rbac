@@ -62,9 +62,11 @@ class CreateViewLib
         $countfieldTable = count($this->fields);
         $width = 75/$jumlah;
         $tableTh = '';
+        $arrayTableJs = [];
         foreach ($this->fields as $key => $value) {
             if ($value['field_database'] == 1) {
                 $tableTh .= "\n\t\t\t\t\t\t\t\t\t".'<th style="width: '.$width.'%">'.$value['name_alias'].'</th>';
+                array_push($arrayTableJs, "{data: '".$value['name_field']."'}");
             }
         }
 $view = "
@@ -120,7 +122,7 @@ $view = "
                         <table id=\"datatable\" class=\"table table-striped table-bordered table-hover\">
                             <thead>
                                 <tr>
-                                    <th width=\"15%\">Action</th>
+                                    <th width=\"15%\">Aksi</th>
                                     <th width=\"10%\">No</th>".$tableTh."
                                 </tr>
                             </thead>
@@ -147,13 +149,9 @@ $view = "
     var save_method;
     \$(document).ready(function () {
         table = \$('#datatable').DataTable({
-                    scrollCollapse: true,
                     responsive: true,
-                    autoWidth: false,
-                    language: { search: \"\",
-                        searchPlaceholder: \"Search\",
-                        sLengthMenu: \"_MENU_items\"
-                    },
+                    processing: true,
+                    serverSide: true,
                     \"order\": [],
                     \"ajax\": {
                         \"url\": \"@?php echo base_url('".$this->table['routename']."/ajax_list') ?@\",
@@ -162,6 +160,11 @@ $view = "
                         },
                         \"type\": \"POST\",
                         \"data\": {@?=csrf_token();?@: '@?=csrf_hash()?@'},
+                        columns: [
+                            {data: 'action'},
+                            {data: 'no'},
+                            ".implode(",\n\t\t\t\t\t\t\t", $arrayTableJs)."
+                        ],
                         error: function(jqXHR, textStatus, errorThrown) {
                             console.log(jqXHR.responseText);
                         }

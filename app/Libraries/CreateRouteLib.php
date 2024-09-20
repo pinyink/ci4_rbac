@@ -62,7 +62,7 @@ class CreateRouteLib
     \$routes->get('(:num)/detail', '".$namaController."::detailData/$1', ['filter' => 'auth:Y,".$rbac.",1']);
     \$routes->get('(:num)/edit', '".$namaController."::editData/$1', ['filter' => 'auth:N,".$rbac.",3']);
     \$routes->post('update', '".$namaController."::saveData', ['filter' => 'auth:N,".$rbac.",3']);
-    \$routes->delete('(:num)/delete_data', '".$namaController."::deleteData/$1', ['filter' => 'auth:N,".$rbac.",4']);
+    \$routes->delete('(:num)/delete', '".$namaController."::deleteData/$1', ['filter' => 'auth:N,".$rbac.",4']);
 });";
         return $route;
     }

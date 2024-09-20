@@ -70,6 +70,8 @@ namespace App\Controllers".$this->table['namespace'].";
 
 use App\Controllers\BaseController;
 use App\Libraries\Tema;
+use Hermawan\DataTables\DataTable;
+
 use App\Models\\".$namaModel.";\n".implode("\n", array_unique($use))."
 class ".$namaController." extends BaseController
 {
@@ -93,7 +95,7 @@ class ".$namaController." extends BaseController
         foreach ($this->fields as $key => $value) {
             if ($value['field_database'] == 1) {
                 if ($value['name_type'] == 'text' || $value['name_type'] == 'textarea') {
-                    array_push($rowFields, "\$row[] = \$list->".$value['name_field'].";");
+                    array_push($rowFields, $value['name_field']);
                 }
                 if ($value['name_type'] == 'number') {
                     array_push($rowFields, "\$row[] = number_format(\$list->".$value['name_field'].", 0, ',', '.');");
@@ -108,36 +110,22 @@ class ".$namaController." extends BaseController
         }
     $controller .= "\n\n\tpublic function ajaxList()
     {
-        \$this->".$modelVariable."->setRequest(\$this->request);
-        \$lists = \$this->".$modelVariable."->getDatatables();
-        \$data = [];
-        \$no = \$this->request->getPost(\"start\");
-        foreach (\$lists as \$list) {
-            \$no++;
-            \$row = [];
-            \$id = \$list->".$this->table['primary_key'].";
-            \$aksi = '<a href=\"'.base_url('".$this->table['table']."/'.\$id.'/detail').'\" class=\"\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Lihat Data\"><i class=\"fa fa-search\"></i></a>';
-            if(enforce(".$this->table['rbac'].", 3)) {
-                \$aksi .= '<a href=\"'.base_url('".$this->table['table']."/'.\$id.'/edit').'\" class=\"ml-2\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Edit Data\" onclick=\"edit_data('.\$id.')\"><i class=\"fa fa-edit\"></i></a>';
-            }
+        \$this->".$modelVariable."->select('".$this->table['primary_key'].', '.implode(', ', $rowFields)."')->where('".$this->table['v_deleted_at']."', null);
 
-            if(enforce(".$this->table['rbac'].", 4)) {
-                \$aksi .= '<a href=\"javascript:;\" class=\"text-danger ml-2\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Delete Data\" onclick=\"delete_data('.\$id.')\"><i class=\"fa fa-trash\"></i></a>';
-            }
-            \$action = \$aksi;
-            
-            \$row[] = \$action;
-            \$row[] = \$no;
-            ".implode("\n\t\t\t", $rowFields)."
-            \$data[] = \$row;
-        }
-        \$output = [
-                \"draw\" => \$this->request->getPost('draw'),
-                \"recordsTotal\" => \$this->".$modelVariable."->countAll(),
-                \"recordsFiltered\" => \$this->".$modelVariable."->countFiltered(),
-                \"data\" => \$data
-            ];
-        echo json_encode(\$output);
+        return DataTable::of(\$this->".$modelVariable.")
+            ->add('action', function(\$row){
+                \$btn = '<a href=\"'.base_url('".$this->table['table']."/'.\$row->id.'/detail').'\" class=\"\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Lihat Data\"><i class=\"fa fa-search\"></i></a>';
+                if(enforce(".$this->table['rbac'].", 3)) {
+                    \$btn .= '<a href=\"'.base_url('".$this->table['table']."/'.\$row->id.'/edit').'\" class=\"ml-2\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Edit Data\"><i class=\"fa fa-edit\"></i></a>';
+                }
+
+                if(enforce(".$this->table['rbac'].", 4)) {
+                    \$btn .= '<a href=\"javascript:;\" class=\"text-danger ml-2\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Delete Data\" onclick=\"delete_data('.\$row->id.')\"><i class=\"fa fa-trash\"></i></a>';
+                }
+                return \$btn;
+            }, 'first')
+            ->setSearchableColumns(['".implode("', '", $rowFields)."'])
+            ->toJson();
     }";
         // set validation rules
     $rules = "";

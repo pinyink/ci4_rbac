@@ -6,16 +6,17 @@
 	"license": "MIT",
 	"require": {
 		"php": ">=7.2",
-		"codeigniter4/framework": "^4",
+		"ext-intl": "*",
+		"ext-json": "*",
+		"ext-mbstring": "*",
 		"casbin/codeigniter-permission": "^1.0",
+		"codeigniter4/framework": "^4",
+		"gasparesganga/php-shapefile": "^3.4",
+		"hermawan/codeigniter4-datatables": "^0.7.2",
+		"laminas/laminas-escaper": "^2.9",
 		"mpdf/mpdf": "^8.1",
 		"phpoffice/phpspreadsheet": "^1.24",
-		"gasparesganga/php-shapefile": "^3.4",
-		"ext-intl": "*",
-        "ext-json": "*",
-        "ext-mbstring": "*",
-        "laminas/laminas-escaper": "^2.9",
-        "psr/log": "^1.1"
+		"psr/log": "^1.1"
 	},
 	"require-dev": {
 		"codeigniter/coding-standard": "^1.7",
