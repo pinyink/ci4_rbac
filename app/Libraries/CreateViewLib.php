@@ -226,10 +226,10 @@ $view = "
 </script>
 @?=\$this->endSection();?@
 ";
-        if (!file_exists(ROOTPATH.'app/Views/'.$this->table['table'])) {
-            mkdir(ROOTPATH.'app/Views/'.$this->table['table'], 775);
+        if (!file_exists(ROOTPATH.'app/Views/'.$this->table['routename'])) {
+            mkdir(ROOTPATH.'app/Views/'.$this->table['routename'], 775);
         }
-        $pathView = ROOTPATH.'app/Views/'.$this->table['table'].'/index.php';
+        $pathView = ROOTPATH.'app/Views/'.$this->table['routename'].'/index.php';
         $view = str_replace('@?', '<?', $view);
         $view = str_replace('?@', '?>', $view);
         $create = fopen($pathView, "w") or die("Change your permision folder for application and harviacode folder to 777");
@@ -310,10 +310,10 @@ $view = "
 
 @?=\$this->endSection();?@
 ";
-        if (!file_exists(ROOTPATH.'app/Views/'.$this->table['table'])) {
-            mkdir(ROOTPATH.'app/Views/'.$this->table['table'].'/'.strtolower($aksi).'.php', 775);
+        if (!file_exists(ROOTPATH.'app/Views/'.$this->table['routename'])) {
+            mkdir(ROOTPATH.'app/Views/'.$this->table['routename'].'/'.strtolower($aksi).'.php', 775);
         }
-        $pathView = ROOTPATH.'app/Views/'.$this->table['table'].'/'.strtolower($aksi).'.php';
+        $pathView = ROOTPATH.'app/Views/'.$this->table['routename'].'/'.strtolower($aksi).'.php';
         $view = str_replace('@?', '<?', $view);
         $view = str_replace('?@', '?>', $view);
         $create = fopen($pathView, "w") or die("Change your permision folder for application and harviacode folder to 777");
@@ -457,10 +457,10 @@ $view = "
         // store js to form
         $form .= "\n\n@?php \$this->section('js'); ?@\n".implode("\n", $script)."\n<script>".$js."\n</script>\n@?php \$this->endSection(); ?@";
 
-        if (!file_exists(ROOTPATH.'app/Views/'.$this->table['table'])) {
-            mkdir(ROOTPATH.'app/Views/'.$this->table['table'].'/_form_'.$this->table['table'].'.php', 775);
+        if (!file_exists(ROOTPATH.'app/Views/'.$this->table['routename'])) {
+            mkdir(ROOTPATH.'app/Views/'.$this->table['routename'].'/_form_'.$this->table['routename'].'.php', 775);
         }
-        $path = ROOTPATH.'app/Views/'.$this->table['table'].'/_form_'.$this->table['table'].'.php';
+        $path = ROOTPATH.'app/Views/'.$this->table['routename'].'/_form_'.$this->table['routename'].'.php';
         $form = str_replace('@?', '<?', $form);
         $form = str_replace('?@', '?>', $form);
         $create = fopen($path, "w") or die("Change your permision folder for application and harviacode folder to 777");
@@ -487,10 +487,10 @@ $view = "
             }
         }
         $table = "<table class=\"table\">".$tr."\n</table>";
-        if (!file_exists(ROOTPATH.'app/Views/'.$this->table['table'])) {
-            mkdir(ROOTPATH.'app/Views/'.$this->table['table'].'/_detail.php', 775);
+        if (!file_exists(ROOTPATH.'app/Views/'.$this->table['routename'])) {
+            mkdir(ROOTPATH.'app/Views/'.$this->table['routename'].'/_detail.php', 775);
         }
-        $path = ROOTPATH.'app/Views/'.$this->table['table'].'/_detail.php';
+        $path = ROOTPATH.'app/Views/'.$this->table['routename'].'/_detail.php';
         $table = str_replace('@?', '<?', $table);
         $table = str_replace('?@', '?>', $table);
         $create = fopen($path, "w") or die("Change your permision folder for application and harviacode folder to 777");
