@@ -133,9 +133,11 @@ class CridDetailController extends BaseController
     public function getData($id)
     {
         $query = $this->cridDetailModel->find($id);
-        $setting = json_decode($query['field_settings']);
-        foreach ($setting as $key => $value) {
-            $query[$key] = $value;
+        if ($query['field_settings'] != null) {
+            $setting = json_decode($query['field_settings']);
+            foreach ($setting as $key => $value) {
+                $query[$key] = $value;
+            }
         }
         return $this->response->setJSON($query);
     }

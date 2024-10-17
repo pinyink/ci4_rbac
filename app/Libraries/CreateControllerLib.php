@@ -324,10 +324,11 @@ class ".$namaController." extends BaseController
 
 $controller .= "\n}";
 
-        if (!file_exists(ROOTPATH.'app/Controllers')) {
-            mkdir(ROOTPATH.'app/Controllers', 775);
+        $namespace = str_replace('\\', '', $this->table['namespace']);
+        if (!file_exists(ROOTPATH.'app/Controllers/'.$namespace)) {
+            mkdir(ROOTPATH.'app/Controllers/'.$namespace, 775);
         }
-        $pathController = ROOTPATH.'app/Controllers/'.$namaController.'.php';
+        $pathController = ROOTPATH.'app/Controllers/'.$namespace.'/'.$namaController.'.php';
         $controller = str_replace('@?', '<?', $controller);
         $create = fopen($pathController, "w") or die("Change your permision folder for application and harviacode folder to 777");
         fwrite($create, $controller);

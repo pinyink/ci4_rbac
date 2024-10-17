@@ -174,7 +174,6 @@ class CridController extends BaseController
     {
         $table = $this->cridModel->find($id);
         $fields = $this->cridDetailModel->where(['crid_id' => $id])->findAll();
-        print_r([$table, $fields]);
 
         $this->createRouteLib->setTable($table);
         $this->createRouteLib->setFields($fields);

@@ -98,7 +98,7 @@ class CreateModelLib
 
         $model = "@?php
 
-namespace App\Models".$this->table['namespace'].";
+namespace App\Models;
 
 use CodeIgniter\Model;
 

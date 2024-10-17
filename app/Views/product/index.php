@@ -28,7 +28,7 @@
             <?=session()->getFlashData('message');?>
             <div class="ibox">
                 <div class="ibox-body">
-                    <?php if(enforce(4, 2)): ?>
+                    <?php if(enforce(1, 2)): ?>
                         <a href='<?=base_url('product/tambah')?>' class='btn btn-info btn-sm'><i class="fa fa-plush"></i> Tambah Data</a>
                     <?php endif ?>
                 </div>
@@ -51,12 +51,9 @@
                         <table id="datatable" class="table table-striped table-bordered table-hover">
                             <thead>
                                 <tr>
-                                    <th width="15%">Action</th>
+                                    <th width="15%">Aksi</th>
                                     <th width="10%">No</th>
-									<th style="width: 18.75%">Nama Product</th>
-									<th style="width: 18.75%">Harga</th>
-									<th style="width: 18.75%">Tanggal</th>
-									<th style="width: 18.75%">Deskripsi Product</th>
+									<th style="width: 75%">Nama Product</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -82,13 +79,9 @@
     var save_method;
     $(document).ready(function () {
         table = $('#datatable').DataTable({
-                    scrollCollapse: true,
                     responsive: true,
-                    autoWidth: false,
-                    language: { search: "",
-                        searchPlaceholder: "Search",
-                        sLengthMenu: "_MENU_items"
-                    },
+                    processing: true,
+                    serverSide: true,
                     "order": [],
                     "ajax": {
                         "url": "<?php echo base_url('product/ajax_list') ?>",
@@ -97,6 +90,11 @@
                         },
                         "type": "POST",
                         "data": {<?=csrf_token();?>: '<?=csrf_hash()?>'},
+                        columns: [
+                            {data: 'action'},
+                            {data: 'no'},
+                            {data: 'nama'}
+                        ],
                         error: function(jqXHR, textStatus, errorThrown) {
                             console.log(jqXHR.responseText);
                         }
@@ -116,7 +114,7 @@
     
     
 
-    <?php if(enforce(4, 4)): ?>
+    <?php if(enforce(1, 4)): ?>
     function delete_data(id) {
         Swal.fire({
         title: 'Apa Anda Yakin?',

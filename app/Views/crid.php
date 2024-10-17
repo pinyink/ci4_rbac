@@ -91,7 +91,7 @@
                     </div>
 					<div class="form-group">
                         <?=form_label('Namespace');?>
-                        <?=form_input('val_namespace', '', ['class' => 'form-control'], 'text');?>
+                        <?=form_input('val_namespace', '\\', ['class' => 'form-control'], 'text');?>
                     </div>
 					<div class="form-group">
                         <?=form_label('Title');?>
