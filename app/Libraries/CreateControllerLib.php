@@ -124,8 +124,9 @@ class ".$namaController." extends BaseController
                 }
                 return \$btn;
             }, 'first')
+            ->addNumbering('no')
             ->setSearchableColumns(['".implode("', '", $rowFields)."'])
-            ->toJson();
+            ->toJson(true);
     }";
         // set validation rules
     $rules = "";

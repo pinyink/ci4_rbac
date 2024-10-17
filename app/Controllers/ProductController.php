@@ -43,8 +43,9 @@ class ProductController extends BaseController
                 }
                 return $btn;
             }, 'first')
+            ->addNumbering('no')
             ->setSearchableColumns(['nama'])
-            ->toJson();
+            ->toJson(true);
     }
 
 	public function rules($id = null)

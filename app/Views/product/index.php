@@ -90,15 +90,15 @@
                         },
                         "type": "POST",
                         "data": {<?=csrf_token();?>: '<?=csrf_hash()?>'},
-                        columns: [
-                            {data: 'action'},
-                            {data: 'no'},
-                            {data: 'nama'}
-                        ],
                         error: function(jqXHR, textStatus, errorThrown) {
                             console.log(jqXHR.responseText);
                         }
                     },
+                    columns: [
+                        {data: 'action'},
+                        {data: 'no'},
+                        {data: 'nama'}
+                    ],
                     //optional
                     "columnDefs": [{
                         "targets": [0, 1],

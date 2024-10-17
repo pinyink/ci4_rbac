@@ -160,15 +160,15 @@ $view = "
                         },
                         \"type\": \"POST\",
                         \"data\": {@?=csrf_token();?@: '@?=csrf_hash()?@'},
-                        columns: [
-                            {data: 'action'},
-                            {data: 'no'},
-                            ".implode(",\n\t\t\t\t\t\t\t", $arrayTableJs)."
-                        ],
                         error: function(jqXHR, textStatus, errorThrown) {
                             console.log(jqXHR.responseText);
                         }
                     },
+                    columns: [
+                        {data: 'action'},
+                        {data: 'no'},
+                        ".implode(",\n\t\t\t\t\t\t\t", $arrayTableJs)."
+                    ],
                     //optional
                     \"columnDefs\": [{
                         \"targets\": [0, 1],
