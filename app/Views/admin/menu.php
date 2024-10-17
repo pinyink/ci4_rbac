@@ -213,6 +213,7 @@
                 type: "DELETE",
                 url: "<?=base_url('/admin/menu/delete_data')?>/"+id,
                 dataType: "json",
+                data: { '<?=csrf_token()?>' : '<?=csrf_hash()?>' },
                 success: function (response) {
                     if(response.errorCode == 1) {
                         Swal.fire(

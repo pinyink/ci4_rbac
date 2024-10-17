@@ -99,7 +99,31 @@ class MenuController extends BaseController
 		$data['menu_desc'] = $this->request->getPost('val_menu_desc');
 
         if ($method == 'save') {
-            $menuModel->insert($data);
+            $id = $menuModel->insert($data);
+            $dataMenuAkses = [
+                [
+                    'menu_akses_id' => '1', 
+                    'menu_akses_desc' => 'Lihat', 
+                    'menu_id' => $id,
+                ],
+                [
+                    'menu_akses_id' => '2', 
+                    'menu_akses_desc' => 'Tambah', 
+                    'menu_id' => $id,
+                ],
+                [
+                    'menu_akses_id' => '3', 
+                    'menu_akses_desc' => 'Edit', 
+                    'menu_id' => $id,
+                ],
+                [
+                    'menu_akses_id' => '4', 
+                    'menu_akses_desc' => 'Hapus', 
+                    'menu_id' => $id,
+                ]
+            ];
+            $menuAksesModel = new MenuAksesModel();
+            $menuAksesModel->insertBatch($dataMenuAkses);
             $log['errorCode'] = 1;
             $log['errorMessage'] = 'Simpan Data Berhasil';
             $log['errorType'] = 'success';
